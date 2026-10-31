@@ -24,8 +24,18 @@ free for hook code, see the skill's platform-nds.md; **guess** until the tail is
   - size 0 = directory marker (28 of them); the stored length of an entry = next entry's offset - this offset.
 - EZ_DAT.BIN: "EZP\0", same date words, u32 at 0x0C = offset of the end marker (0x0313468C); data from 0x10.
 
-Repack plan (phase 3): rebuild EZ_DAT by concatenating stored blocks and rewrite the offsets; keep per-entry padding
-bytes between blocks for the identity build. The ROM has ~10.6 MB free after 0x03558000, so growth is fine.
+- The last entry (offset 0x0313468C = EZ_DAT 0x0C, size 0) points at a **name table** at the end of EZ_DAT: NUL-padded
+  ASCII names (`STAGETABLE.BBQ`, `STAFF_19.AGL`...); an entry's key is its name's offset there (verified for the first
+  and last entries). Names aren't needed to read or repack.
+- Stored blocks start 4-aligned except 11 pairs of empty entries at odd offsets (e.g. 15/16 at 0x8832); LZ blocks
+  carry 0-4 bytes of zero padding.
+
+Repack (phase 3, verified): `ez.repack(tbl, dat, {index: bytes})` copies untouched blocks as stored (padding
+included), recompresses replaced ones with ndspy LZ10, keeps each block's length mod 4 so every later offset keeps
+its alignment, shifts the offsets and EZ_DAT 0x0C. No edits = byte-identical ROM (`tests/test_identity.py`). A build
+with all 334 BBQ/font entries recompressed and grown by 4 bytes boots and draws the ST01 opening card and text
+identical to the original (frame diff empty), so the game's decompressor takes ndspy's LZ10 and shifted offsets.
+The ROM has ~10.6 MB free after 0x03558000, so growth is fine.
 
 ## Content by type (decompressed, `work/ez/index.tsv`)
 | magic | count | what |
