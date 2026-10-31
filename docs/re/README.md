@@ -16,10 +16,13 @@ Addresses are for the dump in `rom.sha1` unless a note says otherwise.
 | `bbq.md` | .BBQ1.00 tables: sections, string table, line-per-string text | string table verified; other sections guessed |
 | `font.md` | Shift-JIS encoding, NFTR fonts 0336/0337 | encoding verified by font CMAP; renderer widths unknown |
 | `text.md` | text ranges (BBQ, arm9), control codes, free space, debug-menu strings | ranges verified; arm9 pointers todo |
+| `debug.md` | script engine (file ids, current script), developer menu + stage jump, map-menu debug item; warp tool | verified (warps from cold boot) |
 | `graphics.md` | graphics-text survey (static sweep of 584 images) | sweep done; tour pending |
 
 Prior work (web search 2026-11-01): no finished English patch; only a GBAtemp request thread and an old GameFAQs
 menu-translation post (gamefaqs board 943464, topic 42918861). Nothing to build on.
 
 Tools: `tools/fsls.py` (NitroFS list/unpack), `tools/ez.py unpack` (archive -> work/ez), `tools/bbq.py`,
+`tools/bbqstr.py` (all strings of a BBQ), `tools/vmdump.py` (script bytecode words), `tools/debug/ezlog.lua`
+(probe: log EZ loads + callers, needs --debugger),
 `tools/nftr.py`, `tools/nitro2d.py survey` (graphics sheets).

@@ -1,0 +1,75 @@
+-- Scene list for warp.lua (format in its header). All scenes start in the developer main menu (script 0x1000):
+--   0 ゲーム開始(ロゴ～)  1 ゲーム開始(タイトル～)  2 ゲーム開始(ステージ??～) -> stage list ST00-ST67 -> phase
+--   (0 オープニング / 1 戦闘 / 2 エンディング)  3 戦闘演出動画ビュア  4 イベント動画ビュア  5 マップビュア
+--   6 システムフラグ操作  7 オプション設定  8 スタッフ ロール
+-- Stage NN = title card NN (68 cards, proof sheets work/qa/warps/sheet_open*.png); ST06 is a scrapped stage.
+SCENES = {}
+local MENU = { "script", 0x1000 }
+
+local function menu(item, ...)
+  local s = { MENU, { "wait", 30 } }
+  if item > 0 then s[#s + 1] = { "press", "down", item } end
+  s[#s + 1] = { "press", "a" }
+  for _, x in ipairs({ ... }) do s[#s + 1] = x end
+  return s
+end
+
+-- stNN_open / stNN_battle / stNN_end: stage jump, the way the game enters the stage (card + intro).
+local function stage_ok(k) return k ~= 6 end  -- ST06 (没ステージ): no opening; battle/end jump to ST07/ST08
+for k = 0, 67 do
+  if stage_ok(k) then for ph, name in pairs({ [0] = "open", [1] = "battle", [2] = "end" }) do
+    local steps = menu(2, { "script", 0x1002 })  -- stage jump script
+    if k > 0 then steps[#steps + 1] = { "press", "down", k } end
+    steps[#steps + 1] = { "press", "a" }
+    steps[#steps + 1] = { "wait", 60 }
+    if ph > 0 then steps[#steps + 1] = { "press", "down", ph } end
+    steps[#steps + 1] = { "leave", 0x1002 }  -- route questions (ST05 B/D, ST16 F/G, ...): first option each
+    SCENES[string.format("st%02d_%s", k, name)] = steps
+  end end
+end
+
+local PREP, MAPMENU = 0x02070EB0, 0x02070D44  -- item tables read when the menu opens
+local function extend(base, extra, god)
+  local s = { god = god }
+  for _, x in ipairs(SCENES[base]) do s[#s + 1] = x end
+  for _, x in ipairs(extra) do s[#s + 1] = x end
+  return s
+end
+
+-- Battle prep (戦闘準備) and its screens: ST30 has every item enabled (ST00 greys most out).
+for k = 0, 67 do
+  if stage_ok(k) then
+    SCENES[string.format("st%02d_prep", k)] =
+      extend(string.format("st%02d_battle", k), { { "read", PREP, { "a", "b" } } })
+  end
+end
+SCENES.prep_mapcheck = extend("st30_prep", { { "press", "a" } })              -- マップ確認
+SCENES.prep_team = extend("st30_prep", { { "press", "down" }, { "press", "a" } })  -- オリジナル隊編成
+SCENES.shop = extend("st30_prep", { { "press", "down", 2 }, { "press", "a" } })   -- 強化メニュー
+SCENES.prep_brief = extend("st30_prep", { { "press", "down", 3 }, { "press", "a" } }) -- 作戦内容確認
+SCENES.chart = extend("st30_prep", { { "press", "down", 4 }, { "press", "a" } })  -- シナリオチャート
+SCENES.save = extend("st30_prep", { { "press", "down", 5 }, { "press", "a" } })   -- セーブ
+-- Map: start the battle, then open the map command menu (A on an empty cell), with its デバッグ item.
+SCENES.map = extend("st30_prep", { { "press", "up" }, { "press", "a" }, { "wait", 400 } })
+SCENES.mapmenu = extend("map", { { "press", "right", 30 }, { "read", MAPMENU, { "a" } } }, true)
+SCENES.debugmenu = extend("mapmenu", { { "press", "down", 5 }, { "press", "a" } }, true)
+SCENES.victory = extend("debugmenu", { { "wait", 30 }, { "press", "a" }, { "wait", 30 }, { "press", "a" } }, true)
+SCENES.gameover = extend("debugmenu", { { "wait", 30 }, { "press", "a" }, { "wait", 30 }, { "press", "down" },
+  { "press", "a" }, { "wait", 200 }, { "press", "a" }, { "wait", 60 }, { "press", "a" } }, true)
+
+SCENES.devmenu = { MENU }
+SCENES.logo = menu(0)
+SCENES.title = menu(1, { "script", 0x1040 })                        -- PRESS START
+SCENES.title_menu = extend("title", { { "wait", 120 }, { "press", "start" } })
+SCENES.load = extend("title_menu", { { "wait", 60 }, { "press", "down", 2 }, { "press", "a" } })
+-- おまけ (extras): system flags -> おまけコンプリート -> はい, back, then title -> おまけ.
+SCENES.extras = menu(6, { "wait", 30 }, { "press", "down" }, { "press", "a" }, { "wait", 30 }, { "press", "left" },
+  { "press", "a" }, { "wait", 90 }, { "press", "b" }, { "wait", 60 }, { "press", "up", 6 }, { "press", "down" },
+  { "press", "a" }, { "script", 0x1040 }, { "wait", 120 }, { "press", "start" }, { "wait", 60 },
+  { "press", "down", 3 }, { "press", "a" })
+SCENES.battle_movies = menu(3)
+SCENES.event_movies = menu(4)
+SCENES.mapview = menu(5)
+SCENES.sysflags = menu(6)
+SCENES.options = menu(7)
+SCENES.credits = menu(8)
