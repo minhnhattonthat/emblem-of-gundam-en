@@ -30,11 +30,23 @@ free for hook code, see the skill's platform-nds.md; **guess** until the tail is
 - Stored blocks start 4-aligned except 11 pairs of empty entries at odd offsets (e.g. 15/16 at 0x8832); LZ blocks
   carry 0-4 bytes of zero padding.
 
-Repack (phase 3, verified): `ez.repack(tbl, dat, {index: bytes})` copies untouched blocks as stored (padding
+Repack (phase 3/4, verified): `ez.repack(tbl, dat, {index: bytes})` copies untouched blocks as stored (padding
 included), recompresses replaced ones with ndspy LZ10, keeps each block's length mod 4 so every later offset keeps
-its alignment, shifts the offsets and EZ_DAT 0x0C. No edits = byte-identical ROM (`tests/test_identity.py`). A build
-with all 334 BBQ/font entries recompressed and grown by 4 bytes boots and draws the ST01 opening card and text
-identical to the original (frame diff empty), so the game's decompressor takes ndspy's LZ10 and shifted offsets.
+its alignment, shifts the offsets and EZ_DAT 0x0C. No edits = byte-identical ROM (`tests/test_identity.py`).
+
+**The size word is the unpacked length rounded up to 16.** All 4,146 entries obey it (`tests/test_extract.py`
+checks the 328 text tables; a one-off scan covered the rest). The whole-file loader at 0x0203BD34 does
+`malloc(size & 0xFFFFFF)` and calls the decompressor with only (dest, src) — the decompressor reads the LZ10 header
+and writes in 16-byte units, so a size word that isn't align16 makes it write past the block. Symptom (phase 4,
+reproduced on entry 85 BTLDIR): the game boots to the developer menu (script 0x1000) and hangs on the next press.
+Fix: `ez.repack` writes `align16(len(data))`, and `tools/insert.py` pads changed tables to 16 so the parser sees
+zeros instead of heap garbage. `frame diff empty` is not enough to catch this: entry 0/191 edits loaded fine, 85
+didn't — the hang is per-entry, not per-build.
+
+Verified end-to-end in the emulator after the fix (shots `work/qa/textproof/`): BTLDIR's three narration lines
+replaced with ASCII show up on the ST00 opening card (`bbq_narration_ascii.png`), and arm9's `ステージを選択` replaced
+in place shows "STAGE SELECT" on the scenario chart (`arm9_label_ascii.png`). So the game draws our inserted
+cp932/ASCII from both sources.
 The ROM has ~10.6 MB free after 0x03558000, so growth is fine.
 
 ## Content by type (decompressed, `work/ez/index.tsv`)

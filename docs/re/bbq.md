@@ -15,9 +15,13 @@
   refers to strings by index (string offsets live only in the type-7 index, so the script needs no pointer fixes).
 - Types 2/3/5: small tables (record arrays); not decoded yet.
 
-## Repack (plan)
-Rewrite the type-7 index + pool, pad, keep the 24-byte zero tail. Since type 7 is last, nothing else moves. Index
-and string count stay fixed (one string per id).
+## Repack (done, phase 4: `bbq.rebuild`)
+Rewrite the type-7 index + pool; the type-7 section is last, so only its index (`count * u32`, at the section's
+`index` offset) and pool move. The index stays where it is, the pool is padded with zeros to a multiple of 4 like the
+original, the file's 24-byte zero tail is kept, and the descriptor's size word is updated. The string count is fixed
+(one string per id), but any string may change length, so a table can grow or shrink freely — the EZ entry's size
+changes with it (`tools/insert.py` rounds the file up to 16, `archive.md`). `bbq.rebuild(raw, unchanged)` returns the
+original bytes exactly, which is what keeps an untouched script/ a byte-identical build.
 
 ## Text facts
 - 66,451 strings, 583,558 characters, all valid cp932.

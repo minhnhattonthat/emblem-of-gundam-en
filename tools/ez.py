@@ -31,7 +31,12 @@ def repack(tbl, dat, new):
     """Rebuild (EZ_TBL, EZ_DAT) with entries {index: unpacked bytes} replaced; untouched blocks are copied as stored
     (padding included), so repack(tbl, dat, {}) is byte-identical. A new block keeps the old flags (LZ10 or raw)
     and its length mod 4, so every later offset keeps its alignment. The DAT header word 0x0C (offset of the name
-    table, which is the last entry's offset) is moved with it."""
+    table, which is the last entry's offset) is moved with it.
+
+    The size word is the *unpacked* length rounded **up to 16** -- every one of the original 4,146 entries has it that
+    way, and the game relies on it: the whole-file loader (0x0203BD34) mallocs that many bytes and the decompressor
+    writes in 16-byte units (docs/re/archive.md). Writing the exact length instead hangs the game at the developer
+    menu, so pad the data itself to 16 as well (tools/insert.py does)."""
     tbl, out, delta = bytearray(tbl), bytearray(dat[:0x10]), 0
     for i, key, off, slen, fl, usz, raw in blocks(tbl, dat):
         struct.pack_into("<I", tbl, HDR + 12 * i + 4, off + delta)
@@ -41,7 +46,7 @@ def repack(tbl, dat, new):
             data = new[i]
             comp = ndspy.lz10.compress(data) if fl == 0x10 else data
             raw = comp + bytes((slen - len(comp)) % 4)
-            struct.pack_into("<I", tbl, HDR + 12 * i + 8, (fl << 24) | len(data))
+            struct.pack_into("<I", tbl, HDR + 12 * i + 8, (fl << 24) | (len(data) + -len(data) % 16))
             delta += len(raw) - slen
         out += raw
     struct.pack_into("<I", out, 0x0C, struct.unpack_from("<I", dat, 0x0C)[0] + delta)

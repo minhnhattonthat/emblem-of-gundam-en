@@ -3,7 +3,8 @@
 Skill: translate-retro-game; `python tools/skill.py` prints its folder. Read its SKILL.md before ROM, text or QA work. `"$(python tools/skill.py)"` works in bash and PowerShell; never paste a `plugins/cache/<hash>` path.
 
 ## Commands (run from repo root)
-- Build:    `python -X utf8 tools/build.py`  -> build/eog_en.nds (checks the dump against `rom.sha1` first)
+- Build:    `python -X utf8 tools/build.py`  -> build/eog_en.nds (checks the dump against `rom.sha1` first; applies `script/`, `--no-script` skips it)
+- Extract:  `python -X utf8 tools/extract.py` (ROM -> `script/`; `--check` lists holes, exit 1)
 - Check:    `python -X utf8 tools/check.py`  (unittest suite in tests/ + lint; the pre-commit hook runs this; hooks: `git config core.hooksPath tools/hooks`)
 - Smoke:    `python -X utf8 "$(python tools/skill.py)/scripts/emu.py" build/eog_en.nds --out work/qa/smoke --route tools/routes/boot.txt --smoke`
 - Warp:     `python -X utf8 "$(python tools/skill.py)/scripts/emu.py" build/eog_en.nds --out work/qa/warp --script tools/debug/scenes.lua --script tools/debug/warp.lua --var "SCENE='<name>'" --frames 900 --sheet` (frames count after the warp; scenes `stNN_open|battle|prep|end` NN 00-67, `shop save chart map mapmenu debugmenu victory gameover title title_menu load extras credits`...: `tools/debug/scenes.lua`, notes `docs/re/debug.md`; never ask the user to play to a scene)
@@ -13,7 +14,7 @@ Skill: translate-retro-game; `python tools/skill.py` prints its folder. Read its
 
 ## Paths
 - Original ROM: `rom/Emblem of Gundam (Japan).nds` (YEGJ, 64 MiB; gitignored; SHA-1 in `rom.sha1`, checked by `tools/check_rom.py`). Emulator: DeSmuME QA fork in `tools/desmume/` (release qa-2, https://github.com/minhnhattonthat/desmume/releases/download/qa-2/desmume-qa-51b26329-win64.zip; gitignored; emu.py writes a fresh ini per run). Savestates: `work/states/`.
-- Text: `script/` (JSON). Tables: `tbl/`. Glossary: `glossary.md`. RE notes index: `docs/re/README.md`. Fonts and their licences: `docs/fonts.md`.
+- Text: `script/` (JSON: `bbq/<ez index>_<name>.json` = one string per id, `arm9.json` = strings keyed by RAM address; tools `extract.py`/`insert.py`). Tables: `tbl/`. Glossary: `glossary.md`. RE notes index: `docs/re/README.md`. Fonts and their licences: `docs/fonts.md`.
 - Python deps: `pip install ndspy capstone keystone-engine Pillow`.
 
 ## Rulings

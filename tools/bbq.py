@@ -31,6 +31,28 @@ def strtab(d):
     return None, []
 
 
+def rebuild(d, strs):
+    """Return the file with its type-7 pool replaced by `strs` (raw bytes per string, no NUL), any length.
+
+    The type-7 section is last, so only its index + pool move: the index keeps its offset, the pool is padded to a
+    multiple of 4 like the original, and the file's trailing bytes (24 zero bytes) are kept. The descriptor's size
+    word is updated; the count must not change (one string per id)."""
+    s = next(s for s in sections(d) if s["type"] == 7)
+    if len(strs) != s["count"]:
+        raise ValueError(f"string count changed: {len(strs)} != {s['count']}")
+    pool, offs = b"", []
+    for b in strs:
+        if b"\0" in b:
+            raise ValueError(f"NUL inside a string: {b!r}")
+        offs.append(len(pool))
+        pool += b + b"\0"
+    pool += bytes(-len(pool) % 4)
+    index = struct.pack(f"<{len(offs)}I", *offs)
+    out = bytearray(d[:s["index"]] + index + pool + d[s["data"] + s["size"]:])
+    struct.pack_into("<I", out, s["at"] + 16, len(pool))
+    return bytes(out)
+
+
 if __name__ == "__main__":
     d = open(sys.argv[1], "rb").read()
     for s in sections(d):

@@ -1,10 +1,12 @@
-"""build.py: original ROM -> build/eog_en.nds.
+"""build.py: original ROM + script/ -> build/eog_en.nds.
 
-Repacks EZ_TBL/EZ_DAT with replaced entries (none yet: the identity build) and saves with ndspy, then undoes the two
-things ndspy.save() changes on its own (docs/re/archive.md): the size word it writes into the zero gap at 0x1000 and
-the 0xFF padding back to the cartridge size.
+Applies the translation (tools/insert.py): each BBQ string table whose text changed is rebuilt (type 7 is the last
+section, so its index and pool just grow or shrink), arm9 strings are replaced in place, then the EZ archive is
+repacked and saved with ndspy. Finally it undoes the two things ndspy.save() changes on its own
+(docs/re/archive.md): the size word it writes into the zero gap at 0x1000 and the 0xFF padding back to the
+cartridge size.
 
-    python -X utf8 tools/build.py [--out PATH]"""
+    python -X utf8 tools/build.py [--out PATH] [--no-script]"""
 import sys
 from pathlib import Path
 
@@ -14,17 +16,21 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import check_rom  # noqa: E402
 import ez  # noqa: E402
+import extract  # noqa: E402
+import insert  # noqa: E402
 
 ROM = ROOT / "rom" / "Emblem of Gundam (Japan).nds"
 OUT = ROOT / "build" / "eog_en.nds"
 
 
-def build(ez_new=None):
-    """Return the built ROM bytes; ez_new = {EZ entry index: unpacked bytes}."""
+def build(ez_new=None, arm9_new=None):
+    """Return the built ROM bytes; ez_new = {EZ entry index: unpacked bytes}, arm9_new = arm9 bytes or None."""
     orig = ROM.read_bytes()
     rom = ndspy.rom.NintendoDSRom(orig)
     t, d = (rom.filenames.idOf(n) for n in ("EZ_TBL.BIN", "EZ_DAT.BIN"))
     rom.files[t], rom.files[d] = ez.repack(rom.files[t], rom.files[d], ez_new or {})
+    if arm9_new is not None:
+        rom.arm9 = arm9_new
     out = bytearray(rom.save())
     out[0x1000:0x1004] = orig[0x1000:0x1004]
     if len(out) > len(orig):
@@ -32,9 +38,25 @@ def build(ez_new=None):
     return bytes(out + b"\xff" * (len(orig) - len(out)))
 
 
+def script(orig=None):
+    """(ez_new, arm9_new) from script/; both empty/None when nothing changed."""
+    rom = ndspy.rom.NintendoDSRom(orig or ROM.read_bytes())
+    tbl, dat = (rom.getFileByName(n) for n in ("EZ_TBL.BIN", "EZ_DAT.BIN"))
+    text = extract.bbq_files(tbl, dat)
+    ez_new = insert.ez_edits({i: raw for i, (_, raw, _) in text.items()})
+    arm9_new = insert.arm9_edit(rom.arm9)
+    return ez_new, (arm9_new if arm9_new != rom.arm9 else None)
+
+
 if __name__ == "__main__":
     check_rom.check()
     out = Path(sys.argv[sys.argv.index("--out") + 1]) if "--out" in sys.argv else OUT
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_bytes(build())
+    if "--no-script" in sys.argv:
+        data = build()
+    else:
+        ez_new, arm9_new = script()
+        print(f"{len(ez_new)} text tables changed, arm9 {'changed' if arm9_new else 'unchanged'}")
+        data = build(ez_new, arm9_new)
+    out.write_bytes(data)
     print(out)

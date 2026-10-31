@@ -35,7 +35,7 @@ class Identity(unittest.TestCase):
         for i, (b, fl, usz) in got.items():
             if i in new:
                 self.assertEqual(dec(b, fl, usz), new[i])
-                self.assertEqual(usz, len(new[i]))
+                self.assertEqual(usz, len(new[i]) + -len(new[i]) % 16)  # the loader's 16-byte buffer rule
             else:
                 self.assertEqual(b, old[i][0], i)
         old_offs = [e[1] for e in ez.entries(self.tbl)]
