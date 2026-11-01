@@ -2,10 +2,23 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase 9 (release): next.** Done-when in the skill table: story-pass verdicts per chapter
-  (`work/qa/story/manifest.tsv`), `docs/polish.md` all ticked (232 open + 3 visual-QA wording notes), release
-  script running `qa_gate.py check` on every manifest, `jp_left.py` clean, debug tool off, patch built/re-applied,
-  README hashes, zip. No release script exists yet.
+- **Phase 9 (release): in progress (2026-11-02).**
+  - **Story pass done:** `tools/story.py` -> `work/qa/story/chapters/` (23 chapters x 3 stages; complete line
+    blocks plus `[page in game ...]` notes for borrowed-line pages; `pages.py`'s page split misses some lines, so
+    never build chapter files from pages alone). 23 reviewer reports `work/tl/review_story_chNN.md`; gate
+    `qa_gate.py check work/qa/story/manifest.tsv work/qa/story/verdicts` = 23/23 current (13 fixed, 10 ok).
+    Caveat: ch01-ch16 were read on earlier chapter-file versions (missing lines/pages caused false "broken
+    sentence" reports, triaged against the JP); fixed chapters were restamped by the controller, not re-reviewed.
+    Recurring bug found: dedup copied one rendering of 「はい！」/「ハッ！」 to every speaker ("Yes, ma'am!" to men,
+    "No, sir!" as assent); all copies checked. 駐留 = [Station], 保持 = [Hold] (ST05 tutorial) in conditions.
+  - **Release script:** `tools/release.py [--version 1.0] [--force]` (gates: build, check.py, smoke, script/ +
+    arm9 jp_left, every `work/qa/**/manifest.tsv`, no `- [ ]` in polish.md, boot literal 0x02022DAC == 0x1042,
+    then xdelta3 patch, re-apply compare, `release/EmblemOfGundam_EN_v<ver>.zip` = patch + README.txt from
+    `docs/release-readme.txt`). Not yet run end to end. README.md placeholders filled.
+  - **Next:** polish pass: `docs/polish.md` has **446 open** lines (232 old + story-pass Minors; many story Minors
+    are borrowed-line false positives or rank-ruling notes: waive with reason). Then rebuild, re-tour
+    (`warp_all.py`, text changed since the phase 8 tour), visual-QA gate, `tools/release.py`. Never publish
+    without the user.
 - **Phase 8 (2026-11-02): complete.** Build `9b51ba44d3285e109252c43e71d04705e9c50c06`: 70 tests pass, lint 0,
   smoke ok, cold tour `work/qa/tour` 373/373 scenes (ST06 is a scrapped stage, no scenes), `qa_gate.py check
   work/qa/manifest.tsv work/qa/verdicts` = 18/18 sheets ok (visual-QA rounds r3-r5, `work/qa/verdicts/r*_*.tsv`).
