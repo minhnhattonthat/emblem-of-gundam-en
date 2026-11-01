@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import batches  # noqa: E402
 import fit  # noqa: E402
+import runtime_text  # noqa: E402
 
 KEEP = ROOT / "script" / "keep_jp.txt"
 ORDINAL = re.compile(r"(%s|%d|\$P\d\d|\$L)(st|nd|rd|th)\b")
@@ -98,6 +99,7 @@ def lint(jp=None, cur=None, keep=None, require_measured=True):
     if coverage:
         return coverage, {}
     rules, t = budgets(), fit.table()
+    native_bytes = json.loads(fit.WINDOWS.read_text(encoding="utf-8")).get("native_bytes", {})
     errs, warns = [], {}
     for sid, j, e, story in strings(jp, cur):
         if j == e:
@@ -131,11 +133,17 @@ def lint(jp=None, cur=None, keep=None, require_measured=True):
             if match(sid, j):
                 name, lim = n, var
                 break
-        if name == "dev" or width_excluded(lim):  # proven non-player destinations only
+        rendered = runtime_text.renderings(sid, e, cur)
+        excluded = name == "dev" or width_excluded(lim)
+        if not excluded and require_measured and sid.startswith("a9:") and re.search(r"%[ds]", e) and rendered is None:
+            errs.append(f"{sid}: native format arguments have no proven runtime domain")
+        byte_limit = native_bytes.get(sid, lim.get("bytes") if lim else None)
+        if byte_limit is not None and any(len(s.encode("cp932", errors="replace")) > byte_limit
+                                          for s in rendered or [e]):
+            errs.append(f"{sid}: exceeds {name} {byte_limit}-byte native text field")
+        if excluded:  # proven non-player destinations and checked format fragments only
             continue
-        if lim and "bytes" in lim and len(e.encode("cp932", errors="replace")) > lim["bytes"]:
-            errs.append(f"{sid}: exceeds {name} {lim['bytes']}-byte native text field")
-        for ln in e.split("\n"):
+        for ln in sorted({line for s in rendered or [e] for line in s.split("\n")}):
             w = width(ln)
             if lim is None or not lim.get("measured"):
                 msg = f"{sid}: unmeasured width budget ({name}): {w}px {ln!r}"

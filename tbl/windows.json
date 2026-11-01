@@ -19,17 +19,153 @@
   ["^0081_MAKERLOGO:(000[2468]|001[02458]|002[09])$", "extras_button"],
   ["^008[0-3]_", "extras"],
   ["^a9:02072c0[4c]$|^a9:02072c14$", "team_cmd"],
+  ["^a9:02072c(1c|44|5c)$", "team_cmd"],
+  ["^a9:0207(24c8|2508|2550|3ce8|3d38|3d7c|3e78|3ed0|3f2c|3f88|3fe4|480c|484c|4864)$", "large_dialog"],
+  ["^a9:02075bb0$", "character_list_heading"],
+  ["^a9:020746fc$", "stage_name_list"],
+  ["^a9:0207471e$", "area_info"],
+  ["^a9:0207475e$", "terrain_cell"],
+  ["^a9:0207(2b9c|2ba4|2bc8|2bdc|2c34|473e|474e|4756)$", "area_modifier"],
+  ["^a9:0207(4bf0|4c18)$", "save_title"],
+  ["^a9:0207(4b88|4bb8|4be4)$", "save_detail"],
+  ["^a9:0207(44c4|7118|4934|4940|494c|4958|498c|49a4|49bc|49d4)$", "one_icon_footer"],
+  ["^a9:02072f0c$", "chart_footer_hint"],
+  ["^a9:0207(2758|2a34|2e28|2dbc)$", "menu_row"],
+  ["^a9:0207(2bcc|2bd4|2be4|2bec|2bf4|2bfc|2c24|2c3c|2c4c|2c54|2c64|2c74|2c7c|2c84|2ce4|2d08|2d14|2d44|2d50|31b8)$", "unit_trait"],
+  ["^a9:0207(4894|48b4|4964|4978)$", "option_label"],
+  ["^a9:0207(489c|48a4|48ac|48bc)$", "option_value"],
+  ["^a9:0207(21d0|21ec|2208|221c|2230|224c|2268|2284|237c|23a4|23c4|23e0|23fc|2590|25c0|25f0|261c|2648|2660|3248|3298|32c0|32d8|3308|3320|3338|3354|3cbc|3cd0|3d00|3d1c|44a0|4c38)$", "small_dialog"],
+  ["^a9:0207(43a8|43ac|43b0|43b4|6f04|6f08|6f0c|6f10|6f14|6f18|6f1c|6f20|6f24|6f2c|6f34|6f3c|6f44|6f4c|6f54)$", "format_fragment"],
+  ["^a9:020770cc$", "gallery_native"],
+  ["^a9:0207(2150|2160|2170|236c)$", "shop_heading"],
   ["^a9:0207(2730|2734|2738|2740|2748|2750|2760|2768|2770|2778|2780|2788|2814|2914|2920|292c|2938|2944|2950|295c|296c|297c|298c|299c|29ac|29bc|29d0|29e4|29f8|2a0c|2a20|2a44|2a50|2a64|2a80|2a98|2ab0|2ac8|2adc|2af0|2b04|2b18)$", "hidden_map_debug"],
   ["^a9:0207(2184|219c|21b4|2418|4388|44e0|4bf8|4c20|5bc4)$", "one_icon_footer"],
   ["^a9:0207(2494|24a0|24b4|2718|6e0c|3188|3198|31a8)$", "chart_footer_hint"],
   ["^a9:0207(2d38|2cc0)$", "menu_row"],
   ["^a9:02076d98$", "chart_footer_hint"],
   ["^a9:0207(2c8[cd]|2c94|2cf0|2e7c|2e88|30ec|3110|3140|3158|3164|31c8|31d8|31e8|31f8|3208|3218|3228|3238|325c|3270|3284|32ac)$", "menu_row"],
+  ["^a9:0207(2d68|2d74|2d80|2d8c|2d98|2e64|2ccc|2da4|2c9c|2cb4|2cd8|2e04|2e40|2dec|2d20|2e10|2e34|2e58|2e70|2e4c|2cfc|2dc8|2df8|2ca8|2db0|2de0|3080|2ee8|2f00|3038|3014|2f30|2f54|2f60|2f78|2f84|2fa8|2fc0|2fd8|2fe4|2ffc|3008|3044|3050|3098|30a4|30bc|30c8|3104|311c|3134|3170|2e94|2ea0|2ec4|2edc|2f18|2f24|2f6c|2f90|2fb4|2ff0|302c|305c|30b0|30d4|30f8|314c|2eac|2ef4|2f3c|2f9c|2fcc|3068|30e0|317c|2eb8|2f48|2d2c|2e1c|2ed0|3128)$", "team_name"],
+  ["^a9:0207(3020|3074|308c|2d5c|2c2c|4746|4778)$", "dormant_native"],
+  ["^a9:020770b4$", "developer_movie_template"],
+  ["^a9:0207(2c6c|32f0)$", "notification"],
+  ["^a9:02073c[4567]0$", "basket_label"],
+  ["^a9:02076e18$", "basket_title"],
+  ["^a9:020747f4$", "choice_fragment"],
+  ["^a9:02074b(18|30)$", "retirement_heading"],
   ["^a9:", "arm9_ui"],
   [".", "story_dialogue"]
  ],
+ "native_bytes": {
+  "a9:020721d0": 26, "a9:020721ec": 26, "a9:02072230": 26, "a9:0207224c": 26, "a9:020723c4": 26,
+  "a9:02072590": 45, "a9:020725c0": 45, "a9:020725f0": 43, "a9:0207261c": 43,
+  "a9:02072648": 20, "a9:02072660": 20, "a9:02074c38": 18, "a9:02075bb0": 16,
+  "a9:02072550": 255, "a9:0207480c": 255, "a9:020732f0": 63,
+  "a9:020724c8": 60, "a9:02072508": 70, "a9:02072c6c": 31,
+  "a9:020746fc": 6, "a9:0207471e": 6, "a9:0207473e": 6, "a9:02074746": 6,
+  "a9:0207474e": 6, "a9:02074756": 6, "a9:0207475e": 6
+ },
  "font": {"main": 336, "small": 337, "advance_rule": "pen += CWDH advance + 1 px; tools/font.py sets ASCII advance = ink width, space = 3"},
  "variants": {
+  "retirement_heading": {
+   "px": 128, "lines": 1, "font": 336, "measured": true,
+   "note": "128x16 surface at x16/y0, normal constructor020517fc-0205182c, draw02052030/02052404. Alphabetic ruler ends at x142 (127px ink plus1px advance) in both character and unit headings. QA route purchases a real character and redirects assignment return into the normal retirement entry; no fabricated roster.",
+   "shots": ["work/qa/retirement_width/characters.png", "work/qa/retirement_width/final.png"]
+  },
+  "choice_fragment": {
+   "excluded": true,
+   "reason": "Shared Yes/No suffix is appended by the flag0x10 dialog path, not a standalone screen. Both map and four save confirmation hosts are checked with the complete suffix against176px/255bytes, including layout padding.",
+   "evidence": ["docs/re/native-widths.md", "0204f14c-0204f15c suffix composition; tools/runtime_text.py CHOICE_HOSTS", "work/qa/native_remediation_tour/save/final.png"]
+  },
+  "basket_label": {
+   "px": 56, "lines": 1, "font": 336, "measured": true,
+   "note": "Conservative unobstructed56px inside80x32 centered selector fields: the first ten ruler letters are whole even beside selected-basket character sprites. Wider level-up headings consume the same labels. Constructor020578c8-020579fc; native162 invoked by QA-only probe with normal constructor and held input.",
+   "shots": ["work/qa/basket_native/final.png"]
+  },
+  "basket_title": {
+   "px": 160, "lines": 1, "font": 336, "measured": true,
+   "note": "Native162 selector title, centered160x32 at x48/y32;31-digit177px ruler clips at x48 and207. This is the text title inside the selector, not the separate graphic strip.",
+   "shots": ["work/qa/basket_native/final.png"]
+  },
+  "notification": {
+   "px": 256, "lines": 1, "font": 336, "measured": true,
+   "note": "Full-width native notification0202305c, 256x32 at x0/y80. Alphabetic ruler clips at screen edges in a cold-boot native-call probe, captured60frames after entry before120frame expiry. Complete material-count and team-name concatenations are checked; their stack caps are31 and63bytes.",
+   "shots": ["work/qa/notification_width/final.png"]
+  },
+  "team_name": {
+   "px": 80, "bytes": 31, "lines": 1, "font": 336, "measured": true,
+   "note": "Named teams from table02073380 indices4e-9b and four pool labels9c-9f. Smallest verified destinations are80x16 organization,paired,and selector cells; wider namebar and composed notifications/dialogs are checked separately. Full80px ABCDEFGHIJKLMN ruler is visible in both organization headings. Domain/caller evidence: native-domains.md.",
+   "shots": ["work/qa/team_width/prep_team/final.png", "work/qa/team_width/map_team/final.png"]
+  },
+  "dormant_native": {
+   "excluded": true,
+   "reason": "Exact orphan selector indices3/4/36 and unused actionindex0f are outside all41 valid native accessor domains; index2 header is explicitly skipped by flag2. Area field+24e and its initializer have no renderer among all19 shared-base consumers and five secondary exporters. This classification assumes valid game records, not corrupt negative team indices.",
+   "evidence": ["docs/re/native-domains.md", "0203ab10 caller-domain audit; 0204d858 shared-base audit"]
+  },
+  "developer_movie_template": {
+   "excluded": true,
+   "reason": "Only native136 consumes this formatter; its two script calls are in developer STAGEJUMP at1ac4/327c. Player battle-gallery rows use native139/020770cc and receive full expansion checks. This is the same release-inaccessible developer class as the STAGEJUMP BBQ table.",
+   "evidence": ["docs/re/native-widths.md", "native136; STAGEJUMP1ac4/327c versus MAKERLOGO3350 native139"]
+  },
+  "area_modifier": {
+   "px": 42, "bytes": 7, "lines": 1, "font": 336, "measured": true,
+   "note": "Seven complete W glyphs,42px, in each of the three map modifier cells. Native map02055da4 and team02059584 consume the same structure. Fields are8bytes apart despite strncpy16; a NUL must fit within7textbytes. Percent formats use the pinned record values.",
+   "shots": ["work/qa/area_cells/map/final.png"]
+  },
+  "save_title": {
+   "px": 64, "lines": 1, "font": 336, "measured": true,
+   "note": "Save/load common title constructor02053360-02053398, draws020533f4/02053408, centered x96 y0 64x16. Ruler ink x96-159 in the seeded load route.",
+   "shots": ["work/qa/load_seeded/final.png"]
+  },
+  "save_detail": {
+   "px": 240, "lines": 3, "font": 336, "measured": true,
+   "note": "Common slot-detail surface x16 y128 240x40, constructor0205339c-020533d0. Formatted and empty paths draw through020530c0/020530d0; complete ruler ink x16-255. runtime_text checks actual stage names and full unsigned-frame-count time range.",
+   "shots": ["work/qa/load_seeded/final.png"]
+  },
+  "large_dialog": {
+   "px": 208, "bytes": 255, "lines": 8, "font": 336, "measured": true,
+   "note": "Dispatcher0204f90c flags bit2 withoutbit1; constructor0204fae4-0204fb18 makes x24 y40 208x112. Cold save route with QA-only descriptor9 selector0, same config as error descriptors, shows alphabetic-ruler ink x24-231. No backup failure is induced.",
+   "shots": ["work/qa/large_dialog/save/final.png"]
+  },
+  "character_list_heading": {
+   "px": 80, "bytes": 16, "lines": 1, "font": 336, "measured": true,
+   "note": "Conservative lower bound: full14-letter ABCDEFGHIJKLMN ruler,80px, visible in character-list title. Constructor020551b8-020551e8 is wider240px; literal copy02054c70-02054ca4 is17bytes includingNUL.",
+   "shots": ["work/qa/basket_width/st01_after/f000720.png"]
+  },
+  "unit_trait": {
+   "px": 88, "bytes": 31, "lines": 1, "font": 336, "measured": true,
+   "note": "Widened native surfaces to11x2 tiles at x168 y32/48/64 via layout.py. Targeted cold-boot probe displays the complete 88 px Sub-Flight System in both occupied trait fields. Exact trait indices0x3a-0x4d in02073380; update0204a2a4-0204a2dc.",
+   "shots": ["work/qa/trait_width/prep_upunits/final.png"]
+  },
+  "option_label": {
+   "px": 144, "lines": 1, "font": 336, "measured": true,
+   "note": "Option descriptors 020748f4; constructors 020504b4-020504e4 make 18x2 tiles, x32. Ruler ink x32-175 on row 2.",
+   "shots": ["work/qa/coverage_ui/options/final.png"]
+  },
+  "option_value": {
+   "px": 48, "lines": 1, "font": 336, "measured": true,
+   "note": "Option constructors 020504e8-02050524 make 6x2 tiles, x176. Centered values use 020503bc-020503e0; ruler ink x176-223.",
+   "shots": ["work/qa/coverage_ui/options/final.png"]
+  },
+  "small_dialog": {
+   "px": 176, "bytes": 255, "lines": 4, "font": 336, "measured": true,
+   "note": "0204f90c dispatch, flags bit 1: constructor 0204faa0-0204fad0 makes x40 y64 176x64 text. Save ruler ink x40-215; save prompt uses strcpy, avoiding fixed-copy truncation. Literal native byte caps and runtime substitutions are checked separately.",
+   "shots": ["work/qa/coverage_ui/save/final.png", "work/qa/dialog_ruler/save/final.png"]
+  },
+  "format_fragment": {
+   "excluded": true,
+   "reason": "Not a standalone label: checked inside the complete native template expansion by runtime_text.py. Level deltas feed 020744a0; environment/direction fragments feed 020770cc and the still-unresolved developer template 020770b4. An unresolved host still fails the phase gate.",
+   "evidence": ["docs/re/width-callers.md", "020743c8, 02076f5c, 02076f6c; native 136/139; runtime_text.py"]
+  },
+  "gallery_native": {
+   "px": 160, "bytes": 31, "lines": 1, "font": 336, "measured": true,
+   "note": "Complete native-139 row including leading space: MAKERLOGO 3350/336c/33a8 -> helper10018 -> native116 ->0204e630, 32-byte field at0204e654. Every valid weapon/environment/direction combination is checked.",
+   "shots": ["work/qa/coverage_all/extras_battle/final.png"]
+  },
+  "shop_heading": {
+   "px": 120, "lines": 1, "font": 336, "measured": true,
+   "note": "Conservative unobstructed bound for x8 y0 152x16 heading (0202a9f8-0202aa28 /0202b6fc-0202b72c). Targeted ruler shows its first 21 digits (120 px) fully before the adjacent Merit panel starts at x136; do not use the nominal whole 152 px behind that panel.",
+   "shots": ["work/qa/header_ruler/prep_assign/final.png", "work/qa/header_ruler/prep_upunits/final.png"]
+  },
   "char_desc": {
    "excluded": true,
    "reason": "Unused character-description record field +8 and unreferenced pool default 2; the displayed skill descriptions come from CHARTABLE +4. Exact ID set is checked against the pinned ROM's 147 records, stride 0x24.",

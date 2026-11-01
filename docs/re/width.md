@@ -31,8 +31,8 @@ character/unit/skill names, terrain cells, and the phase 7 remediation measureme
 ## Phase 7 review remediation (2026-11-01)
 
 Strict coverage is now mandatory for phase acceptance: `python -X utf8 tools/lint.py` or
-`python -X utf8 tools/check.py --phase7`. The ordinary unit suite also tests the validators with invalid
-inputs; passing that suite is not evidence that all width research is finished. `tools/width_coverage.py`
+`python -X utf8 tools/check.py` (the commit hook; `--phase7` is an alias). The ordinary unit suite now
+includes strict merged-script coverage as well as invalid-input regressions. `tools/width_coverage.py`
 lists the unresolved categories quickly, with `--ids` for every affected line.
 
 | Variant | Budget | Evidence |
@@ -53,12 +53,14 @@ The original sound submenu's narrow layout clipped `Sound Effects`. `tools/layou
 setup-mode operand at 0x20c0 from 0 to 1 (the same medium layout used by the title menu). The readable result
 is `work/qa/sound_medium/extras_sound/final.png`; neither label is abbreviated.
 
-Remaining: 286 ARM9 lines. `width-callers.md` records the native/BBQ evidence for excluding unused
-description/series fields and hidden map-debug labels, and mapping 19 further ARM9 strings. Exact
-description-ID sets are tested against record fields; neither wording nor index parity establishes
-an exclusion. Give remaining rows measured destinations or reviewed non-player exclusions with a
-concrete reason. Do not substitute a guessed generic ARM9 limit. Known chart-footer and command-menu
-addresses are mapped to 114/128 px; nine proven one-icon footers use a conservative 177 px bound.
+Remaining: **zero lines**. `width-callers.md`, `native-widths.md`, `native-domains.md` and
+`retirement-route.md` preserve native/BBQ destinations, transport caps, runtime argument domains,
+and exact non-player exclusions. Description-ID sets are tested against record fields; neither
+wording nor index parity establishes an exclusion. No guessed generic ARM9 fallback is accepted.
+Additional measured fields include176/208px dialogs,88px traits,80px team names,42px modifiers,
+64px save titles,240px slot details,256px notifications,56px basket labels,160px selector title,
+and128px retirement headings. Exact screenshots and conservative-bound explanations are in
+`tbl/windows.json`. New labels still fail until assigned a measured destination or evidenced exclusion.
 
 ## What the marker build showed about the text system
 

@@ -1,61 +1,61 @@
-# Phase 7 remediation checkpoint — 2026-11-01
+# Phase 7 remediation — 2026-11-01
 
-The phase is **not complete**. Important finding I1 still has 286 lines without measured width coverage;
-the strict phase gate rejects them. Phase 8 acceptance and release packaging must wait for that gate.
-No owner decision is needed to continue the technical work.
+All Critical/Important findings from the phase7 review are repaired. Measured-width coverage is
+complete: `tools/width_coverage.py --ids` exits0 with **zero unresolved lines**. The full check passes
+all67 tests, including strict merged-script lint. Phase7 is complete; phase8 visual acceptance and
+phase9 release packaging remain separate gates.
 
-| Review item | Result |
+| Review item | Repair |
 |---|---|
-| I1 width coverage | Partly repaired. Known ARM9 chart/menu addresses now select their measured variants; new list, extras, and map-name measurements are enforced. Unresolved or guessed coverage fails `lint.py` by default and `check.py --phase7`. The unit suite's explicit content-only audit is diagnostic, not phase acceptance. |
-| I2 ROM integrity | Replaced broad ARM9/BBQ permissions with planned exact writes, expected original bytes, overlap checks, and exact relocated targets/content. All three review mutations are regression tests. Builds validate the result before writing the ROM and emit 516 component write logs under `build/writes/`. |
-| I3 stale baseline | Authoritative extraction reads the pinned original ROM with the current extractor each process; the old disk cache is ignored. Table and ID coverage must match before any zip/get loop can skip a string. Both added ARM9 IDs are regression-tested with an old cache present. |
-| I4 glossary | Batch and merged-script lint share the same block validator, including required forms and Avoid spellings. Menu-only approved alternatives use an optional sixth glossary column. A dropped Kycilia name was restored; `Amro` is a negative regression. |
-| I5 erased blocks | Reflow can leave a line empty, but a whole nonempty source block cannot disappear without a committed keep-list ID. Tests cover a single erased line/block and legitimate reflow. |
-| M1 whitespace | Leading/trailing label padding is checked with fullwidth-to-ASCII normalization. Speech indentation follows nonempty lines after reflow; quoted narration is distinguished by source layout, with the Alex acronym exception recorded by ID (D20). |
+| I1 width coverage | Every changed player line selects a measured destination; exact non-player exclusions have native/record evidence. Runtime formats expand actual names, counters and suffixes before byte/pixel checks. The ordinary check and commit hook now enforce strict coverage; `--phase7` is the same check. |
+| I2 ROM integrity | Exact component write plans check preimages, overlaps, pointer targets, relocated text and unchanged metadata. Container checks additionally reject changed header fields, checksums, filenames and padding. Builds validate before writing and emit516 component logs under `build/writes/`. |
+| I3 stale baseline | Each process extracts the pinned original with the current extractor; stale disk caches cannot hide new IDs. Table/ID coverage is checked before iteration. |
+| I4 glossary | Batch and merged-script lint share block-level required/Avoid checks and approved menu-only alternatives. Missing Kycilia restored; negative Amro regression retained. |
+| I5 erased blocks | A whole nonempty source block cannot disappear through reflow without a committed keep-list ID. Legitimate redistribution still passes. |
+| M1 whitespace | Source label padding normalizes fullwidth spaces to ASCII. Speech continuation indentation follows nonempty lines after reflow, with the documented Alex narration exception (D20). |
 
-Two visible issues found while closing coverage were fixed: the sound submenu now uses the medium button
-layout so `Sound Effects` is whole, and gallery labels use `Land` instead of `Ground` to fit the measured
-row without abbreviating Southeast Asia. AREA INFO strings now have a 31-byte native-copy limit as well
-as a pixel limit; the current longest name is 27 bytes. Music, SFX, gallery and unit-name paths also
-enforce a 31-byte VM transport limit. The command-menu budget was corrected from 130 to 128 px.
+The first repairs were committed/pushed as `e94e1dc`. This continuation closes the remaining width
+audit and native transport defects. Durable evidence is indexed in `docs/re/README.md`:
 
-A read-only caller review resolved 324 more lines: 263 description/series lines and 42 hidden debug
-labels have evidenced non-player exclusions; 19 ARM9 labels now select measured destinations.
-Exact record-derived selectors are regression-tested, since deduplicated pools do not follow index
-parity. `docs/re/width-callers.md` records the native and script call evidence. Exclusions waive only
-width checks, not the other content checks.
+- `width-callers.md`: record-derived unused descriptions/series, debug-only consumers and shared fields.
+- `native-widths.md`: measured native UI families, runtime inputs and buffer capacities.
+- `native-domains.md`: all41 native label-accessor calls, valid team domains and dormant area-field consumers.
+- `retirement-route.md`: independently reviewed, then emulated normal-purchase retirement capture.
 
-The integrity checker works in original component coordinates. ARM9 plans include individual string slots,
-every original pointer slot, the exact appended text pool, autoload metadata, and unchanged relocated DTCM.
-BBQ plans preserve executable opcodes/arguments except enumerated VM string-type bits and the one checked
-sound-menu layout operand; type-7 indexes/pools and stage-name fields must match the source. Font/graphics
-spans come from the approved deterministic rendering, never from whichever bytes the candidate ROM changed.
-Resized component tails are normalized with FF only for `romdiff`; logical lengths are checked separately.
+No generic guessed ARM9 fallback is accepted. Exclusions waive width only, preserving translation,
+encoding, control-code, glossary and whitespace checks. Dynamic names come from actual pinned records;
+save details cover the unsigned32-bit frame counter; gallery rows include every valid environment,
+direction and weapon number; notification and Yes/No host concatenations are checked in full.
 
-Reproduce the remaining work:
+Native fixes found while measuring:
 
-1. `python -X utf8 tools/width_coverage.py --ids` lists the 286 unresolved ARM9 lines.
-2. Resolve their screen-specific destinations, including runtime format-argument limits; do not apply
-   a broad fallback. Save/error-dialog dispatch evidence is in `docs/re/width-callers.md`.
-3. `python -X utf8 tools/check.py --phase7` must exit 0 before the phase is declared repaired.
-4. Resume the phase 8 graphics/combat work recorded in `docs/status.md`, then refresh manifests and perform
-   a fresh visual pass. Existing round-one issue verdicts have not been turned into approvals.
+- Three trait surfaces grew from80 to88px, retaining “Sub-Flight System” and their31-byte copy cap.
+- Two fixed Japanese-sized literal loops now call the game's NUL-terminated copy helper. Exact
+  instruction preimages and a255-byte destination bound are checked. The earlier count-only proposal
+  was rejected because its odd tail read could overrun even-sized relocated allocations.
+- The second Attack action now says “Fight”, matching D18. Widening its mode-2 table alone was rejected
+  because the32px artwork would still clip.
+- Earlier sound-button, gallery row and AREA INFO buffer repairs remain in the build.
 
-Evidence is under `work/qa/coverage*`, `work/qa/area_bound`, `work/qa/sound_medium`,
-`work/qa/remediation_smoke`, and `work/qa/remediation_tour`. The broad all-ARM9 stress image caused native
-buffer overreads and timeouts in map/title scenes; those are probe failures, not evidence against the
-normal build. Use targeted IDs for those fields. The new extras routes reach sound, music, SFX, battle,
-and event lists without a user save.
+Validation evidence:
 
-Read-only review of the final source changes: the corruption cases are covered by negative tests; ordinary
-test success is explicitly distinguished from the failing strict phase gate. The remaining Important
-finding is I1. No full-tour visual approval or release readiness is claimed.
+- ROM: `build/eog_en.nds`,64MiB, SHA-1 `d48ac934d5ee96de573963c6080cff84f8cb2536`,
+  built **2026-11-01 11:24:08 UTC**; exact integrity check passed.
+- Smoke: `work/qa/native_remediation_smoke`, exit0.
+- Full cold-boot tour: `work/qa/native_remediation_tour`, **373/373** routes at1200frames, exit0.
+- Native allocation-exhaustion guard: map_unit, prep_upunits, prep_assign and retirement all pass.
+- Targeted normal captures: basket selector and both retirement headings pass; rulers establish
+  notification256px, basket labels56px conservative/title160px, and retirement headings128px.
+- Final full test suite: **67 passed**,266.772s, exit0. Log: `work/remediation-final-check.txt`.
 
-Normal-build evidence: SHA-1 `07bc293ccb9b0d85dc298e16474fd194e2cf8428`, built 2026-11-01
-09:58:02 UTC. Exact component integrity validation passed, the smoke run exited 0, and the cold-boot
-tour completed 373/373 routes at 1200 frames. Completion of routes alone is not a visual approval.
+Fresh read-only visual pass of the targeted normal captures found complete Sound Effects buttons,
+aligned save Yes/No choices, complete basket/retirement labels and intact unit/prep info screens.
+This is a targeted phase7 verdict, **not** approval of every full-tour sheet. Existing phase8 issue
+verdicts stay unresolved; combat graphics and the remaining graphics survey must be completed before
+manifest approval. Phase9 still needs story verdicts, polish closure and a verified patch+README zip.
 
-Validation checkpoint: `tools/check.py` passed all 59 tests (297.747 s); strict `tools/lint.py`
-exited 1 with exactly 286 unmeasured-width errors. Targeted follow-up routes live in
-`tools/debug/width_scenes.lua` (load between `scenes.lua` and `warp.lua`); their probe ROMs and
-shots do not replace the normal-build tour or its savestates.
+Probe gotchas to carry forward: WARP_DONE can precede actual task readiness, so retirement waits for
+the assignment state and then180frames before A. Blank-save developer warps fail backup access on
+both original and translated ROMs; use a game-generated battery copy for save/load probes. These
+belong in the skill's emulator-QA reference; no skill files were modified. QA-only RAM patches and
+ruler ROMs are separate from the release candidate.

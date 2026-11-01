@@ -1,5 +1,4 @@
-"""Lint regressions and content audit. Full phase acceptance additionally requires tools/lint.py to exit zero;
-the content audit explicitly separates known unresolved width research from translation correctness."""
+"""Lint regressions and the full merged-script gate, including measured width coverage."""
 import sys
 import unittest
 from unittest.mock import patch
@@ -15,10 +14,57 @@ import build  # noqa: E402
 import lint  # noqa: E402
 import bbq  # noqa: E402
 import extract  # noqa: E402
+import runtime_text  # noqa: E402
 
 
 @unittest.skipUnless(build.ROM.is_file(), "no ROM")
 class Lint(unittest.TestCase):
+    def test_material_count_cannot_overrun_stack(self):
+        jp = {"arm9": [["02072c6c", "物資＋"]]}
+        cur = {"arm9": {"02072c6c": "i" * 22}}
+        errors, _ = lint.lint(jp, cur, set())
+        self.assertTrue(any("31-byte" in e for e in errors), errors)
+
+    def test_confirmation_checks_shared_suffix(self):
+        cur = {"arm9": {"02073cbc": "Save?", "020747f4": "\n\n" + "W" * 30}}
+        rendered = runtime_text.renderings("a9:02073cbc", "Save?", cur)
+        self.assertEqual(rendered, ["Save?\n\n" + "W" * 30])
+        self.assertGreater(lint.width(rendered[0].split("\n")[-1]), 176)
+
+    def test_integer_width_search_matches_exhaustive(self):
+        for high in (0, 9, 10, 19, 59, 256, 999, 1050):
+            actual = runtime_text.widest_integer(high)
+            self.assertLessEqual(actual, high)
+            self.assertEqual(lint.width(str(actual)), max(lint.width(str(n)) for n in range(high + 1)))
+
+    def test_native_format_checks_real_name_width(self):
+        jp = {"arm9": [["02072208", "%s\n購入した。"]], "0005_SKILLTABLE": ["機体"]}
+        cur = {"arm9": {"02072208": "%s\nwas purchased."}, "0005_SKILLTABLE": ["W" * 30]}
+        with patch.object(runtime_text, "record_sources", return_value={"unit": ("0005_SKILLTABLE", [0])}):
+            errors, _ = lint.lint(jp, cur, set())
+        self.assertTrue(any("a9:02072208" in e and "> small_dialog" in e for e in errors), errors)
+
+    def test_gallery_checks_complete_expanded_row(self):
+        addresses = set(runtime_text.ENV_PARTS + runtime_text.DIR_PARTS) | {"020770cc"}
+        original = dict(batches.jp_tables()["arm9"])
+        jp = {"arm9": [[at, original[at]] for at in addresses]}
+        native = batches.current()["arm9"]
+        cur = {"arm9": {at: native[at] for at in addresses}}
+        errors, _ = lint.lint(jp, cur, set())
+        self.assertEqual(errors, [])
+        cur["arm9"]["02076f54"] = "W" * 30
+        errors, _ = lint.lint(jp, cur, set())
+        self.assertTrue(any("a9:020770cc" in e and "31-byte" in e for e in errors), errors)
+
+    def test_save_time_domain_includes_unsigned_frame_maximum(self):
+        cur = batches.current()
+        template = cur["arm9"]["02074bb8"]
+        rendered = runtime_text.renderings("a9:02074bb8", template, cur)
+        stage = next(v for k, v in cur.items() if k.startswith("0000_"))[0]
+        worst = template % (256, stage, (2**32 - 1) // 216000, 59, 59)
+        self.assertGreaterEqual(max(lint.width(s.split("\n")[-1]) for s in rendered),
+                                lint.width(worst.split("\n")[-1]))
+
     def test_layout_spaces(self):
         for original, translated, good in [(" 選択", "Select", " Select"),
                                            ("　選択", "Select", " Select"),
@@ -83,8 +129,8 @@ class Lint(unittest.TestCase):
                 self.assertIn("02072150", dict(batches.jp_tables()["arm9"]))
                 self.assertIn("02072160", dict(batches.jp_tables()["arm9"]))
 
-    def test_script_content_apart_from_width_coverage(self):
-        errs, _ = lint.lint(require_measured=False)
+    def test_script_including_measured_width_coverage(self):
+        errs, _ = lint.lint()
         self.assertEqual(errs, [], "\n" + "\n".join(errs[:30]))
 
     def test_unknown_width_fails_phase_gate(self):

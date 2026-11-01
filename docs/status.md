@@ -2,21 +2,26 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase:** 7 review remediation **incomplete** 2026-11-01; phase 8 cannot be accepted yet.
-  See `docs/phase7-remediation.md`. I2-I5 repaired with regressions; I1 has 286 unresolved ARM9 width lines.
+- **Phase:** 7 review remediation **complete**; resume phase8 QA (2026-11-01).
+  See `docs/phase7-remediation.md`. I1-I5 and M1 repaired; width coverage reports zero unresolved lines.
+  Native call/domain evidence is in `docs/re/native-widths.md`, `native-domains.md` and `retirement-route.md`.
   Caller evidence excludes 263 unused BBQ description/series lines and 42 hidden debug labels, and maps
   another 19 ARM9 labels (`docs/re/width-callers.md`). `tools/lint.py` now fails on
-  unmeasured budgets; `tools/check.py --phase7` is the strict phase gate. The ordinary unit/content audit
-  deliberately reports code correctness separately and is not a phase-completion verdict. M1 now checks
+  unmeasured budgets; the ordinary `tools/check.py` and commit hook now enforce the same strict gate
+  (`--phase7` is a legacy alias). M1 now checks
   layout padding and reflowed speech indentation (D20).
   New measurements: sound/gallery 160 px, extras headers/help 177 px, buttons 112 px, MAP names 177 px/31 bytes.
   Fixed sound-menu clipping via the checked VM layout operand, gallery label overflow, and a missing Kycilia.
   Command rows/headers are 128 px (corrected); gallery/unit-name VM strings also have a 31-byte cap.
-  Build SHA-1 `07bc293ccb9b0d85dc298e16474fd194e2cf8428` (2026-11-01 09:58:02 UTC); integrity and smoke
-  pass; normal cold-boot tour `work/qa/remediation_tour` completed 373/373 at 1200 frames. No fresh full-tour
+  Build SHA-1 `d48ac934d5ee96de573963c6080cff84f8cb2536` (2026-11-01 11:24:08 UTC); integrity and smoke
+  pass; normal cold-boot tour `work/qa/native_remediation_tour` completed 373/373 at 1200 frames. No fresh full-tour
   visual approval is claimed; the earlier issue verdicts remain unresolved.
-  Latest unit/content check: 59 tests pass; strict lint exits 1 with 286 unmeasured-width errors.
-  No release script/zip exists yet; do not proceed to phase 9 while these gates fail.
+  Full strict check: **67 tests pass**,266.772s, including the current merged-script width gate.
+  Native fixes: trait fields80→88px (full Sub-Flight System), two fixed-copy loops replaced by the game's
+  NUL-terminated helper, second Attack→Fight per D18. Allocator guards pass map_unit/prep_upunits/prep_assign.
+  Complete runtime formats now enforce actual name/value domains and native byte caps, including save details,
+  gallery rows, team notifications and Yes/No host concatenation. Targeted basket and retirement captures pass.
+  No release script/zip exists yet; phase8 visual/graphics acceptance must precede phase9.
 - **Phase 6 review** (`.harness/reviews/...phase6.md`)
   fixed: I1 `batches.units()` keeps the JP apart from the dedup key (+ test), I2 a literal percent is its own
   token (`batches.codes`, shared by lint, + test), I3 honorific/閣下 check in `batches.check` and `lint.py` (per

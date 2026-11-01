@@ -15,6 +15,7 @@ from pathlib import Path
 
 import ndspy.lz10
 import ndspy.rom
+import ndspy.fnt
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -58,6 +59,8 @@ def check_arm9(old, new, texts=None, logs=None):
     params, lst, ents = arm9.layout(old)
     itcm_end = lst - ents[1][1]
     writes, pool = [], bytearray()
+    edits = {off: text for off, text in texts.items() if originals.get(off) != text}
+    writes.extend(layout.arm9_writes(old, edits))
     for off, text in texts.items():
         if off not in originals:
             return [f"arm9: unknown string start {off:#x}"]
@@ -148,13 +151,30 @@ def asset_writes(old, expected):
     return writes
 
 
+def check_container(orig, built, a=None, b=None):
+    """Preserve metadata and reject corruption in header checksums, layout and unparsed padding."""
+    a = ndspy.rom.NintendoDSRom(orig) if a is None else a
+    b = ndspy.rom.NintendoDSRom(built) if b is None else b
+    errors = []
+    for name, value in vars(a).items():
+        if name not in {"arm9", "files", "filenames"} and value != getattr(b, name):
+            errors.append(f"ROM {name} changed")
+    if ndspy.fnt.save(a.filenames) != ndspy.fnt.save(b.filenames):
+        errors.append("ROM filenames changed")
+    canonical = bytearray(b.save())
+    canonical[0x1000:0x1004] = orig[0x1000:0x1004]  # same two normalization steps as build.py
+    canonical.extend(b"\xff" * max(0, len(orig) - len(canonical)))
+    if len(built) != len(orig):
+        errors.append("ROM cartridge size changed")
+    if canonical != built:
+        errors.append("ROM header/checksums, file layout or padding differs from canonical packing")
+    return errors
+
+
 def check(orig, built, text_ids, writes_dir=None):
     """Error lines; text_ids = EZ entries the script may change."""
     a, b = ndspy.rom.NintendoDSRom(orig), ndspy.rom.NintendoDSRom(built)
-    errs, logs = [], {"arm9": []}
-    for name in ("arm7", "iconBanner", "arm9OverlayTable", "arm7OverlayTable"):
-        if getattr(a, name) != getattr(b, name):
-            errs.append(f"{name} changed")
+    errs, logs = check_container(orig, built, a, b), {"arm9": []}
     if len(a.files) != len(b.files):
         errs.append("file count changed")
     ez_ids = {a.filenames.idOf(n) for n in EZ_FILES}

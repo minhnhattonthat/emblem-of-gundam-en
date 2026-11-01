@@ -18,8 +18,11 @@ Addresses are for the dump in `rom.sha1` unless a note says otherwise.
 | `text.md` | text ranges (BBQ, arm9), pointers, script/ format, control codes, free space, growing arm9 strings into the ITCM tail | verified (roundtrip + coverage + relocation tests, corrupt-and-boot shots) |
 | `debug.md` | script engine (file ids, current script), developer menu + stage jump, map-menu debug item; warp tool | verified (291/291 warps from cold boot) |
 | `graphics.md` | graphics-text survey (static sweep of 584 images) | sweep done; tour pending |
-| `width.md` | measured text-box budgets, marker classes, text-layout facts | strict phase-7 coverage incomplete; see status |
-| `width-callers.md` | exact native/BBQ render destinations, record-derived exclusions and byte transport caps | reviewed mappings; 286 ARM9 lines still need evidence |
+| `width.md` | measured text-box budgets, marker classes, text-layout facts | zero unresolved width lines |
+| `width-callers.md` | exact native/BBQ render destinations, record-derived exclusions and byte transport caps | reviewed mappings |
+| `native-widths.md` | native buffers, runtime formats, measured UI families and code fixes | phase7 evidence |
+| `native-domains.md` | complete accessor domains and exact dormant-field exclusions | independent read-only audit |
+| `retirement-route.md` | guarded normal-purchase retirement capture | both headings measured cold |
 
 Prior work (web search 2026-11-01): no finished English patch; only a GBAtemp request thread and an old GameFAQs
 menu-translation post (gamefaqs board 943464, topic 42918861). Nothing to build on.

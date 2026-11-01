@@ -72,7 +72,8 @@ def arm9_edit(data, texts=None):
         room = data.find(b"\0", off) - off
         (fits if len(text.encode("cp932")) <= room else grow)[off] = text
     out = arm9.replace(data, fits) if fits else data
-    return arm9.relocate(out, grow) if grow else out
+    out = arm9.relocate(out, grow) if grow else out
+    return layout.apply_arm9(data, out, edits)
 
 
 if __name__ == "__main__" and sys.argv[1:] == ["--status"]:

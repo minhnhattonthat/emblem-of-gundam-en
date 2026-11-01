@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import build  # noqa: E402
 import insert  # noqa: E402
 import romcheck  # noqa: E402
+import layout  # noqa: E402
 
 
 @unittest.skipUnless(build.ROM.is_file(), "no ROM")
@@ -23,6 +24,35 @@ class RomCheck(unittest.TestCase):
 
     def test_build_changes_only_what_it_may(self):
         self.assertEqual(romcheck.check(self.orig, self.built, insert.tables().keys()), [])
+
+    def test_rejects_boot_address_checksum_and_gap_corruption(self):
+        rom = ndspy.rom.NintendoDSRom(self.built)
+        rom.arm9EntryAddress += 4
+        self.assertTrue(any("arm9EntryAddress" in e for e in
+                            romcheck.check_container(self.orig, self.built, b=rom)))
+        for offset in (0x15e, 0x1100):
+            with self.subTest(offset=offset):
+                changed = bytearray(self.built)
+                changed[offset] ^= 1
+                errors = romcheck.check_container(self.orig, bytes(changed))
+                self.assertTrue(errors, errors)
+                if offset == 0x15e:
+                    self.assertTrue(any("canonical packing" in e for e in errors), errors)
+
+    def test_native_literal_copies_use_terminated_helper_and_stay_bounded(self):
+        old = ndspy.rom.NintendoDSRom(self.orig).arm9
+        texts = insert.arm9_texts()
+        plans = {off: after for off, _, after, _ in layout.arm9_writes(old, texts)}
+        for off, source, _, _, _ in layout.STRING_COPIES:
+            call = struct.unpack_from("<I", plans[off], 8)[0]
+            displacement = (call & 0xffffff) << 2
+            if displacement & 0x2000000:
+                displacement -= 0x4000000
+            self.assertEqual(0x02000000 + off + 16 + displacement, 0x020102ec)
+            self.assertLessEqual(len(texts[source].encode("cp932")) + 1, 256)
+            self.assertNotIn(struct.pack("<I", 0x1afffff7), plans[off])  # original loop is gone
+        with self.assertRaisesRegex(ValueError, "native destination"):
+            layout.arm9_writes(old, {0x72550: "i" * 256})
 
     def test_catches_a_stray_arm9_write(self):
         new = bytearray(ndspy.rom.NintendoDSRom(self.built).arm9)
