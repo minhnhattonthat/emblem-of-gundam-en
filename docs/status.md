@@ -24,9 +24,16 @@ Updated at the end of every session. Keep it to what the next session needs; his
     one final shot per scene; `--only` reruns now keep the other rows and rebuild full sheets). Gate:
     `qa_gate.py init work/qa/manifest.tsv work/qa/tour --glob "sheet_*.png"`, 4 chunks, verdicts in
     `work/qa/verdicts/` from visual-qa agents (`docs/visual-qa-brief.md`; JP reference = `work/qa/warps/`).
-  - **Banner source:** VRAM dump at brief01 f5400 (`work/qa/brief_dump/`): not a BG file; the 勝利条件/敗北条件
-    banners are OBJ sprites, most likely from sprite sheet 0340 (+ its cells 0343, 1D-mapped 4bpp) - edit needs
-    the NCER cells (which tiles form each banner).
+  - **Visual-QA round 1 (4 chunks, all `issue`):** fixed: stage names over the 150 px prep/brief name bar (8
+    shortened, lint check). Open: (a) **3D-layer textures** - engine A BG0 is 3D in every UI scene; the win/lose
+    banners, button captions 戻る/決定/次へ/情報/メニュー, result panel 戦果ポイント/獲得ポイント/所持ポイント/戦果合計,
+    chart header シナリオ チャート, st03 baton header 歴史のバトンを何処につなぐ？ and the **17 staff-roll pages** are
+    `\0DLG` textures (`docs/re/graphics.md` §DLG; format half-decoded); (b) 0444 BL quadrant = prep_team
+    編成チーム情報 screen (+ TR/BR quadrants); (c) "Weapon" W in font 337 reads as H; (d) terrain cell
+    "Shooting-" too wide (map panel); (e) save dialog cursor brackets frame いいえ's width, not "No"; (f) extras
+    title art reading + help bar "Music..." clipped at x=0; (g) one-word lines st40 "Sink her", st52 "and".
+    Tools in scratchpad this session (re-create if lost): BG-layer render from ppudump (`io.bin` DISPCNT/BGxCNT,
+    mode 5 ext-affine BG2/3 = linear 16-bit map, 8bpp), OAM render, NCER cell render, DLG contact sheets.
   - **Next:** warp scenes for forecast/team info/scenario menu/credits card (debug tool) and check them in-game;
     0444 terrain strip 隠蔽/水/空/宇 (16 px boxes, not done); 0340/0344 sprite tile sheets (zoom), 0402 建物;
     the end caption `- エンブレム オブ ガンダム -` (source unknown: last credits frame); the **win/lose banners

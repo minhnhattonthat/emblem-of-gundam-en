@@ -22,7 +22,21 @@ Edit path for all rows: NCGR tiles (+ NSCR map) inside the EZ archive, LZ10-reco
 | 0360 / 0372 | title: "EMBLEM of GUNDAM" logo (English) + エンブレム オブ ガンダム katakana subtitle; © 創通・サンライズ | title screen | logo is already English; subtitle reading: translate/remove per D5; © line: "© SOTSU・SUNRISE" |
 | 2121 | 株式会社 バンダイナムコゲームス under "Produced by" | credit card | -> "BANDAI NAMCO Games Inc." |
 
-| ? (found in phase 8) | 勝利条件 / 敗北条件 green/purple banners on the win/lose condition screen | briefNN scene | not in the static sweep: source to find (sprite? NCER) |
+| ? (found in phase 8) | 勝利条件 / 敗北条件 green/purple banners on the win/lose condition screen | briefNN scene | not in BG or OAM: engine A BG0 is the **3D layer** (DISPCNT bit 3 in every UI scene), so these are textured quads from `\0DLG` files (below) |
+| 0444 other quadrants | the 0446 NSCR is 512x512 = 4 screens: TL team info (done), **BL 編成チーム情報** (prep_team: 攻戦/防戦/移動/消費/補給, 陸荒水空宇), TR and BR (other team screens) | NSCR atlas | add rects at y >= 256 / x >= 256 to `gfx.LABELS[444]`; coordinates = shot + (0,256) for BL |
+| 0340 cells 12-17, 0344 cells 10-12, 25-26 | 攻 防 移 消 補 機 icons; 前進 / 後退 / 連戦, 攻 / 防 | OBJ cells (NCER 0343 / 0347, 4bpp 1D, cells listed by `ncer.py`-style render) | single-kanji icons beside English labels |
+
+## `\0DLG` textures (found phase 8, 2026-11-01): NOT 3D models
+The 1019 `\0DLG` files (ids 2127-4171, odd) are **textures** for the 3D layer, each paired with the `\0LGA` file
+before it (layout: quads with anchor, size, UVs). DLG header: u32 magic `\0DLG`, u32 1, u32 total size, 2 x u32 0,
+u32 pixel bytes P, u32 palette bytes L; pixels at 0x1c, then the BGR555 palette. LGA u16 at 0x34 = texture width
+(256/512; 0 in some). Format not fully decoded: palette sizes of 200/136 colours suggest several sub-textures per
+file (table in the LGA). Clear cases:
+- **4137-4169 (17 files): staff roll pages**, 256x192 4bpp 16 colours, Japanese roles and names (【脚本】 芝村 裕吏 ...)
+  as white serif text. 4133/4135/4171 blank/plain.
+- **2127-2245 (UI group g9):** win/lose and result banners, 2203/2205 スキル習得 panels, "MISSION CLEAR / FAIL",
+  "DELAZ FLEET" bars, buttons... to survey at the right width/format.
+- 2248-4131 (g10-g12): unit battle sprites and cut-ins (to survey for text).
 
 Done in the build (`tools/gfx.py`): the 68 cards (1129 "06" kept), 0375, 0378, 0450 labels.
 
