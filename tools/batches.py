@@ -5,6 +5,7 @@ translator's output, merge it back into script/.
     python -X utf8 tools/batches.py check bNNN [bNNN..]                 # exit 1 on any error
     python -X utf8 tools/batches.py merge [bNNN..]                       # checked outputs -> script/ (+ duplicates)
     python -X utf8 tools/batches.py status                               # translated / left, per table class
+    python -X utf8 tools/batches.py polish NAME ID [ID..]                # fix batch: whole blocks, current EN pre-filled
 
 Ids: `EEEE:IIII` (BBQ ez index : string index) and `a9:XXXXXXXX` (arm9 RAM address).
 A string counts as translated once its script/ text differs from the ROM's Japanese, so `split` only queues what is
@@ -387,6 +388,13 @@ def merge(names):
     a9i = {s["at"][2:].rjust(8, "0"): s for s in a9["strings"]}
     touched = set()
 
+    def at(id_):
+        a, b = id_.split(":")
+        if a == "a9":
+            return a9i[b]["text"]
+        stem = next(k for k in tables if k.startswith(a + "_"))
+        return tables[stem][1]["strings"][int(b)]
+
     def put(id_, en):
         a, b = id_.split(":")
         if a == "a9":
@@ -405,9 +413,11 @@ def merge(names):
             continue
         out, _ = read_out(name)
         rows = [r[0] for r in read_in(name)]
+        old = {i: at(i) for i in rows}
         for i in rows:
             put(i, out[i])
-        # copies: a dup list holds the ids of a whole block, in the same order as the first block's ids
+        # copies: a dup list holds the ids of a whole block, in the same order as the first block's ids.
+        # A copy is only overwritten while it still matches the head: copies fixed on their own (per speaker) stay.
         heads = {r: k for k, r in enumerate(rows)}
         for head, lists in dups.items():
             if head not in heads:
@@ -415,7 +425,8 @@ def merge(names):
             k = heads[head]
             for d in lists:
                 for off, did in enumerate(d):
-                    put(did, out[rows[k + off]])
+                    if at(did) == old[rows[k + off]]:
+                        put(did, out[rows[k + off]])
         (TL / f"{name}.merged").write_text("", encoding="utf-8")
         done += 1
     import extract
@@ -424,6 +435,43 @@ def merge(names):
     if "arm9" in touched:
         extract.write_json(ARM9, a9)
     print(f"merged {done}/{len(names)} batches, {len(touched)} files")
+
+
+def polish(name, ids):
+    """work/tl/NAME.tsv with every whole block holding one of IDS, and NAME.out.tsv pre-filled with the current
+    English (edit it, check, merge). A copy id is queued as itself; merge still reaches the head's copies."""
+    inp, outp = TL / f"{name}.tsv", TL / f"{name}.out.tsv"
+    assert not inp.exists() and not outp.exists(), f"{name} exists"
+    jp, cur = jp_tables(), current()
+    want, groups = set(ids), []
+    for stem, strs in jp.items():
+        if stem == "arm9":
+            groups += [("arm9", "menu", [f"a9:{a}"], "") for a, t in strs if f"a9:{a}" in want]
+            continue
+        ez, prev_name = stem[:4], ""
+        for form, idx in blocks(stem, strs):
+            bid = [f"{ez}:{i:04d}" for i in idx]
+            if want & set(bid):
+                groups.append((stem, form, bid, prev_name if form == "dlg" else ""))
+            prev_name = strs[idx[0]] if form == "name" else ""
+    found = {i for g in groups for i in g[2]}
+    missing = want - found
+    assert not missing, f"ids not found as text: {sorted(missing)}"
+    lines, outl, last = ["id\tspeaker\tform\tlimit\tjp"], [], None
+    for stem, form, bid, speaker in groups:
+        if stem != last:
+            lines.append(f"# {stem}")
+            last = stem
+        texts = [get({"arm9": dict(jp["arm9"])} if stem == "arm9" else jp, i) for i in bid]
+        limit = f"{STORY_PX}px" if STORY.search(stem) else f"~{max(fit.px(t) for t in texts)}px"
+        for k, (i, t) in enumerate(zip(bid, texts)):
+            f = form if len(bid) == 1 else f"{form}{k + 1}/{len(bid)}"
+            lines.append(f"{i}\t{speaker}\t{f}\t{limit}\t{esc(t)}")
+            en = get(cur, i)
+            outl.append(f"{i}\t{esc(en) if en else EMPTY}")
+    inp.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    outp.write_text("\n".join(outl) + "\n", encoding="utf-8", newline="\n")
+    print(f"{name}: {len(outl)} lines in {len(groups)} blocks")
 
 
 def status():
@@ -466,6 +514,8 @@ if __name__ == "__main__":
         sys.exit(1 if bad else 0)
     elif cmd == "merge":
         merge(args or sorted(p.stem[:4] for p in TL.glob("b[0-9][0-9][0-9].out.tsv")))
+    elif cmd == "polish":
+        polish(args[0], args[1:])
     elif cmd == "status":
         status()
     else:

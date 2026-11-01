@@ -15,10 +15,15 @@ Updated at the end of every session. Keep it to what the next session needs; his
     arm9 jp_left, every `work/qa/**/manifest.tsv`, no `- [ ]` in polish.md, boot literal 0x02022DAC == 0x1042,
     then xdelta3 patch, re-apply compare, `release/EmblemOfGundam_EN_v<ver>.zip` = patch + README.txt from
     `docs/release-readme.txt`). Not yet run end to end. README.md placeholders filled.
-  - **Next:** polish pass: `docs/polish.md` has **446 open** lines (232 old + story-pass Minors; many story Minors
-    are borrowed-line false positives or rank-ruling notes: waive with reason). Then rebuild, re-tour
-    (`warp_all.py`, text changed since the phase 8 tour), visual-QA gate, `tools/release.py`. Never publish
-    without the user.
+  - **Polish pass done (2026-11-02):** 446/446 ticked (299 fixed, 147 waived with reasons) by 6 translator agents
+    (`docs/polish-brief.md`, chunks `work/tl/polish_chunkN.md`, results `polN.res`). New `batches.py polish NAME
+    ID..` (fix batch of whole blocks, current EN pre-filled); `merge` now overwrites a duplicate only while it still
+    equals the head (keeps per-speaker copy fixes). Per-agent batches folded into one `polall` (conflicting blocks:
+    one winner each) and merged: 898 lines + copies, 172 files. Win/lose labels now sentence case ("All enemies
+    destroyed"), Solar Ray System in 0198. Build + 71 tests + smoke green. Waived "needs in-game check": 0316:0241
+    speaker, 0333:0147 addressee, debug-only labels (0019, 0035), "Discard"/options-row widths (lint passes).
+  - **Next:** re-tour (`warp_all.py build/eog_en.nds --frames 900 --out work/qa/tour`, text changed), `qa_gate.py
+    init` + visual-qa round + `check`, then `tools/release.py`. Never publish without the user.
 - **Phase 8 (2026-11-02): complete.** Build `9b51ba44d3285e109252c43e71d04705e9c50c06`: 70 tests pass, lint 0,
   smoke ok, cold tour `work/qa/tour` 373/373 scenes (ST06 is a scrapped stage, no scenes), `qa_gate.py check
   work/qa/manifest.tsv work/qa/verdicts` = 18/18 sheets ok (visual-QA rounds r3-r5, `work/qa/verdicts/r*_*.tsv`).

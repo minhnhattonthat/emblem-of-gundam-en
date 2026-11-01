@@ -95,11 +95,11 @@
   },
   {
    "at": "0x20723e0",
-   "text": "%s:\nATK upgraded."
+   "text": "%s's\nATK was upgraded."
   },
   {
    "at": "0x20723fc",
-   "text": "%s:\nDEF upgraded."
+   "text": "%s's\nDEF was upgraded."
   },
   {
    "at": "0x2072418",
