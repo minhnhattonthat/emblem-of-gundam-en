@@ -175,6 +175,13 @@ LABELS = {
         (205, 145, 44, 15, 337, "Supplies"),
         (4, 163, 38, 11, 337, "Weapon"), (56, 163, 34, 11, 337, "Attack"), (102, 163, 38, 11, 337, "Defense"),
         (153, 163, 38, 11, 337, "Terrain"),
+        # bottom-left screen of the 512x512 atlas = prep 編成チーム情報 (two teams side by side); D18 short forms
+        (78, 257, 100, 14, 336, "Team Formation"),
+        # the same labels and terrain strip also sit in the top-left screen, drawn from the same tiles (twins)
+        *[(x, y0 + y, 28, 13, 337, s) for x, y0 in ((2, 256), (130, 256), (2, 24)) for y, s in (
+            (17, "Atk"), (33, "Def"), (49, "Move"), (65, "Cost"), (81, "Supply"))],
+        *[(x0 + 16 * k, y0, 16, 13, 337, s, "v", f"c{x0 - 4}", "W") for x0, y0 in ((40, 353), (168, 353), (168, 81)) for k, s in enumerate(
+            ("Lnd", "Rgh", "Wtr", "Air", "Spc"))],
     ],
     360: [  # title: the katakana reading under the English logo goes (D16), © 創通・サンライズ -> SOTSU・SUNRISE
         (86, 112, 92, 12, 337, ""), (168, 179, 86, 12, 337, "SOTSU・SUNRISE", "l"),
@@ -199,6 +206,12 @@ def _glyphs(fid, d):
             xs = [x for r in rows for x, v in enumerate(r) if v]
             if xs:
                 out[chr(c) if c < 0x80 else "・"] = [r[min(xs):max(xs) + 1] for r in rows]
+    if fid == 337:  # the font's own 4 px W has a solid middle and reads as H ("Heapon", visual QA): 5 px W
+        w5 = ["#...#"] * 4 + ["#.#.#"] * 3 + ["##.##", "#...#"]
+        ink = [k for k, r in enumerate(out["H"]) if any(r)]
+        out["W"] = [[0] * 5 for _ in out["H"]]
+        for k, row in zip(ink, w5):
+            out["W"][k] = [int(ch == "#") for ch in row]
     return out
 
 
@@ -235,9 +248,26 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
         k = (7 - y % 8 if e >> 11 & 1 else y % 8) * 8 + (7 - x % 8 if e >> 10 & 1 else x % 8)
         return pal[((e >> 12) * ncol + ts[e & 0x3FF][k]) % len(pal)]
 
+    def rect_cells(x0, y0, w, h):
+        return [(cx, cy) for cy in range(y0 // 8, (y0 + h - 1) // 8 + 1) for cx in range(x0 // 8, (x0 + w - 1) // 8 + 1)]
+
+    # twin rects: same text, and each cell at the same place in its rect (2-team screens draw both columns from
+    # one set of tiles): a tile referenced only from twins is edited once, in place, and the later twin skipped
+    twin = Counter()
+    for x0, y0, w, h, fid, text, *_ in LABELS[cid]:
+        for cx, cy in rect_cells(x0, y0, w, h):
+            twin[ent[cy * cols + cx], text, cx - x0 // 8, cy - y0 // 8] += 1
+    assigned = {}  # twin key -> the entry its first rect was drawn into
     for x0, y0, w, h, fid, text, *align in LABELS[cid]:
-        cells = [(cx, cy) for cy in range(y0 // 8, (y0 + h - 1) // 8 + 1) for cx in range(x0 // 8, (x0 + w - 1) // 8 + 1)]
+        cells = rect_cells(x0, y0, w, h)
         tid = {c: ent[c[1] * cols + c[0]] for c in cells}
+        key = {c: (e, text, c[0] - x0 // 8, c[1] - y0 // 8) for c, e in tid.items()}
+        if all(key[c] in assigned for c in cells):  # a twin already drawn: point at its tiles
+            for c in cells:
+                refs[tid[c] & 0x3FF] -= 1
+                refs[assigned[key[c]] & 0x3FF] += 1
+                ent[c[1] * cols + c[0]] = assigned[key[c]]
+            continue
         # work in RGB: cells may sit on different (extended) palette slots, so raw indices don't compare
         idx, px = {}, {}
         for (cx, cy), e in tid.items():
@@ -247,15 +277,18 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
                 idx[xy], px[xy] = v, pal[((e >> 12) * ncol + v) % len(pal)]
         # a tile used outside these cells, or flipped, gets a fresh slot; the others are edited in place
         for c, e in tid.items():
-            if e >> 10 & 3 or refs[e & 0x3FF] > 1:
+            if e >> 10 & 3 or refs[e & 0x3FF] > twin[key[c]]:  # used by something other than its twins
                 if not free:
                     raise ValueError(f"{cid} {c}: no free tile slot for a shared tile")
                 refs[e & 0x3FF] -= 1
                 tid[c] = (e & 0xF000) | free.pop(0)
+                refs[tid[c] & 0x3FF] += 1
                 ent[c[1] * cols + c[0]] = tid[c]
+            assigned[key[c]] = tid[c]
         before = dict(px)
         box = {(x, y): px[x, y] for y in range(y0, y0 + h) for x in range(x0, x0 + w)}
-        ring = {v for (x, y), v in box.items() if x in (x0, x0 + w - 1) or y in (y0, y0 + h - 1)}
+        # "v": glyphs touch the left/right edges (16 px terrain cells), so only the top/bottom rows are background
+        ring = {v for (x, y), v in box.items() if y in (y0, y0 + h - 1) or ("v" not in align and x in (x0, x0 + w - 1))}
         inks = Counter(v for v in box.values() if v not in ring)
         if not inks:
             raise ValueError(f"{cid}: no ink in {(x0, y0, w, h)}")
@@ -265,11 +298,18 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
         # 11 px labels sit on gradient bars whose inner shades beat the ink in count: take the strongest contrast
         # there; the 9 px labels are two-tone (fill + highlight): take the most common, the fill
         ink = max((i for i, n in inks.items() if n >= top * 0.3), key=lambda i: abs(lum(i) - ring_lum)) \
-            if fid == 336 else inks.most_common(1)[0][0]
+            if fid == 336 else max(inks, key=lum) if "v" in align else inks.most_common(1)[0][0]
         sh = Counter(box.get((x + dx, y + dy)) for (x, y), v in box.items() if v == ink for dx, dy in ((1, 0), (0, 1)))
         sh = [(n, i) for i, n in sh.items() if i in inks and i != ink]
         shadow = max(sh)[1] if sh and max(sh)[0] > inks[ink] // 4 else None
-        if not text:  # pure erase over artwork: blend each column from the row above the box to the row below
+        if "W" in align:  # white ink (cells whose own colours have no clean fill/ink split)
+            ink, shadow = (248, 248, 248), None
+        cfl = [a for a in align if a[:1] == "c"]  # "c<X>": erase each row with the colour of clean column X
+        if cfl:
+            for y in range(y0, y0 + h):
+                for x in range(x0, x0 + w):
+                    px[x, y] = colour_at(int(cfl[0][1:]), y)
+        elif not text or "b" in align:  # erase over artwork: blend each column from the row above the box to below
             def soft(x, y):  # 7 px horizontal average: a single bright pixel above/below would streak down
                 cs = [colour_at(min(max(i, 0), wpx - 1), y) for i in range(x - 3, x + 4)]
                 return tuple(sum(c[k] for c in cs) / len(cs) for k in range(3))
@@ -278,12 +318,12 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
                 for y in range(y0, y0 + h):
                     t = (y - y0 + 1) / (h + 1)
                     px[x, y] = tuple(round(u + (v - u) * t) for u, v in zip(a, c))
-        for y in range(y0, y0 + h) if text else ():  # erase: an ink pixel takes the nearest background of its row
+        for y in range(y0, y0 + h) if text and "b" not in align and not cfl else ():  # ink takes its row's nearest bg
             row = [px[x, y] for x in range(x0, x0 + w)]
             bgx = [k for k, v in enumerate(row) if v not in inks]
             for k, v in enumerate(row):
-                if v in inks:
-                    px[x0 + k, y] = row[min(bgx, key=lambda j: abs(j - k))]
+                if v in inks:  # a row that is all ink (glyph across a whole 16 px cell) takes the box's top row
+                    px[x0 + k, y] = row[min(bgx, key=lambda j: abs(j - k))] if bgx else px[x0 + k, y0]
         if isinstance(fid, tuple):  # (ttf name in fonts/, px size): antialiased, coverage blended in RGB
             f = ImageFont.truetype(str(FONTS / fid[0]), fid[1])
             m = Image.new("L", (int(f.getlength(text)) + 4, fid[1] * 2), 0)
