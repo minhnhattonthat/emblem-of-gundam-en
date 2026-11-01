@@ -184,7 +184,7 @@ def _rgb(c):
     return ((c & 31) << 3, (c >> 5 & 31) << 3, (c >> 10 & 31) << 3)
 
 
-def relabel(d, lga, edits_):
+def relabel(d, lga, edits_, fonts=None):
     """Redraw text rects in sub-textures: [(tex id, (x, y, w, h), text, font px, style)]. The rect is cleared by
     interpolating each row between the pixels just left and right of it, then the text is drawn centred in the
     original's lightest colour, with a 1 px outline (style "outline") or a +1,+1 shadow ("shadow") in its darkest
@@ -192,8 +192,9 @@ def relabel(d, lga, edits_):
     pix, pal = parse(d)
     pix = bytearray(pix)
     texs = textures(lga, len(pix))
-    for tid, (x, y, w, h), text, size, style in edits_:
+    for tid, rect, text, size, style in edits_:
         r = texs[tid]
+        x, y, w, h = rect or (1, 1, r["w"] - 2, r["h"] - 2)  # None: the whole texture
         rows = _get(pix, r)
         n = 1 << BPP[r["fmt"]]
         cols = {i: _rgb(pal[r["pal"] + i]) for i in range(1, n) if r["pal"] + i < len(pal)}
@@ -201,19 +202,41 @@ def relabel(d, lga, edits_):
         inside = [cols[rows[yy][xx]] for yy in range(y, y + h) for xx in range(x, x + w) if rows[yy][xx]]
         ink, dark = max(inside, key=lum), min(inside, key=lum)
         im = Image.new("RGB", (w, h))
+        clear = set()  # rows with transparent pixels on both sides stay transparent behind the text
         for yy in range(h):
             a, b = rows[y + yy][x - 1], rows[y + yy][x + w]
+            if (not a or not b) and style != "solid":  # one transparent side is enough (2199: a dash on the right)
+                clear.add(yy)
             ca, cb = cols.get(a, (0, 0, 0)), cols.get(b, (0, 0, 0))
+            period = int(style.split("p")[-1]) if "p" in style.replace("shadow", "") else 0
             for xx in range(w):
+                if period:  # repeat the background pattern (a grid) from one period left of the rect
+                    src = rows[y + yy][x + xx - period * ((xx // period) + 1)]
+                    im.putpixel((xx, yy), cols.get(src, (0, 0, 0)))
+                    continue
                 t = (xx + 1) / (w + 1)
                 im.putpixel((xx, yy), tuple(round(ca[k] * (1 - t) + cb[k] * t) for k in range(3)))
-        font = ImageFont.truetype(str(ROOT / "fonts" / "LiberationSans-Bold.ttf"), size)
-        l, _, rr, _ = font.getbbox(text)
-        _, t, _, bb = font.getbbox("H")
-        pos = ((w - (rr - l)) // 2 - l, (h - (bb - t)) // 2 - t)
         m = Image.new("L", (w, h))
-        ImageDraw.Draw(m).text(pos, text, font=font, fill=255)
-        assert m.getbbox() and m.getbbox()[0] > 0 and m.getbbox()[2] < w, f"{text!r} does not fit {w} px"
+        if isinstance(size, int):  # TrueType, antialiased; shrinks until it fits the rect (outline/shadow included)
+            for px_ in range(size, 7, -1):
+                font = ImageFont.truetype(str(ROOT / "fonts" / "LiberationSans-Bold.ttf"), px_)
+                l, _, rr, _ = font.getbbox(text)
+                if rr - l + 4 <= w:
+                    break
+            _, t, _, bb = font.getbbox("H")
+            pos = ((w - (rr - l)) // 2 - l, (h - (bb - t)) // 2 - t)
+            ImageDraw.Draw(m).text(pos, text, font=font, fill=255)
+        else:  # the game's own NFTR font (336 / 337), 1-bit, for small captions
+            import gfx
+            pts = gfx._text_mask(text, fonts[size])
+            cap = [p for p in gfx._text_mask("H", fonts[size])]
+            tw = max(p[0] for p in pts) + 1
+            ct, cb = min(p[1] for p in cap), max(p[1] for p in cap)
+            ox, oy = (w - tw) // 2, (h - (cb - ct + 1)) // 2 - ct
+            for px_, py_ in pts:
+                if 0 <= px_ + ox < w and 0 <= py_ + oy < h:
+                    m.putpixel((px_ + ox, py_ + oy), 255)
+        assert not text or (m.getbbox() and m.getbbox()[0] > 0 and m.getbbox()[2] < w), f"{text!r} does not fit {w} px"
         ma = m.load()
         under = Image.new("L", (w, h))
         ua = under.load()
@@ -229,6 +252,9 @@ def relabel(d, lga, edits_):
         keys = list(cols)
         for yy in range(h):
             for xx in range(w):
+                if yy in clear and not ma[xx, yy] and not ua[xx, yy]:
+                    rows[y + yy][x + xx] = 0
+                    continue
                 c = im.getpixel((xx, yy))
                 rows[y + yy][x + xx] = min(keys, key=lambda i: sum((cols[i][k] - c[k]) ** 2 for k in range(3)))
         _put(pix, r, rows)
@@ -250,7 +276,37 @@ def texture_image(d, lga, tid):
 TEXT = {
     2233: [(t, (18, 2, 114, 19), s, 12, "shadow") for t, s in (  # win/lose condition screen banners (briefNN)
         (3, "Victory Conditions"), (4, "Victory Conditions"), (5, "Defeat Conditions"), (6, "Defeat Conditions"))],
+    2139: [(t, (18, 1, 44, 14), s, (336,), "outline") for t, s in (  # bottom-bar buttons (64x16, A/B/X icon left)
+        (1, "Next"), (2, "Back"), (3, "End"), (4, "Menu"), (5, "OK"), (6, "Start"), (7, "End"), (8, "Info"),
+        (9, "Move"), (10, "Hold"))],
+    2215: [(24, (10, 1, 21, 14), "End", (337,), "outline")],  # greyed-out B button
 }
+TEXT[2139].append((0, (3, 1, 90, 14), "Merit Points", (336,), "outline"))  # result bar, "pts" at right kept
+TEXT.update({
+    2235: [(5, (16, 4, 104, 22), "Total Merit", (336,), ""), (6, (16, 4, 104, 22), "Total Merit", (336,), ""),
+           (7, (24, 3, 112, 18), "Merit Points", (336,), ""), (8, (24, 3, 112, 18), "Merit Points", (336,), ""),
+           (9, (30, 0, 110, 16), "Points Earned", (336,), ""), (10, (30, 0, 110, 16), "Current Points", (336,), "")],
+    2197: [(0, (2, 2, 106, 31), "Battle Start", 18, "outline")],
+    2199: [(0, (2, 1, 106, 24), "Battle Result", 18, "outline")],
+    2203: [(2, (3, 1, 150, 32), "Skill Activated", 20, "outline"), (3, (3, 1, 150, 32), "Unit Skill", 18, "outline")],
+    2205: [(2, (3, 1, 150, 32), "Skill Activated", 20, "outline"),
+           (3, (1, 1, 160, 32), "Character Skill", 18, "outline")],
+    2179: [(0, None, "Chain", 16, "outline")],  # battle-forecast mode banners
+    2181: [(0, None, "Advance", 16, "outline")],
+    2183: [(0, None, "Retreat", 16, "outline"), (1, None, "Attacker", (336,), "outline")],
+    2185: [(0, None, "Retreat", 16, "outline"), (1, None, "Defender", (336,), "outline")],
+    2187: [(0, None, "Continue", 16, "outline")],
+    2193: [(0, None, "WIPED", 24, "outline"), (1, None, "OUT", 24, "outline"), (15, (1, 1, 14, 14), "", 8, "solid")],  # 全|滅, 機
+    2211: [(0, None, "Shot", 14, "outline"), (1, None, "Down", 14, "outline"), (12, None, "", 8, ""),  # 撃|破 N 機
+           (13, None, "Lost", 14, "outline"), (14, None, "", 8, "")],  # 損|失
+    2225: [(0, (30, 1, 196, 14), "Select Baton Route", (336,), "outline"),
+           (10, (12, 1, 232, 14), "Where will you pass the baton of history?", (336,), "outline")],
+    2227: [(12, (60, 1, 66, 14), "Scenario", (336,), "solid"), (13, (5, 1, 66, 14), "Chart", (336,), "solid")],
+    2243: [(t, (2, 1, 252, 38), s, (336,), "") for t, s in (
+        (3, "Saving..."), (4, "Save complete."), (8, "Creating system data..."), (9, "System data created."))],
+    2245: [(6, (60, 6, 136, 36), "Retirement Notice", 20, "shadow p16"),  # unit retirement banner, grid kept
+           (7, (60, 6, 136, 36), "Retirement Notice", 20, "shadow p16")],
+})
 
 
 def ids():
@@ -258,9 +314,11 @@ def ids():
 
 
 def edits(tbl, dat, unpack):
-    raw = unpack(tbl, dat, ids() | {i - 1 for i in TEXT})
+    import gfx
+    raw = unpack(tbl, dat, ids() | {i - 1 for i in TEXT} | {336, 337})
+    fonts = {(f,): gfx._glyphs(f, raw[f]) for f in (336, 337)}
     out = {i: credit_page(raw[i], CREDITS[i]) for i in CREDITS}
-    out.update({i: relabel(raw[i], raw[i - 1], e) for i, e in TEXT.items()})
+    out.update({i: relabel(raw[i], raw[i - 1], e, fonts) for i, e in TEXT.items()})
     return out
 
 
@@ -287,6 +345,29 @@ def preview():
     print(len(CREDITS), "pages ->", dst)
 
 
+def preview_text(only=None):
+    """work/gfx_en/tex_<id>.png: every edited sub-texture, original left, English right, x3."""
+    import gfx
+    ez, dst = ROOT / "work" / "ez", ROOT / "work" / "gfx_en"
+    fonts = {(f,): gfx._glyphs(f, (ez / f"{f:04d}.bin").read_bytes()) for f in (336, 337)}
+    for i, e in TEXT.items():
+        if only and i not in only:
+            continue
+        d, lga = (ez / f"{i:04d}.bin").read_bytes(), (ez / f"{i - 1:04d}.bin").read_bytes()
+        n = relabel(d, lga, e, fonts)
+        tids = sorted({x[0] for x in e})
+        pairs = [(texture_image(d, lga, t), texture_image(n, lga, t)) for t in tids]
+        W2 = max(a.width for a, _ in pairs)
+        s = Image.new("RGB", (2 * W2 + 4, sum(a.height + 2 for a, _ in pairs)), (40, 40, 40))
+        y = 0
+        for a, b in pairs:
+            s.paste(a, (0, y)); s.paste(b, (W2 + 4, y)); y += a.height + 2
+        s.resize((s.width * 3, s.height * 3), Image.NEAREST).save(dst / f"tex_{i}.png")
+    print("->", dst)
+
+
 if __name__ == "__main__":
     if sys.argv[1:] == ["preview"]:
         preview()
+    elif sys.argv[1:2] == ["text"]:
+        preview_text({int(a) for a in sys.argv[2:]})
