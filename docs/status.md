@@ -2,50 +2,65 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase:** 4 (extract) done 2026-11-01. Next: phase 5 (engine spike + marker build). All text is in `script/`
-  (66,802 strings) and `python tools/build.py` inserts it; an untouched `script/` builds a byte-identical ROM.
+- **Phase:** 5 (engine spike + marker build) done 2026-11-01. Next: phase 6 (translate in batches).
 - **Done:**
   - Step 0: DeSmuME QA fork qa-2 in `tools/desmume/`, smoke boots the original ROM (title -> menu -> opening card),
     Lua probe logs, pre-commit rejects a failing test, guard hook blocks `sed -i`, `rom.sha1` pinned, `tools/check.py`.
   - Phase 1: `docs/re/` (archive, bbq, font, text, graphics). Text = Shift-JIS in .BBQ string tables (66,451
     strings, one string per displayed line) + 351 arm9 strings; fonts NFTR 0336/0337 with ASCII; static graphics
     sweep found 68 stage title cards + 6 UI screens + title subtitle/© + credit card.
-  - Phase 2: `tools/debug/` warp tool on the game's own developer menu (script 0x1000, booted by patching one RAM
-    literal; stage jump ST00-ST67 x opening/battle/ending) + the map-menu デバッグ item (forced win/lose, damage
-    toggles). `warp_all.py` reaches all 291 scenes from cold boot (67 stages x open/battle/prep/end, all
-    68 title cards seen; prep screens, shop, save, chart, map, map menu, debug menu, victory, game over, title,
-    load, extras, credits, viewers; proof sheets `work/qa/warps/sheet_*.png`, states `work/states/`), ~15 min
-    at --jobs 6. ST06 is a scrapped stage (no opening; battle/end jump to ST07/ST08), left out. Notes:
-    `docs/re/debug.md`.
-  - Phase 3: `ez.repack()` + `tools/build.py` (ndspy save, restores the 0x1000 word and 0xFF pad) give a
-    byte-identical ROM, tested in `tests/test_identity.py` (also checks an edited repack keeps every other entry and
-    alignment). Build takes ~1 s.
-  - Phase 4: `tools/extract.py` writes `script/bbq/<ez index>_<name>.json` (328 tables, 66,451 strings) and
-    `script/arm9.json` (351 strings keyed by RAM address); `tools/insert.py` + `bbq.rebuild()` + `arm9.replace()`
-    put them back, `tools/build.py` applies `script/` by default (`--no-script` for the identity build).
-    `tests/test_extract.py` (9 tests): every string re-encodes to the ROM's bytes, every table's pool is its index
-    plus its strings plus <4 zero bytes, rebuild is byte-identical and grows/shrinks, `extract.py --check` reports
-    0 holes, every arm9 pointer-visible string is extracted, an untouched script/ builds the original ROM.
-  - **Verified in the emulator** (`work/qa/textproof/`): BBQ insert -> ASCII narration on the ST00 opening card
-    (`bbq_narration_ascii.png`); arm9 in-place insert -> "STAGE SELECT" for ステージを選択 on the scenario chart
-    (`arm9_label_ascii.png`). Stage-card titles and the chart's green banner are *graphics*, not strings — they
-    change nothing in `script/` (phase 8).
-- **Next (phase 5, engine spike + marker build):**
-  - Font/VWF: NFTR 0336 (11x11) / 0337 (9x9) have ASCII; decide whether to widen/space glyphs and whether the
-    engine can wrap/merge the one-line-per-string layout (English is wider than Japanese; boxes are fixed width).
-  - Marker build: every string -> `[id]`-style marker, cold boot + `warp_all.py`, every box shows its id, non-text
-    "strings" found and excluded (half-width katakana keys like `ｶﾂ&ﾚﾂ&ｷｯｶ`, `%d`/`%s` formats, 317 empty strings).
-  - Width gate: measure every box variant's width in-game.
-  - arm9 growth: `arm9.replace()` only shrinks for now. Marker text will not fit 2-byte strings, so add relocation:
-    move arm9 strings and rewrite their 4-aligned pointers, or append a new autoload section (ITCM tail
-    0x01FF9160..0x01FF9160+27 KiB, or the 0x4 KiB slack before the main section ends at 0x77140) — `archive.md`.
+  - Phase 2: `tools/debug/` warp tool on the game's own developer menu (script 0x1000) + the map-menu デバッグ item.
+    `warp_all.py` reaches all 291 scenes from cold boot with proof sheets; `work/states/<scene>.dst`.
+  - Phase 3: `ez.repack()` + `tools/build.py` give a byte-identical ROM (`tests/test_identity.py`), ~1 s a build.
+  - Phase 4: `tools/extract.py` -> `script/bbq/<ez index>_<name>.json` (328 tables) + `script/arm9.json` (351 strings);
+    `tools/insert.py` puts them back; roundtrip + coverage tests; BBQ insert and arm9 insert verified in-game.
+  - **Phase 5 (this session):**
+    - **Font/VWF: done, no new font ships.** The renderer honours each glyph's CWDH advance and adds 1 px
+      (measured: advance 6 -> 7 px pitch, 2 -> 3, 10 -> 11). `tools/font.py` sets every printable ASCII advance to
+      its ink width (space 3): all printable ASCII goes from 665 to 508 px (76 %), ~25 % more English per line. The
+      build installs the table in both fonts. Validated by a glyph torture line (every glyph draws, ink extent
+      matches `tools/font.py` `width()` to the pixel) and `tests/test_font.py`. Details `docs/re/font.md`.
+    - **arm9 growth: done.** `arm9.relocate()` moves long strings into the free ITCM autoload tail
+      (0x01FF9160, 28,320 bytes), growing the ITCM section and sliding the DTCM source + autoload list (kept
+      4-aligned) while rewriting the 4-byte literals; `insert.arm9_edit` falls back to it automatically. Verified
+      in-game (a moved string renders on the chart footer). `tests/test_arm9.py`. Details `docs/re/text.md`.
+    - **Marker build: done.** `tools/mark.py` marks 66,135 strings (`TTT:IIII|` + a 6 px-digit ruler), leaves 667
+      non-text strings alone in 5 classes (empty 317, blank 100, numeric 158, key 90, path 2 - a marked
+      `./EZ_DAT.BIN` black-screened the boot), and writes `work/marker/map.tsv`. A marker ROM with the ruler
+      reaches **291/291 scenes** (`work/qa/markers/`, ids visible in every text box) and an id-only build
+      (`--ruler 0`, `work/qa/markers_id/`) proves the same where text is centred (ids would be pushed out).
+    - **Width gate: started, 3 variants measured.** `tbl/windows.json` + `docs/re/width.md`: stage-card narration
+      180 px / 3 lines (x=33), command-menu row 130 px, chart footer hint 114 px. Measured with
+      `tools/textband.py` off ruler shots. **Story dialogue with a portrait is NOT reached by any warp yet** - that
+      is the phase 6 blocker (`tbl/windows.json` `story_dialogue` is a placeholder).
+    - **Warp tool hardened:** stage scenes boot straight into the stage-jump script 0x1002 (the dev menu ignores
+      input for ~1 s after it is drawn, which silently dropped presses and hung ~1 warp in 3); dev-menu scenes wait
+      180 frames. 291/291 scenes pass on both the marker build and the VWF build.
+- **Next (phase 6, translate):**
+  - Add a warp scene that shows a **story dialogue window with a portrait**, then measure it and fill
+    `story_dialogue` in `tbl/windows.json` (candidates: a later narration page in a stage intro, or script 0x1006
+    message-window test). Nothing else blocks dispatch: every string has an id, the VWF budget per line is known for
+    the main boxes, and `tools/font.py width()` can predict a line's px before it ships.
+  - Batch translation of `script/bbq/*.json` + `script/arm9.json` (glossary in `glossary.md`; style rulings D1-D5 in
+    `docs/decisions.md`), with the batch check = a lint that reads `tbl/windows.json` (phase 7 wires it in).
+  - Graphics text is phase 8: stage title cards (68), the 6 UI screens, the credits caption
+    `- エンブレム オブ ガンダム -`, `GAME OVER`, and the title's katakana subtitle are **not** in `script/` (confirmed
+    with the marker build: they stayed Japanese).
 - **Open bugs:** none.
 - **Waiting on the user:** (non-blocking) series logo art on stage cards (Gundam/08th/0080/0083/Zeta, with small
   Japanese inside the logo) planned to stay as official logo art per D5; title katakana subtitle under the English
   logo planned to be replaced by nothing or English.
-- **Tooling gotchas:** Python HTTPS fails cert verification on this machine; set `SSL_CERT_FILE` to certifi
-  (AGENTS.md). emu.py `--mash` fires during scripted routes whenever its press queue is empty (warp.lua defers it).
-  A warp scene costs ~2-2.5 min wall at the default `--timeout 300`; run them in the background.
-  **EZ size word = align16(unpacked length)**: writing the exact length hangs the game at the developer menu
-  (reproduced on entry 85, `archive.md`). `ez.repack` and `insert.ez_edits` handle it; never pass a rebuilt entry
-  straight to `ez.repack` without padding it to 16.
+- **Tooling gotchas:**
+  - **The cards and message windows type the text on.** A width shot taken at the default `--frames 300` measures
+    typing progress, not the box: three lines of the same 60-digit string read 96/192/42 px at 300 frames and
+    180/180/180 at 1500. Use `--frames 1200+` for any width measurement (`docs/re/width.md`).
+  - The dev menu drops input for ~1 s after it appears; boot stage scenes into 0x1002 and give dev-menu presses
+    ~180 frames (`tools/debug/warp.lua`, `docs/re/debug.md`).
+  - Non-text strings that must never be marked: arm9 `./EZ_DAT.BIN` (the file loader), `%`/`$L`/`$P01` token-only
+    strings, half-width-katakana `&` keys, counters. `tools/mark.py --report` lists every one with its class.
+  - Python HTTPS fails cert verification on this machine; set `SSL_CERT_FILE` to certifi (AGENTS.md).
+  - A script in `work/exp/` shadows a stdlib module for every script run from that folder (`bisect.py` broke
+    Pillow's import); keep throwaway names specific.
+  - **EZ size word = align16(unpacked length)**: writing the exact length hangs the game at the developer menu
+    (reproduced on entry 85, `archive.md`). `ez.repack` and `insert.ez_edits` handle it; never pass a rebuilt entry
+    straight to `ez.repack` without padding it to 16.

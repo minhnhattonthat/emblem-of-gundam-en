@@ -52,11 +52,19 @@ def ez_edits(unpacked, script=None):
 
 
 def arm9_edit(data, texts=None):
-    """arm9 bytes with the changed strings replaced; identical bytes when no string changed."""
+    """arm9 bytes with the changed strings written back: in place where the English fits, otherwise moved into the
+    ITCM autoload tail (arm9.relocate)."""
     texts = arm9_texts() if texts is None else texts
     old = {off: t for off, t in arm9.strings(data)}
     edits = {off: t for off, t in texts.items() if old.get(off) != t}
-    return arm9.replace(data, edits) if edits else data
+    if not edits:
+        return data
+    fits, grow = {}, {}
+    for off, text in edits.items():
+        room = data.find(b"\0", off) - off
+        (fits if len(text.encode("cp932")) <= room else grow)[off] = text
+    out = arm9.replace(data, fits) if fits else data
+    return arm9.relocate(out, grow) if grow else out
 
 
 if __name__ == "__main__" and sys.argv[1:] == ["--status"]:

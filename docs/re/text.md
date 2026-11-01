@@ -32,6 +32,14 @@ separate strings (`bbq.md`). 317 strings are empty and must stay empty.
 ## Free space
 - Archive files are rebuilt whole, so any file may grow; EZ_DAT can grow into the ROM's free tail
   (0x03558000-0x03FFFFFF, ~10.6 MB of 0xFF, inside the 64 MiB chip). ndspy rebuilds the FAT.
-- arm9 strings: length is the constraint, not space. Growing one means moving it and rewriting its pointer(s); the
-  safe home is a new autoload section (ITCM has ~27 KiB free after 0x01FF9160, see `archive.md`), or the 0x4 KiB
-  slack between 0x770F4 and the main section end. Decide at phase 5 (VWF/font decision).
+- **arm9 strings grow into the ITCM autoload tail** (phase 5, `arm9.relocate`, verified in-game): the arm9 file is
+  laid out `[main section][ITCM source][DTCM source][autoload list]`; the autoload list at file 0x78300 holds 12-byte
+  entries (RAM address, size, bss):
+  `0x01FF8000/0x1160/0` (ITCM) and `0x027E0000/0x60/0xCC0` (DTCM). The module params at file 0xBA0 point at it
+  (+0x00 list address, +0x04 list end, then 0x02077140 twice, 0x021A95A0, 0, 0x04017530, footer magic). ITCM is
+  32 KiB and the game loads only 0x1160, so **0x6EA0 (28,320) bytes are free** from RAM 0x01FF9160.
+  `relocate()` appends the moved strings after the ITCM source, grows that section's size, lets the DTCM source and
+  the list slide up (the list must stay 4-aligned), rewrites the params, and points the old 4-byte literals at the new
+  address; the old slot is zeroed. A line's worth of strings fits easily; the whole 351-string set as `aN` markers
+  takes 1.7 KB. `insert.arm9_edit` uses it for every string that no longer fits in place.
+- The 0x4 KiB between 0x770F4 and the main section end is only 0x4C bytes — not free space.

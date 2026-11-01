@@ -1,0 +1,41 @@
+{
+ "note": "Text budgets per box variant, px of drawn text from the pen origin on one line, measured in-game from the marker/ruler build (docs/re/width.md). `measured` means a ruler was drawn until the box clipped it and the shot is recorded; `guess` means it is inferred from the UI geometry and must be replaced before a translator writes against it. The lint (phase 7) reads this file: a line whose variant has no measured budget warns.",
+ "font": {"main": 336, "small": 337, "advance_rule": "pen += CWDH advance + 1 px; tools/font.py sets ASCII advance = ink width, space = 3"},
+ "variants": {
+  "stage_card_narration": {
+   "px": 180, "lines": 3, "line_pitch": 15, "x": 33, "font": 336, "measured": true,
+   "note": "Stage card narration (BBQ tables 0085 BTLDIR and the per-stage <NNN>STAGE tables): 30 digits at 6 px fill it. The card types the text on, so a shot must run >= 1200 frames after the warp (at the default 300 the third line is still mid-type).",
+   "shots": ["work/qa/w85c/st00_open/final.png", "work/qa/w191/st30_battle/final.png"]
+  },
+  "menu_row": {
+   "px": 130, "lines": 1, "x": 56, "font": 336, "measured": true,
+   "note": "One row of a command menu (map menu, shop, battle-prep menu): 22 ASCII digits fit, the 23rd is clipped. Same box for the 5-row map menu and the shop list.",
+   "shots": ["work/qa/a9r/mapmenu/final.png", "work/qa/a9r/shop/final.png"]
+  },
+  "chart_footer_hint": {
+   "px": 114, "lines": 1, "x": 0, "font": 336, "measured": true,
+   "note": "The arm9 hint on the lower screen's status strip (ステージを選択); it is clipped where the B button starts.",
+   "shots": ["work/qa/a9r/chart/final.png"]
+  },
+  "prep_condition_row": {
+   "px": 150, "lines": 1, "x": 60, "font": 336, "measured": false,
+   "note": "Victory/defeat condition rows on the battle-brief screen (centred text). Guessed from the panel geometry.",
+   "shots": ["work/qa/markers_id/prep_brief/final.png"]
+  },
+  "stage_info_panel": {
+   "px": 95, "lines": 1, "x": 40, "font": 336, "measured": false,
+   "note": "Upper-screen stage-info panel labels (stage name, turn counter); centred, so the marker's id can be pushed out of the box when the text is longer than the field.",
+   "shots": ["work/qa/markers_id/prep/final.png"]
+  },
+  "list_row": {
+   "px": 150, "lines": 1, "x": 20, "font": 336, "measured": false,
+   "note": "Generic list rows (extras, load, options, sysflags, movie viewers). Guessed: several of these are wider than menu_row.",
+   "shots": ["work/qa/markers_id/extras/final.png", "work/qa/markers_id/load/final.png"]
+  },
+  "story_dialogue": {
+   "px": 180, "lines": 3, "line_pitch": 15, "x": 33, "font": 336, "measured": false,
+   "note": "PLACEHOLDER: no scene in the warp list reaches a story dialogue window with a portrait yet. Before phase 6 dispatch, find one (warp a later page of a stage intro, or the 0x1006 message-window test script) and measure it.",
+   "shots": []
+  }
+ }
+}

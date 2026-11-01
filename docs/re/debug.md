@@ -30,6 +30,11 @@ test, tutorial cursor...), 0x1009 テスト開始, 0x100B イベント画像チ�
 `warp.lua` + `scenes.lua`: boot to the dev menu, then steps (menu presses, wait for a script id, or wait until
 the game reads a menu's item table: battle prep 0x02070EB0, map menu 0x02070D44; Lua read hooks fire under
 JIT). `warp_all.py` runs every scene, saves `work/states/<scene>.dst`, a named proof shot and sheets per group.
+
+The stage scenes boot **straight into the stage-jump list** (script 0x1002, `scenes.lua` sets `boot = 0x1002`)
+instead of pressing through the dev menu: the dev menu is drawn at f~23 but ignores input for another second on a
+slow boot, so its first presses were silently dropped and ~1 warp in 3 hung. Scenes that need the dev menu use the
+`{"menu", N}` step, which re-runs "up to the top, down N, A" until the script leaves 0x1000.
 Scenes: `stNN_open|battle|end|prep` (NN 00-67), battle-prep screens (`prep_mapcheck prep_team shop prep_brief
 chart save`, on ST30 where all are enabled), `map mapmenu debugmenu victory gameover` (ST30, map menu with
 デバッグ), `title title_menu load extras` (extras unlocked through system flags → おまけコンプリート), `logo

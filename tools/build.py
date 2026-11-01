@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import check_rom  # noqa: E402
 import ez  # noqa: E402
 import extract  # noqa: E402
+import font  # noqa: E402
 import insert  # noqa: E402
 
 ROM = ROOT / "rom" / "Emblem of Gundam (Japan).nds"
@@ -39,11 +40,13 @@ def build(ez_new=None, arm9_new=None):
 
 
 def script(orig=None):
-    """(ez_new, arm9_new) from script/; both empty/None when nothing changed."""
+    """(ez_new, arm9_new) from script/; both empty/None when nothing changed. `--no-script` skips this, so the
+    identity build never sees the font table either."""
     rom = ndspy.rom.NintendoDSRom(orig or ROM.read_bytes())
     tbl, dat = (rom.getFileByName(n) for n in ("EZ_TBL.BIN", "EZ_DAT.BIN"))
     text = extract.bbq_files(tbl, dat)
     ez_new = insert.ez_edits({i: raw for i, (_, raw, _) in text.items()})
+    ez_new.update(font.edits(tbl, dat, extract.unpack))  # VWF: per-glyph advances, docs/re/font.md
     arm9_new = insert.arm9_edit(rom.arm9)
     return ez_new, (arm9_new if arm9_new != rom.arm9 else None)
 
@@ -56,7 +59,9 @@ if __name__ == "__main__":
         data = build()
     else:
         ez_new, arm9_new = script()
-        print(f"{len(ez_new)} text tables changed, arm9 {'changed' if arm9_new else 'unchanged'}")
+        n = len([i for i in ez_new if i not in font.FONT_IDS])
+        print(f"{n} text tables changed, arm9 {'changed' if arm9_new else 'unchanged'}, "
+              f"VWF font table in {len(font.FONT_IDS)} fonts")
         data = build(ez_new, arm9_new)
     out.write_bytes(data)
     print(out)

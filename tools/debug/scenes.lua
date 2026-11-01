@@ -7,18 +7,24 @@ SCENES = {}
 local MENU = { "script", 0x1000 }
 
 local function menu(item, ...)
-  local s = { MENU, { "wait", 30 } }
+  -- 180 frames: the dev menu is drawn at f~23 but ignores input for about a second on a slow boot, dropping the
+  -- presses silently. Don't retry by pressing A until the script changes: the submenus (flags, options, name entry)
+  -- run inside script 0x1000, so a retry would just drive them.
+  local s = { MENU, { "wait", 180 } }
   if item > 0 then s[#s + 1] = { "press", "down", item } end
   s[#s + 1] = { "press", "a" }
+  s[#s + 1] = { "wait", 30 }
   for _, x in ipairs({ ... }) do s[#s + 1] = x end
   return s
 end
 
--- stNN_open / stNN_battle / stNN_end: stage jump, the way the game enters the stage (card + intro).
+-- stNN_open / stNN_battle / stNN_end: stage jump, the way the game enters the stage (card + intro). Booted straight
+-- into the stage list (script 0x1002) instead of going through the dev menu: fewer dropped-input retries, and the
+-- list's cursor starts at ST00.
 local function stage_ok(k) return k ~= 6 end  -- ST06 (没ステージ): no opening; battle/end jump to ST07/ST08
 for k = 0, 67 do
   if stage_ok(k) then for ph, name in pairs({ [0] = "open", [1] = "battle", [2] = "end" }) do
-    local steps = menu(2, { "script", 0x1002 })  -- stage jump script
+    local steps = { boot = 0x1002, { "script", 0x1002 }, { "wait", 60 } }
     if k > 0 then steps[#steps + 1] = { "press", "down", k } end
     steps[#steps + 1] = { "press", "a" }
     steps[#steps + 1] = { "wait", 60 }
@@ -30,7 +36,7 @@ end
 
 local PREP, MAPMENU = 0x02070EB0, 0x02070D44  -- item tables read when the menu opens
 local function extend(base, extra, god)
-  local s = { god = god }
+  local s = { god = god, boot = SCENES[base].boot }
   for _, x in ipairs(SCENES[base]) do s[#s + 1] = x end
   for _, x in ipairs(extra) do s[#s + 1] = x end
   return s

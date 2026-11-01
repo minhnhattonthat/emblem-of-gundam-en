@@ -16,3 +16,4 @@ All of D1-D7 came from the owner's standing answers for one-shot runs (Orca disp
 | D6 | 2026-11-01 | Specs and plans | need approval, pre-approved | Pre-approved: keep going through checkpoints, report at the end. |
 | D7 | 2026-11-01 | Existing saves / savestates | user's files, none | None provided; build the debug tool as usual. |
 | D8 | 2026-11-01 | Git identity | - | Already set (minhnhattonthat); don't change it. |
+| D9 | 2026-11-01 | Font approach (phase 5) | keep fixed half-width; VWF via the CWDH advance; redraw a new font; tiny 2-letters-per-tile font | VWF via CWDH: the renderer honours the per-glyph advance (measured), so ASCII advances become each glyph's ink width and a line holds ~25 % more English. The existing glyphs stay (5x10 condensed, legible); no new font file ships, so nothing to license. Redrawing the glyphs is a phase 7/8 polish item if the playtest wants it. |
