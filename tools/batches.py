@@ -28,7 +28,7 @@ JP_CACHE = TL / "jp.json"
 GLOSSARY = ROOT / "glossary.md"
 STORY_PX = 180  # story_dialogue / stage_card_narration budget, tbl/windows.json (measured)
 JP_RE = re.compile(r"[\u3040-\u30ff\u4e00-\u9fff\uff66-\uff9f\uff01-\uff5e]")
-TOKEN_RE = re.compile(r"\$L|\$P\d\d|%[ds]|%|\n")
+TOKEN_RE = re.compile(r"\$L|\$P\d\d|%%|%[ds]|%|\n")  # %% = one literal percent in a printf string
 END = tuple("」』。！？!?）)♪")
 # Developer test rooms and their copies of the stage text: translated last (the release never reaches them).
 DEV = re.compile(r"^00(1[7-9]|2\d|3[0-8])_|_BATTLE\d\d$|^0084_")
@@ -106,16 +106,17 @@ def units():
                 speaker, name_at = strs[idx[0]], idx[0]
             elif name_at != idx[0] - 1:
                 speaker = ""  # a speaker label only names the speech right after it
-            key = tuple(strs[i] for i in idx)
+            text = tuple(strs[i] for i in idx)
+            key = text
             if len(prev) >= 8 and prev[-1] + 1 == idx[0] and not strs[prev[-1]].rstrip().endswith(END):
-                key = (stem,) + key  # tail of a sentence cut at 8 lines: its English depends on the lines before
+                key = (stem,) + text  # tail of a sentence cut at 8 lines: its English depends on the lines before
             prev = idx
             if key in seen:
                 seen[key][5].append(ids)
                 continue
             story = bool(STORY.search(stem))
             limit = f"{STORY_PX}px" if story else f"~{max(fit.px(strs[i]) for i in idx)}px"
-            u = (stem, form, list(zip(ids, key)), speaker if form == "dlg" else "", limit, [])
+            u = (stem, form, list(zip(ids, text)), speaker if form == "dlg" else "", limit, [])
             seen[key] = u
             out.append(u)
     for at, t in jp["arm9"]:
@@ -226,6 +227,33 @@ def split(chars=3000, most=150):
 
 
 # ---- check -------------------------------------------------------------------------------------------------------
+def codes(jp, en):
+    """Sorted control-code tokens of both sides. A JP full-width ％ is a literal percent: `%%` in a printf string
+    (one with %d/%s), else `%`; each literal percent stays its own token, so a dropped or added one shows."""
+    pct = "%%" if re.search(r"%[ds]", jp) else "%"
+    return sorted(TOKEN_RE.findall(jp.replace("％", pct))), sorted(TOKEN_RE.findall(en))
+
+
+# Honorifics (D1/D10, style-reference): a katakana name + さん/くん/君/ちゃん keeps -san/-kun/-chan; 閣下 -> Excellency.
+# Per block, so reflow and a pronoun for a repeated mention pass: each distinct name+honorific needs one EN hit.
+HON_NAME = r"[ァ-ヺー・]{2,}"
+HONORIFICS = [(HON_NAME + r"さん", r"-san\b"), (HON_NAME + r"(?:くん|君)", r"-kun\b"),
+              (HON_NAME + r"ちゃん", r"-chan\b"), (r"閣下", r"Excellency")]
+
+
+def honorifics(jp, en):
+    """Problems for one block (JP lines joined, EN lines joined): honorifics the English dropped."""
+    out = []
+    for jrx, erx in HONORIFICS:
+        need = len(set(re.findall(jrx, jp)))
+        if erx == "Excellency":
+            need = min(need, 1)
+        got = len(re.findall(erx, en))
+        if got < need:
+            out.append(f"honorific: {need} x {jrx.replace(HON_NAME, 'Name')} in JP, {got} x {erx} in EN")
+    return out
+
+
 def read_in(name):
     rows = []
     for ln in (TL / f"{name}.tsv").read_text(encoding="utf-8").splitlines()[1:]:
@@ -285,6 +313,7 @@ def check(name):
             for a in avoid:  # per line: a block's lines joined can fake a match across a break
                 if any(re.search(r"\b" + re.escape(a) + r"\b", ln) for ln in block_en):
                     errs.append(f"{block_ids[0]}: avoid '{a}' (glossary: {e})")
+        errs.extend(f"{block_ids[0]}: {p}" for p in honorifics(jp, en))
         block_jp.clear()
         block_en.clear()
         block_ids.clear()
@@ -309,9 +338,7 @@ def check(name):
             errs.append(f"{i}: \\u escape")
         if JP_RE.search(en):
             errs.append(f"{i}: Japanese left")
-        pct = "%%" if re.search(r"%[ds]", jp) else "%"  # a literal percent in a printf string must be %%
-        tj = sorted(TOKEN_RE.findall(jp.replace("％", pct).replace("%%", "")))
-        te = sorted(TOKEN_RE.findall(en.replace("%%", "")))
+        tj, te = codes(jp, en)
         if tj != te:
             errs.append(f"{i}: codes {tj} != {te}")
         if re.search(r"(%s|%d|\$P\d\d|\$L)(st|nd|rd|th)\b", en):

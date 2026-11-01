@@ -43,14 +43,16 @@ Japanese or full-width characters (【攻撃】 -> `[ATK]`, ＋ -> `+`, × -> `x
 
 ## Style (full rulings in docs/style-reference.md)
 - Faithful: keep the information and the order of ideas; adapt idiom, not meaning. Don't add what the Japanese
-  doesn't state; don't summarise or skip. Keep jokes and famous lines landing (Char's "Not even my father has ever
+  doesn't state; don't summarise or skip. Keep jokes and famous lines landing (Amuro's "Not even my father has ever
   hit me!"-class quotes use their well-known English form).
 - Official English Gundam names and terms (Bandai/Sunrise English releases): Amuro Ray, Char Aznable, Sayla Mass,
   Kycilia, M'Quve, Ramba Ral, Zaku II, Gouf, GM, White Base, Jaburo, Odessa, A Baoa Qu, Side 7... The glossary wins
   over your memory; when a name is not in it, use the official English form and report it as `NEW TERM`.
 - Honorifics (owner ruling D1): keep さん/くん/ちゃん as `-san`/`-kun`/`-chan`; 様 on Zeon nobility and superiors ->
-  `Lord X` / `Lady X` (the series' official English); ranks as English ranks (少佐 Major, 大尉 Lieutenant,
-  中尉 Lieutenant (JG)... see style reference). Name order is Western (given name first).
+  `Lord X` / `Lady X` (the series' official English); 閣下 -> `Your Excellency` (third person
+  `His/Her Excellency`); ranks as English ranks, navy forms for space forces (D12/D13/D15: 大尉 Lieutenant, 少佐
+  Lieutenant Commander, 中佐 Commander, 大佐 Captain; army forms for ground units) - the rank table in docs/style-reference.md is the only authority. `batches.py check`
+  rejects a dropped honorific or 閣下. Name order is Western (given name first).
 - Speech: 「...」 -> `"..."`. JP continuation lines of a speech start with a full-width space; start your
   continuation lines with one space (` response sluggish...?"`). A speech that spans lines opens `"` on its first line
   and closes on its last.

@@ -94,7 +94,7 @@ script refuses to run while any line is unticked.
 
 ## b048 (review-and-fix)
 - [ ] 0164:0354 - すまんな is apologetic, "Thanks." loses it - "Sorry, lads. / Sagre, Mile, you're on watch."
-- [ ] 0164:0412 - soldier slang flattened, "you'll be cursed" odd for バチが当たる - "Damn right. / Turn it down and you're askin' for it."
+- [x] (fixed: phase 6 review I4) 0164:0412 - soldier slang flattened, "you'll be cursed" odd for バチが当たる - "Damn right. / Turn it down and you're askin' for it."
 
 ## b049 (review-and-fix)
 - [ ] 0168:0104 - その中でもあからさまに危険な任務: "ones" has no clear antecedent - "were a unit that volunteered for / the most blatantly dangerous runs."
@@ -172,7 +172,7 @@ script refuses to run while any line is unticked.
 ## b068 (review-and-fix)
 - [ ] 0201:0074 - "Not when mobile suits have gotten in this far." reads as a non sequitur after "I'll strike out" - " Not with mobile suits /  this far inside!"
 - [ ] 0201:0080 - 甘いな "Naive." flat for Dozle - "You're soft! /  It's come to where we must throw /  in every force we've got."
-- [ ] 0202:0090 - せっかく減った人口 irony lost ("conveniently reduced") - "Our population has been so nicely /  reduced. We let it grow no more, /  and keep only the superior race."
+- [x] (fixed: phase 6 review I4) 0202:0090 - せっかく減った人口 irony lost ("conveniently reduced") - "Our population has been so nicely /  reduced. We let it grow no more, /  and keep only the superior race."
 
 ## b069 (review-and-fix)
 - [ ] 0202:0144 - concessive が lost, sentence lacks "yet" - "Eloquent, with a rare gift / for stirring men's hearts, he yet / harbored within him a monster / that defied all understanding."
@@ -193,7 +193,7 @@ script refuses to run while any line is unticked.
 - [ ] 0207:0350 - "30+ of our units destroyed" sentence case among Title Case labels - "30+ Allied Units Destroyed"
 
 ## b074 (review-and-fix)
-- [ ] 0209:0024 - キシリア閣下 rendered "Lady Kycilia" (style: 閣下 -> Your Excellency); also 0209:0158 - "Your orders, / Your Excellency." keeps name out; controller to decide
+- [x] (fixed: phase 6 review I3) 0209:0024 - キシリア閣下 rendered "Lady Kycilia" (style: 閣下 -> Your Excellency); also 0209:0158 - "Your orders, / Your Excellency." keeps name out; controller to decide
 - [ ] 0209:0088 - Amuro 「それは理屈だ」 "sophistry" too bookish for teen Amuro - "That's just an excuse!"
 - [ ] 0209:0061 - 「捕虜交換の折に引き上げよう」 is Kycilia promising to retrieve him - "I'll bring you back / in a prisoner exchange."
 - [ ] 0209:0065 - "their MS abandoned" - "Even with their mobile suits / abandoned, the fight between / Amuro and Char went on."
@@ -240,7 +240,7 @@ script refuses to run while any line is unticked.
 
 ## b088 (review-and-fix)
 - [ ] 0228:0663 - Cima's 以後お見知りおきを is a set greeting; "Do remember me from now on" stiff - "A pleasure to make / your acquaintance."
-- [ ] 0228:0739 - Kou's fiery やれるはずなんだ！ flattened to "I should manage" - "The Gundam can do this! / I'll prove it!"
+- [x] (fixed: phase 6 review I4) 0228:0739 - Kou's fiery やれるはずなんだ！ flattened to "I should manage" - "The Gundam can do this! / I'll prove it!"
 - [ ] 0231:0023 - "in the / least" split mid-phrase - "We have not in the least /  lost sight of why we fight."
 - [ ] 0228:0760 - 僕は一号機を…… trailing; "I have to get Unit 1..." vague - "I've got to get Unit 1 back..." (leads into 0763)
 
@@ -443,7 +443,7 @@ script refuses to run while any line is unticked.
 
 ## b139 (review-and-fix)
 - [ ] 0303:0134 - こいつだけは "this one at least (must go)"; "not this one!" reads oddly after "costs my life" - " Even at the cost of my life, my body, / this one, at least!"
-- [ ] 0303:0136 - Scirocco senses Kamille: こいつ！？ is a reaction, not an echo; quoted 'This one' odd - "This guy!? What is he!?"
+- [x] (fixed: phase 6 review I5) 0303:0136 - Scirocco senses Kamille: こいつ！？ is a reaction, not an echo; quoted 'This one' odd - "This guy!? What is he!?"
 - [ ] 0304:0033 - "placed, in a form that could / be moved at any time, at Jaburo" clunky - "with only the command center, / movable at any time, / kept at Jaburo."
 - [ ] 0304:0059 - location label "Underground, Jaburo" - "Jaburo Underground"
 

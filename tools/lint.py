@@ -57,13 +57,6 @@ def budgets():
     return out
 
 
-def codes(jp, en):
-    pct = "%%" if re.search(r"%[ds]", jp) else "%"  # a literal percent in a printf string must be %%
-    tj = sorted(batches.TOKEN_RE.findall(jp.replace("％", pct).replace("%%", "")))
-    te = sorted(batches.TOKEN_RE.findall(en.replace("%%", "")))
-    return tj, te
-
-
 def width(line):
     """px with the variables at a wide value: %s 8 W, %d / $Pnn 3 digits, $L (level) 2 digits."""
     line = re.sub(r"\$P\d\d|%d", "000", line.replace("%s", "W" * 8)).replace("$L", "00")
@@ -101,7 +94,7 @@ def lint(jp=None, cur=None, keep=None):
             e.encode("cp932")
         except UnicodeEncodeError as x:
             errs.append(f"{sid}: not Shift-JIS: {x}")
-        tj, te = codes(j, e)
+        tj, te = batches.codes(j, e)
         if tj != te:
             errs.append(f"{sid}: codes {tj} != {te}: {e!r}")
         if ORDINAL.search(e):
@@ -128,7 +121,19 @@ def lint(jp=None, cur=None, keep=None):
                 else:
                     warns.setdefault(f"over a guessed budget", []).append(msg)
     errs += stubs(jp, cur)
+    errs += honorifics(jp, cur)
     return errs, warns
+
+
+def honorifics(jp, cur):
+    """Story blocks whose English dropped a -san/-kun/-chan or 閣下 (batches.honorifics)."""
+    out = []
+    for stem in sorted(k for k in cur if k != "arm9"):
+        for form, idx in batches.blocks(stem, jp[stem]):
+            j, e = "".join(jp[stem][i] for i in idx), " ".join(cur[stem][i] for i in idx)
+            if not batches.JP_RE.search(e):  # Japanese left is reported (or keep-listed) above
+                out += [f"{stem}:{idx[0]:04d}: {p}: {e!r}" for p in batches.honorifics(j, e)]
+    return out
 
 
 def stubs(jp, cur):
