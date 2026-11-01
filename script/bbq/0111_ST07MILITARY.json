@@ -3,7 +3,7 @@
  "name": "ST07MILITARY.BBQ",
  "strings": [
   "",
-  "North American Command",
+  "North American HQ",
   "Char",
   "\"Still holding out, are they?",
   " Well, Garma's bound to struggle.\"",
@@ -21,7 +21,7 @@
   " sortied in a mobile suit?\"",
   "\"No, sir.\"",
   "(I see.",
-  " So Garma didn't go out himself.)",
+  " So Garma didn't board one.)",
   "(If he died fighting the white one,",
   " fine. If I swooped in to save him,",
   " also fine. So I had thought...)"

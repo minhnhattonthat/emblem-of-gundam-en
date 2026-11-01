@@ -2,9 +2,27 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase:** 7 (insert, fit, check) **done** 2026-11-01; next is phase 8 (QA in the emulator: smoke, warp tours
-  with contact sheets + visual-QA verdicts via `qa_gate.py`, graphics text: 68 stage cards, 6 UI screens, title,
-  GAME OVER, credits).
+- **Phase:** 8 (QA in the emulator) **in progress** 2026-11-01. Phase 6 review (`.harness/reviews/...phase6.md`)
+  fixed: I1 `batches.units()` keeps the JP apart from the dedup key (+ test), I2 a literal percent is its own
+  token (`batches.codes`, shared by lint, + test), I3 honorific/閣下 check in `batches.check` and `lint.py` (per
+  block: each distinct katakana-name+さん/くん/ちゃん needs a -san/-kun/-chan, 閣下 needs "Excellency") + the 4
+  lines, I4/I5 the named voice lines + Scirocco, M1 brief ranks. A translator agent ran a **voice pass** over the
+  ~65 deferred voice/joke/stiff polish items (`work/tl/voice_pass.md` lists every changed string).
+- **Phase 8 so far:**
+  - **Stage title cards: done** (`tools/gfx.py`, in the build): 67 cards redrawn from each `STnnSTAGE` string 351
+    (lint now keeps it identical to the 0000 stage list; 6 mismatches fixed), Liberation Sans/Serif Bold 20 px
+    (`fonts/`, OFL, `docs/fonts.md`), caption ramp of each card, re-tiled into the same 256-tile NCGR; logo rows
+    untouched (`tests/test_gfx.py`). Card 1129 "06" kept. Seen in-game (st13/st20 warps, `work/qa/cards/`).
+  - **UI labels: in progress** (`gfx.LABELS`, redrawn in place with the game's own 9/11 px NFTR fonts; these
+    screens give every visible cell its own tile): 0375 stage info, 0378 battle forecast, 0450 scenario menu done
+    in preview (`python -X utf8 tools/gfx.py preview` -> `work/gfx_en/ui_*.png`); `tools/gfxgrid.py ID` draws a
+    screen with a tile grid to read label bboxes. Not yet in-game checked.
+  - **Next:** 0444 team info (flipped tiles, 4 palettes: check the shared-tile assert), 0340/0344 tile sheets
+    (zoom, sprites), 0402 建物, title katakana subtitle + © 創通・サンライズ (0360/0372), credits 2121
+    (株式会社 バンダイナムコゲームス) + the end caption `- エンブレム オブ ガンダム -`, the **win/lose banners
+    勝利条件/敗北条件** (briefNN scene; missing from the phase 1 survey, source not found yet). GAME OVER is already
+    English art. Then: warp scenes for the forecast/team-info/scenario menu (debug tool), `warp_all.py` on the EN
+    build, `qa_gate.py init` over the sheets, visual-QA verdicts (fresh read-only pass), smoke.
 - **Phase 7 (this session):**
   - Gates green: build, `tools/check.py` 37 tests (incl. `test_lint` = `tools/lint.py` 0 errors: font chars, control
     codes JP==EN, trailing space, width vs `tbl/windows.json`, stub last lines), `tools/romcheck.py` 0 unexpected

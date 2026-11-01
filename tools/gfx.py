@@ -1,0 +1,340 @@
+"""gfx.py: graphics text (docs/re/graphics.md) -> English, for build.py.
+
+Stage title cards (68, EZ 1111 + 3k: NCGR 8bpp 256 tiles, NCLR k+1, NSCR k+2): the caption above the series logo is
+redrawn from the stage name in script/ (`STkkSTAGE` string 351, so a wording change there follows automatically),
+in the caption's own palette ramp, then the card is re-tiled (dedup) into the same 256-tile NCGR. The logo and
+everything below tile row 16 keep their pixels.
+
+    python -X utf8 tools/gfx.py preview      # work/gfx_en/<id>.png + work/gfx_en/cards_N.png sheets (EN | JP)
+"""
+import json
+import struct
+import sys
+from collections import Counter
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+import nitro2d  # noqa: E402
+
+FONTS = ROOT / "fonts"
+CARDS = tuple(range(1111, 1313, 3))
+CAPTION_ROWS = 16  # tile rows 0-15 hold the caption, the series logo starts at row 16 on every card
+SERIF = {1231, 1234, 1237, 1240, 1303}  # 0083 cards: the caption is a dark Mincho on white
+KEEP = {1129}  # "06": unused test stage, digits only
+COLS, VIS_W, VIS_H = 64, 256, 192  # NSCR 512x512 stored row-major; the card shows the top-left 256x192
+MAX_W, SIZE = 244, 20
+
+
+def stage_name(k):
+    p = next((ROOT / "script" / "bbq").glob(f"*_ST{k:02d}STAGE.json"))
+    return json.loads(p.read_text(encoding="utf-8"))["strings"][351]
+
+
+def parse(ncgr, nscr):
+    """(tile list of 64-index lists, NSCR entries list, data offsets) of one card."""
+    g = nitro2d.ncgr(ncgr)
+    b = nitro2d.block(nscr)
+    size, = struct.unpack_from("<I", b, 16)
+    ent = list(struct.unpack_from(f"<{size // 2}H", b, 0x14))
+    return nitro2d.tiles(g), ent
+
+
+def index_image(ts, ent):
+    im = Image.new("P", (VIS_W, VIS_H))
+    px = im.load()
+    for r in range(VIS_H // 8):
+        for c in range(VIS_W // 8):
+            e = ent[r * COLS + c]
+            assert e >> 12 == 0, "8bpp cards use palette 0"
+            t, hf, vf = ts[e & 0x3FF], e >> 10 & 1, e >> 11 & 1
+            for k, v in enumerate(t):
+                x, y = k % 8, k // 8
+                px[c * 8 + (7 - x if hf else x), r * 8 + (7 - y if vf else y)] = v
+    return im
+
+
+def layout(text, font_path):
+    """(font, lines): one line at SIZE if it fits, else two balanced lines (one size for every card)."""
+    f = ImageFont.truetype(str(font_path), SIZE)
+    if f.getlength(text) <= MAX_W:
+        return f, [text]
+    words = text.split()
+    best = min((max(f.getlength(" ".join(words[:i])), f.getlength(" ".join(words[i:]))), i)
+               for i in range(1, len(words)))
+    lines = [" ".join(words[:best[1]]), " ".join(words[best[1]:])]
+    while max(f.getlength(x) for x in lines) > MAX_W:
+        f = ImageFont.truetype(str(font_path), f.size - 1)
+    return f, lines
+
+
+def card(ncgr, nscr, nclr, text, serif=False):
+    """(new ncgr bytes, new nscr bytes, preview RGB image)."""
+    ts, ent = parse(ncgr, nscr)
+    pal, _ = nitro2d.nclr(nclr)
+    im = index_image(ts, ent)
+    px = im.load()
+    cap_h = CAPTION_ROWS * 8
+    counts = Counter(px[x, y] for y in range(cap_h) for x in range(VIS_W))
+    bg = counts.most_common(1)[0][0]
+    # a two-line caption's second line dips into rows 16-17: its ink there touches the ink of row 15, the logo's
+    # doesn't, so flood-fill down from row 15 and clear what is reached
+    seen = [(x, cap_h - 1) for x in range(VIS_W) if px[x, cap_h - 1] != bg]
+    todo, dip = list(seen), set()
+    while todo:
+        x, y = todo.pop()
+        for nx in (x - 1, x, x + 1):
+            for ny in (y, y + 1):
+                if 0 <= nx < VIS_W and cap_h <= ny < cap_h + 16 and (nx, ny) not in dip and px[nx, ny] != bg:
+                    dip.add((nx, ny))
+                    todo.append((nx, ny))
+    ys = [y for y in range(cap_h) for x in range(VIS_W) if px[x, y] != bg] + [y for _, y in dip]
+    cy = (min(ys) + max(ys) + 1) / 2  # the Japanese block's centre
+    for x, y in dip:
+        px[x, y] = bg
+    ramp = [i for i in counts if i != bg]
+    fg = max(ramp, key=lambda i: sum(abs(a - b) for a, b in zip(pal[i], pal[bg])))  # the ink: furthest from bg
+    # draw: coverage mask, then blend bg -> fg and snap to the caption's own ramp
+    f, lines = layout(text, FONTS / ("LiberationSerif-Bold.ttf" if serif else "LiberationSans-Bold.ttf"))
+    mask = Image.new("L", (VIS_W, cap_h), 0)
+    d = ImageDraw.Draw(mask)
+    asc, desc = f.getmetrics()
+    lh = f.size + 6  # tighter than the Japanese 42 px, so the second line stays clear of the logo
+    cap_top, cap_bot = f.getbbox("H")[1], f.getbbox("H")[3]
+    for n, ln in enumerate(lines):
+        mid = cy + (n - (len(lines) - 1) / 2) * lh
+        x = (VIS_W - f.getlength(ln)) / 2
+        d.text((round(x), round(mid - (cap_top + cap_bot) / 2)), ln, font=f, fill=255)
+    cand = ramp + [bg]
+    snap = []
+    for a in range(256):
+        want = [pal[bg][k] + (pal[fg][k] - pal[bg][k]) * a / 255 for k in range(3)]
+        snap.append(min(cand, key=lambda i: sum((pal[i][k] - want[k]) ** 2 for k in range(3))))
+    mpx = mask.load()
+    for y in range(cap_h):
+        for x in range(VIS_W):
+            px[x, y] = snap[mpx[x, y]]
+    # re-tile: tile 0 stays (the entries outside the visible area point at it), then unique tiles in screen order
+    tiles, index = [ts[0]], {tuple(ts[0]): 0}
+    new_ent = list(ent)
+    for r in range(VIS_H // 8):
+        for c in range(VIS_W // 8):
+            t = tuple(px[c * 8 + k % 8, r * 8 + k // 8] for k in range(64))
+            if t not in index:
+                index[t] = len(tiles)
+                tiles.append(list(t))
+            new_ent[r * COLS + c] = index[t]
+    if len(tiles) > len(ts):
+        raise ValueError(f"{text!r}: {len(tiles)} tiles > {len(ts)}")
+    g = nitro2d.block(ncgr)
+    size, off = struct.unpack_from("<II", g, 24)
+    data_at = 0x10 + (8 + off if off else 0x20)
+    out_g = bytearray(ncgr)
+    blob = bytes(v for t in tiles for v in t)
+    out_g[data_at:data_at + size] = blob + bytes(size - len(blob))
+    out_s = bytearray(nscr)
+    struct.pack_into(f"<{len(new_ent)}H", out_s, 0x10 + 0x14, *new_ent)
+    return bytes(out_g), bytes(out_s), _rgb(im, pal)
+
+
+def _rgb(im, pal):
+    flat = [v for c in pal[:256] for v in c]
+    im = im.copy()
+    im.putpalette(flat)
+    return im.convert("RGB")
+
+
+def jobs():
+    """[(card id, english caption)] for every card that gets redrawn."""
+    return [(cid, stage_name(k)) for k, cid in enumerate(CARDS) if cid not in KEEP]
+
+
+# ---- UI labels: Japanese drawn into a screen's tiles, redrawn in place with the game's own font -----------------
+# {NCGR id: [(x, y, w, h, font id, text)]} in NSCR pixels (tools/gfxgrid.py shows the grid). These screens give every
+# visible cell its own tile, so a label's tiles are edited in place (labels() refuses a tile used outside the rect).
+# Per rect: each pixel row's most common index is its background, the most common other index is the ink, and the
+# index most often right of/below the ink is its shadow (drawn at +1,+1). Text is centred.
+LABELS = {
+    375: [  # stage info (top screen during a battle)
+        (91, 1, 78, 15, 336, "Stage Info"), (222, 22, 30, 12, 337, "Turn"),
+        (145, 73, 42, 15, 337, "Supplies"), (145, 121, 42, 15, 337, "Supplies"), (214, 146, 38, 15, 337, "Supplies"),
+        (2, 162, 44, 13, 337, "Weapon"), (50, 162, 44, 13, 337, "Attack"), (98, 162, 44, 13, 337, "Defense"),
+        (153, 163, 35, 12, 337, "Terrain"),
+    ],
+    378: [  # battle forecast (left half palette 0, right half palette 1: the two sides)
+        (90, 113, 80, 14, 336, "Battle Forecast"),
+        (15, 130, 35, 13, 337, "Before"), (63, 130, 35, 13, 337, "After"),
+        (143, 130, 35, 13, 337, "Before"), (191, 130, 35, 13, 337, "After"),
+        (100, 155, 24, 19, 337, "units"), (228, 155, 24, 19, 337, "units"),
+    ],
+    444: [  # team info (terrain strip 隠蔽/水/空/宇 at 168,80 not done: 16 px boxes)
+        (95, 1, 68, 15, 336, "Team Info"), (164, 33, 28, 16, 337, "Units"), (235, 34, 16, 14, 337, ""),
+        (205, 145, 44, 15, 337, "Supplies"),
+        (4, 163, 38, 11, 337, "Weapon"), (56, 163, 34, 11, 337, "Attack"), (102, 163, 38, 11, 337, "Defense"),
+        (153, 163, 38, 11, 337, "Terrain"),
+    ],
+    450: [  # scenario menu
+        (74, 1, 112, 14, 336, "Scenario Menu"), (8, 177, 172, 14, 336, "See how the scenario unfolds"),
+        (216, 177, 30, 14, 336, "Back"),
+    ],
+}
+
+
+def _glyphs(fid, d):
+    import nftr
+    f = nftr.parse(d)
+    out = {}
+    for c in range(0x21, 0x7F):
+        if c in f["cmap"]:
+            rows = nftr.glyph(f, d, f["cmap"][c])
+            xs = [x for r in rows for x, v in enumerate(r) if v]
+            if xs:
+                out[chr(c)] = [r[min(xs):max(xs) + 1] for r in rows]
+    return out
+
+
+def _text_mask(text, glyphs):
+    """[(x, y)] ink pixels of text, advance = ink width + 1, space 3 (the build's VWF table, tools/font.py)."""
+    pts, x = [], 0
+    for ch in text:
+        if ch == " ":
+            x += 3
+            continue
+        g = glyphs[ch]
+        pts += [(x + gx, gy) for gy, r in enumerate(g) for gx, v in enumerate(r) if v]
+        x += len(g[0]) + 1
+    return pts
+
+
+def label_edits(cid, ncgr, nscr, nclr, fonts):
+    """New NCGR bytes for one screen with its LABELS redrawn; fonts = {font id: glyphs} (_glyphs)."""
+    pal, _ = nitro2d.nclr(nclr)
+    g = nitro2d.ncgr(ncgr)
+    ts = nitro2d.tiles(g)
+    b = nitro2d.block(nscr)
+    wpx, _, _, size = struct.unpack_from("<HHII", b, 8)
+    ent = list(struct.unpack_from(f"<{size // 2}H", b, 0x14))
+    cols = wpx // 8
+    refs = Counter(e & 0x3FF for e in ent)
+    free = list(range(max(refs) + 1, len(ts)))  # never-referenced slots past the last used tile
+    for x0, y0, w, h, fid, text in LABELS[cid]:
+        cells = [(cx, cy) for cy in range(y0 // 8, (y0 + h - 1) // 8 + 1) for cx in range(x0 // 8, (x0 + w - 1) // 8 + 1)]
+        tid = {c: ent[c[1] * cols + c[0]] for c in cells}
+        px = {}
+        for (cx, cy), e in tid.items():
+            for k, v in enumerate(ts[e & 0x3FF]):
+                x, y = k % 8, k // 8
+                px[cx * 8 + (7 - x if e >> 10 & 1 else x), cy * 8 + (7 - y if e >> 11 & 1 else y)] = v
+        # a tile used outside these cells, or flipped, gets a fresh slot; the others are edited in place
+        for c, e in tid.items():
+            if e >> 10 & 3 or refs[e & 0x3FF] > 1:
+                if not free:
+                    raise ValueError(f"{cid} {c}: no free tile slot for a shared tile")
+                refs[e & 0x3FF] -= 1
+                tid[c] = (e & 0xF000) | free.pop(0)
+                ent[c[1] * cols + c[0]] = tid[c]
+        box = {(x, y): px[x, y] for y in range(y0, y0 + h) for x in range(x0, x0 + w)}
+        ring = {v for (x, y), v in box.items() if x in (x0, x0 + w - 1) or y in (y0, y0 + h - 1)}
+        inks = Counter(v for v in box.values() if v not in ring)
+        if not inks:
+            raise ValueError(f"{cid}: no ink in {(x0, y0, w, h)}")
+        p = (tid[cells[0]] >> 12) * 256  # 8bpp extended palette slot
+        lum = lambda i: sum(pal[(p + i) % len(pal)])  # noqa: E731
+        ring_lum = sum(lum(v) for v in ring) / len(ring)
+        top = inks.most_common(1)[0][1]
+        # 11 px labels sit on gradient bars whose inner shades beat the ink in count: take the strongest contrast
+        # there; the 9 px labels are two-tone (fill + highlight): take the most common, the fill
+        ink = max((i for i, n in inks.items() if n >= top * 0.3), key=lambda i: abs(lum(i) - ring_lum)) \
+            if fid == 336 else inks.most_common(1)[0][0]
+        sh = Counter(box.get((x + dx, y + dy)) for (x, y), v in box.items() if v == ink for dx, dy in ((1, 0), (0, 1)))
+        sh = [(n, i) for i, n in sh.items() if i in inks and i != ink]
+        shadow = max(sh)[1] if sh and max(sh)[0] > inks[ink] // 4 else None
+        for y in range(y0, y0 + h):  # erase: each ink pixel takes the nearest background pixel of its row
+            row = [px[x, y] for x in range(x0, x0 + w)]
+            bgx = [k for k, v in enumerate(row) if v not in inks]
+            for k, v in enumerate(row):
+                if v in inks:
+                    px[x0 + k, y] = row[min(bgx, key=lambda j: abs(j - k))]
+        pts = _text_mask(text, fonts[fid]) or [(0, 0)]  # "" = erase only (drawn under the erased bg below)
+        if not text:
+            shadow = ink = px[x0, y0]
+        tw = max(p[0] for p in pts) + 1 + (shadow is not None)
+        ys = [p[1] for p in pts]
+        th = max(ys) - min(ys) + 1 + (shadow is not None)
+        if tw > w:
+            raise ValueError(f"{cid}: {text!r} {tw}px > {w}px")
+        ox, oy = x0 + (w - tw) // 2, y0 + (h - th) // 2 - min(ys)
+        for layer, idx, d in ((shadow, shadow, 1), (ink, ink, 0)):
+            if layer is None:
+                continue
+            for x, y in pts:
+                px[ox + x + d, oy + y + d] = idx
+        for (cx, cy), e in tid.items():
+            ts[e & 0x3FF] = [px[cx * 8 + k % 8, cy * 8 + k // 8] for k in range(64)]
+    gb = nitro2d.block(ncgr)
+    size, off = struct.unpack_from("<II", gb, 24)
+    data_at = 0x10 + (8 + off if off else 0x20)
+    out = bytearray(ncgr)
+    blob = bytes(v for t in ts for v in t) if g["bpp"] == 8 else bytes(t[k] | t[k + 1] << 4 for t in ts for k in range(0, 64, 2))
+    out[data_at:data_at + len(blob)] = blob
+    out_s = bytearray(nscr)
+    struct.pack_into(f"<{len(ent)}H", out_s, 0x10 + 0x14, *ent)
+    return bytes(out), bytes(out_s)
+
+
+def ids():
+    """EZ entries edits() may change (tools/romcheck.py)."""
+    return {c + d for c in CARDS + tuple(LABELS) if c not in KEEP for d in (0, 2)}
+
+
+def edits(tbl, dat, unpack):
+    """{ez index: bytes} for build.py."""
+    want = {i + d for i, _ in jobs() for d in range(3)} | {i + d for i in LABELS for d in range(3)} | {336, 337}
+    raw = unpack(tbl, dat, want)
+    fonts = {f: _glyphs(f, raw[f]) for f in (336, 337)}
+    out = {}
+    for cid in LABELS:
+        g, s = label_edits(cid, raw[cid], raw[cid + 2], raw[cid + 1], fonts)
+        out[cid], out[cid + 2] = g + bytes(-len(g) % 16), s + bytes(-len(s) % 16)
+    for cid, text in jobs():
+        g, s, _ = card(raw[cid], raw[cid + 2], raw[cid + 1], text, cid in SERIF)
+        out[cid], out[cid + 2] = g + bytes(-len(g) % 16), s + bytes(-len(s) % 16)  # EZ size word rule
+    return out
+
+
+def preview():
+    ez = ROOT / "work" / "ez"
+    dst = ROOT / "work" / "gfx_en"
+    dst.mkdir(parents=True, exist_ok=True)
+    pairs = []
+    raw = {i + d: (ez / f"{i + d:04d}.bin").read_bytes() for i, _ in jobs() for d in range(3)}
+    for cid, text in jobs():
+        _, _, im = card(raw[cid], raw[cid + 2], raw[cid + 1], text, cid in SERIF)
+        im.save(dst / f"{cid:04d}.png")
+        pairs.append((cid, im, Image.open(ROOT / "work" / "gfx" / f"{cid:04d}.png").crop((0, 0, VIS_W, VIS_H))))
+    per = 8
+    for s in range(0, len(pairs), per):
+        sheet = Image.new("RGB", (2 * VIS_W + 4, per * (VIS_H + 2)), (255, 0, 255))
+        for k, (cid, a, b) in enumerate(pairs[s:s + per]):
+            sheet.paste(a, (0, k * (VIS_H + 2)))
+            sheet.paste(b.convert("RGB"), (VIS_W + 4, k * (VIS_H + 2)))
+        sheet.save(dst / f"cards_{s // per}.png")
+    print(len(pairs), "cards ->", dst)
+    fonts = {f: _glyphs(f, (ez / f"{f:04d}.bin").read_bytes()) for f in (336, 337)}
+    for cid in LABELS:
+        rd = lambda i: (ez / f"{i:04d}.bin").read_bytes()  # noqa: E731
+        pal, _ = nitro2d.nclr(rd(cid + 1))
+        new, scr = label_edits(cid, rd(cid), rd(cid + 2), rd(cid + 1), fonts)
+        a = nitro2d.nscr_render(scr, nitro2d.ncgr(new), pal, nitro2d.ncgr(new)["bpp"]).crop((0, 0, 256, 192))
+        b = nitro2d.nscr_render(rd(cid + 2), nitro2d.ncgr(rd(cid)), pal, nitro2d.ncgr(new)["bpp"]).crop((0, 0, 256, 192))
+        sheet = Image.new("RGB", (516, 192), (255, 0, 255))
+        sheet.paste(a, (0, 0))
+        sheet.paste(b, (260, 0))
+        sheet.resize((516 * 3, 576), Image.NEAREST).save(dst / f"ui_{cid:04d}.png")
+    print(len(LABELS), "UI screens ->", dst)
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["preview"]:
+    preview()

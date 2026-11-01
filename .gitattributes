@@ -7,6 +7,7 @@
 *.cue binary
 *.iso binary
 *.png binary
+*.ttf binary
 *.bps binary
 *.ips binary
 *.xdelta binary

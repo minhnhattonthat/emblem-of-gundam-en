@@ -122,7 +122,21 @@ def lint(jp=None, cur=None, keep=None):
                     warns.setdefault(f"over a guessed budget", []).append(msg)
     errs += stubs(jp, cur)
     errs += honorifics(jp, cur)
+    errs += stage_names(jp, cur)
     return errs, warns
+
+
+def stage_names(jp, cur):
+    """A stage name reads the same in the stage list (0000) and in its STnnSTAGE table (string 351, which the
+    title card is drawn from, tools/gfx.py)."""
+    z = next((k for k in cur if k.startswith("0000_")), None)
+    names = dict(zip(jp[z], cur[z])) if z else {}
+    out = []
+    for stem in sorted(k for k in cur if re.search(r"_ST\d\dSTAGE$", k) and len(cur[k]) > 351):
+        j, e = jp[stem][351], cur[stem][351]
+        if j in names and names[j] != e:
+            out.append(f"{stem}:0351: stage name {e!r} != stage list {names[j]!r}")
+    return out
 
 
 def honorifics(jp, cur):

@@ -22,6 +22,10 @@ Edit path for all rows: NCGR tiles (+ NSCR map) inside the EZ archive, LZ10-reco
 | 0360 / 0372 | title: "EMBLEM of GUNDAM" logo (English) + エンブレム オブ ガンダム katakana subtitle; © 創通・サンライズ | title screen | logo is already English; subtitle reading: translate/remove per D5; © line: "© SOTSU・SUNRISE" |
 | 2121 | 株式会社 バンダイナムコゲームス under "Produced by" | credit card | -> "BANDAI NAMCO Games Inc." |
 
+| ? (found in phase 8) | 勝利条件 / 敗北条件 green/purple banners on the win/lose condition screen | briefNN scene | not in the static sweep: source to find (sprite? NCER) |
+
+Done in the build (`tools/gfx.py`): the 68 cards (1129 "06" kept), 0375, 0378, 0450 labels.
+
 ## Already English (no work)
 0363 "No Data" save cards, 0366 "Please choose data performing reading ...", 0381 TEAM/AREA/POWER BALANCE,
 0453/0456 OFFENSE/DEFENSE SIDE ATTACK, 0459/0462/2118 publisher logos, 1429-1444 faction cards (Earth Federation

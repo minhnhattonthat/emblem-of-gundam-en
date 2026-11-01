@@ -3,7 +3,8 @@
 The arm9 grows (relocated strings), so ndspy lays the filesystem out again and a flat byte diff of the two ROMs is
 noise past the arm9. Instead, against the original:
   - every file but EZ_TBL.BIN / EZ_DAT.BIN, arm7, the overlays, banner and icon are byte-identical;
-  - every EZ entry is identical unpacked, except the text tables script/ changed and the two fonts;
+  - every EZ entry is identical unpacked, except the text tables script/ changed, the two fonts
+    and the graphics-text images (tools/gfx.py);
   - arm9 (romdiff.check): the main section differs only inside the string region and at the pointer words the
     relocation rewrote, plus the two autoload-params words; the ITCM block is the original + the moved strings;
     the DTCM block is identical; the autoload list differs only in the ITCM size.
@@ -22,6 +23,7 @@ import arm9  # noqa: E402
 import build  # noqa: E402
 import ez  # noqa: E402
 import font  # noqa: E402
+import gfx  # noqa: E402
 import romdiff  # noqa: E402
 
 EZ_FILES = ("EZ_TBL.BIN", "EZ_DAT.BIN")
@@ -81,10 +83,10 @@ def check(orig, built, text_ids):
     eb = entries(*(b.getFileByName(n) for n in EZ_FILES))
     if ea.keys() != eb.keys():
         errs.append("EZ entry count changed")
-    ok = set(text_ids) | set(font.FONT_IDS)
+    ok = set(text_ids) | set(font.FONT_IDS) | gfx.ids()
     for i in ea:
         if ea[i] != eb.get(i) and i not in ok:
-            errs.append(f"EZ entry {i} changed but is not a text table or font")
+            errs.append(f"EZ entry {i} changed but is not a text table, font or graphics-text image")
         if ea[i][0] != eb[i][0]:
             errs.append(f"EZ entry {i} key changed")
     return errs + check_arm9(a.arm9, b.arm9)
