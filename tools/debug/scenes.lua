@@ -64,6 +64,7 @@ SCENES.gameover = extend("debugmenu", { { "wait", 30 }, { "press", "a" }, { "wai
   { "press", "a" }, { "wait", 200 }, { "press", "a" }, { "wait", 60 }, { "press", "a" } }, true)
 
 SCENES.devmenu = { MENU }
+SCENES.messagetest = { boot = 0x1006, { "script", 0x1006 } }  -- leftover 画面呼び出しテスト: message windows, save/load
 SCENES.logo = menu(0)
 SCENES.title = menu(1, { "script", 0x1040 })                        -- PRESS START
 SCENES.title_menu = extend("title", { { "wait", 120 }, { "press", "start" } })

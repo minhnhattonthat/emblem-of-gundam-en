@@ -39,7 +39,8 @@ Updated at the end of every session. Keep it to what the next session needs; his
 - **Next (phase 6, translate):**
   - Add a warp scene that shows a **story dialogue window with a portrait**, then measure it and fill
     `story_dialogue` in `tbl/windows.json` (candidates: a later narration page in a stage intro, or script 0x1006
-    message-window test). Nothing else blocks dispatch: every string has an id, the VWF budget per line is known for
+    message-window test - the `messagetest` scene boots it but currently sits on the Bandai logo, so it needs its own
+    input route). Nothing else blocks dispatch: every string has an id, the VWF budget per line is known for
     the main boxes, and `tools/font.py width()` can predict a line's px before it ships.
   - Batch translation of `script/bbq/*.json` + `script/arm9.json` (glossary in `glossary.md`; style rulings D1-D5 in
     `docs/decisions.md`), with the batch check = a lint that reads `tbl/windows.json` (phase 7 wires it in).

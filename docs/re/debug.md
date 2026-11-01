@@ -24,7 +24,10 @@ ST16 F 東アジア/G 東南アジア), 3 戦闘演出動画ビュア, 4 イベ�
 実験ステージ00 and developer test rooms (小山さんち ...). Menu input: 4 frames on / 4 off works.
 
 Other leftover test scripts: 0x1006 画面呼び出しテスト (message window, full-screen message, result, save/load
-test, tutorial cursor...), 0x1009 テスト開始, 0x100B イベント画像チェック.
+test, tutorial cursor...), 0x1009 テスト開始, 0x100B イベント画像チェック. Booting 0x1006 directly with the warp
+(`--only messagetest`, GAME A pressed every 90 frames) sat on the Bandai logo for 900 frames: that scene needs its
+own input route before it can stand in for a message window, and the story-dialogue box is still unmeasured
+(`docs/re/width.md`).
 
 ## Warp tool (`tools/debug/`)
 `warp.lua` + `scenes.lua`: boot to the dev menu, then steps (menu presses, wait for a script id, or wait until
