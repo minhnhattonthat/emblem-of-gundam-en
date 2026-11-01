@@ -43,6 +43,7 @@
   ["^a9:0207(2494|24a0|24b4|2718|6e0c|3188|3198|31a8)$", "chart_footer_hint"],
   ["^a9:0207(2d38|2cc0)$", "menu_row"],
   ["^a9:02076d98$", "chart_footer_hint"],
+  ["^a9:02071f(e4|f0)$", "chart_footer_hint"],
   ["^a9:0207(2c8[cd]|2c94|2cf0|2e7c|2e88|30ec|3110|3140|3158|3164|31c8|31d8|31e8|31f8|3208|3218|3228|3238|325c|3270|3284|32ac)$", "menu_row"],
   ["^a9:0207(2d68|2d74|2d80|2d8c|2d98|2e64|2ccc|2da4|2c9c|2cb4|2cd8|2e04|2e40|2dec|2d20|2e10|2e34|2e58|2e70|2e4c|2cfc|2dc8|2df8|2ca8|2db0|2de0|3080|2ee8|2f00|3038|3014|2f30|2f54|2f60|2f78|2f84|2fa8|2fc0|2fd8|2fe4|2ffc|3008|3044|3050|3098|30a4|30bc|30c8|3104|311c|3134|3170|2e94|2ea0|2ec4|2edc|2f18|2f24|2f6c|2f90|2fb4|2ff0|302c|305c|30b0|30d4|30f8|314c|2eac|2ef4|2f3c|2f9c|2fcc|3068|30e0|317c|2eb8|2f48|2d2c|2e1c|2ed0|3128)$", "team_name"],
   ["^a9:0207(3020|3074|308c|2d5c|2c2c|4746|4778)$", "dormant_native"],
@@ -252,8 +253,8 @@
    "shots": ["work/play/st2/0001.png", "work/play/st1/0001.png"]
   },
   "skill_name": {
-   "px": 104, "lines": 1, "x": 8, "font": 336, "measured": true,
-   "note": "Character skill / weapon name (CHARTABLE names): clipped at x=110 on the character-info screen and the team panel (same 103 px both).",
+   "px": 104, "bytes": 19, "lines": 1, "x": 8, "font": 336, "measured": true,
+   "note": "Character skill / weapon name (CHARTABLE names): clipped at x=110 on the character-info screen and the team panel (same 103 px both). The battle forecast's skill list copies a 20-byte field with no room for the NUL: 'All-Round MS Piloting' (21 bytes) ran on into the next name ('PilotinBri', combat playtest), so 19 bytes.",
    "shots": ["work/play/st1/0001.png", "work/play/st2/0001.png"]
   },
   "info_desc": {

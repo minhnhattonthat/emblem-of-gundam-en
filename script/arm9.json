@@ -2,6 +2,26 @@
  "note": "arm9 strings, keyed by RAM address (file offset = at - 0x02000000). See docs/re/text.md.",
  "strings": [
   {
+   "at": "0x2071fd4",
+   "text": "--------"
+  },
+  {
+   "at": "0x2071fe0",
+   "text": "　"
+  },
+  {
+   "at": "0x2071fe4",
+   "text": "Battle Start"
+  },
+  {
+   "at": "0x2071ff0",
+   "text": "Battle End"
+  },
+  {
+   "at": "0x2071ffc",
+   "text": "%04d"
+  },
+  {
    "at": "0x2072150",
    "text": "Sell Units"
   },

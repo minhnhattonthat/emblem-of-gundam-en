@@ -190,6 +190,9 @@ LABELS = {
     360: [  # title: the katakana reading under the English logo goes (D16), © 創通・サンライズ -> SOTSU・SUNRISE
         (86, 112, 92, 12, 337, ""), (168, 179, 86, 12, 337, "SOTSU・SUNRISE", "l"),
     ],
+    402: [  # LAND_06 placeholder battle background: 建物 under each of the two top tags
+        (x, 69, 100, 28, ("LiberationSans-Regular.ttf", 17), "Building", "l", "W") for x in (14, 142)
+    ],
     372: [(86, 124, 82, 11, 337, "")],  # extras top screen: the faded title art, its katakana reading goes too (D16)
     2121: [  # staff roll "Produced by" card
         (18, 95, 220, 20, ("LiberationSerif-Bold.ttf", 15), "BANDAI NAMCO Games Inc."),
@@ -386,14 +389,91 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
     return bytes(out), bytes(out_s)
 
 
+# ---- OBJ labels: single-kanji sprite cells (NCGR id, NCER = id + 3) redrawn as English in the 9 px font -------------
+# {NCGR id: {cell: (text, new width)}}: each cell is one 16x16 OBJ; a wider one gets fresh tiles appended to the
+# NCGR (no unused tiles) and its OAM shape/size changed. Ink = the glyph's most common fill index, outline = index 1.
+OBJ_LABELS = {
+    340: {12: ("Atk", 32), 13: ("Def", 32), 14: ("Move", 32), 15: ("Cost", 32), 16: ("Supply", 32), 17: ("Mob", 32)},
+    # battle forecast odds under the unit counts (後退 40%, combat playtest): a 3-digit value starts 29 px into the
+    # cell, too close for the 9 px font ("Advance" hid the 1 of 100%), so 3x5 caps like the game's own AREA/TEAM
+    # micro-labels; and the battle's 攻/防 % icons
+    344: {10: ("ADVANCE", 32, "caps"), 11: ("RETREAT", 32, "caps"), 12: ("CHAIN", 32, "caps"),
+          25: ("Atk", 16), 26: ("Def", 16)},
+}
+_OBJ_SHAPE = {(16, 16): (0, 1), (32, 16): (1, 2), (64, 16): (1, 3)}  # (w, cell h) -> (attr0 shape, attr1 size)
+CAPS = {c: [[int(p == "#") for p in r] for r in rows.split()] for c, rows in {  # 3x5 caps, the letters used
+    "A": ".#. #.# ### #.# #.#", "C": ".## #.. #.. #.. .##", "D": "##. #.# #.# #.# ##.", "E": "### #.. ##. #.. ###",
+    "H": "#.# #.# ### #.# #.#", "I": "### .#. .#. .#. ###", "N": "##. #.# #.# #.# #.#", "R": "##. #.# ##. #.# #.#",
+    "T": "### .#. .#. .#. .#.", "V": "#.# #.# #.# #.# .#.", "L": "#.. #.. #.. #.. ###", "P": "##. #.# ##. #.. #..",
+    "S": ".## #.. .#. ..# ##.", "U": "#.# #.# #.# #.# ###",
+}.items()}
+
+
+def obj_edits(ncgr, ncer_d, labels, glyphs):
+    """(new NCGR, new NCER) with labels {cell: (text, width)} drawn into appended tiles."""
+    import ncer
+    g = nitro2d.ncgr(ncgr)
+    assert g["bpp"] == 4, g["bpp"]
+    ts = nitro2d.tiles(g)
+    cells = ncer.cells(ncer_d)
+    b = ncer_d[0x10:]
+    n, kind, off, mapping = struct.unpack_from("<HHII", b, 8)
+    assert mapping == 0 and kind == 0, (mapping, kind)  # 1D, tile index = attr2 & 0x3FF
+    base = 0x10 + 8 + off
+    oam0 = base + n * 8
+    out_r = bytearray(ncer_d)
+    new = []
+    for cell, (text, w, *font) in sorted(labels.items()):
+        (x, y, w0, h, t, p, hf, vf), = cells[cell]
+        old = [[ts[t + (r // 8) * (w0 // 8) + c // 8][(r % 8) * 8 + c % 8] for c in range(w0)] for r in range(h)]
+        fill = Counter(v for row in old for v in row if v > 1).most_common(1)[0][0]
+        pts = _text_mask(text, CAPS if font == ["caps"] else glyphs)
+        tw = max(px for px, _ in pts) + 1
+        ys = [py for _, py in pts]
+        if tw + 2 > w:
+            raise ValueError(f"OBJ cell {cell}: {text!r} {tw + 2}px > {w}px")
+        ox, oy = 1, (h - (max(ys) - min(ys) + 1)) // 2 - min(ys)
+        rows = 32 if w == 64 else h  # 64 wide exists only as 64x32: the extra rows stay transparent
+        img = [[0] * w for _ in range(rows)]
+        ink = {(px + ox, py + oy) for px, py in pts}
+        for px, py in ink:
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    if 0 <= px + dx < w and 0 <= py + dy < h:
+                        img[py + dy][px + dx] = 1
+        for px, py in ink:
+            img[py][px] = fill
+        tile0 = len(ts) + len(new)
+        new += [[img[ty * 8 + k // 8][tx * 8 + k % 8] for k in range(64)] for ty in range(rows // 8) for tx in range(w // 8)]
+        _, o = struct.unpack_from("<HI", ncer_d, base + cell * 8 + 2)
+        at = oam0 + o
+        a0, a1, a2 = struct.unpack_from("<HHH", ncer_d, at)
+        shape, size = _OBJ_SHAPE[(w, h)]
+        struct.pack_into("<HHH", out_r, at, a0 & 0x3FFF | shape << 14, a1 & 0x3FFF | size << 14,
+                         a2 & ~0x3FF | tile0)
+    if tile0 + len(new) > 1024:
+        raise ValueError("OBJ tiles past the 1D 32K limit")
+    blob = bytes(t[k] | t[k + 1] << 4 for t in new for k in range(0, 64, 2))
+    gb = ncgr[0x10:]
+    size_, off_ = struct.unpack_from("<II", gb, 24)
+    end = 0x10 + 8 + off_ + size_
+    out_g = bytearray(ncgr[:end] + blob + ncgr[end:])
+    struct.pack_into("<I", out_g, 0x08, len(out_g))
+    struct.pack_into("<I", out_g, 0x14, struct.unpack_from("<I", ncgr, 0x14)[0] + len(blob))
+    struct.pack_into("<I", out_g, 0x10 + 24, size_ + len(blob))
+    return bytes(out_g), bytes(out_r)
+
+
 def ids():
     """EZ entries edits() may change (tools/romcheck.py)."""
-    return {c + d for c in CARDS + tuple(LABELS) if c not in KEEP for d in (0, 2)} | dlg.ids()
+    return ({c + d for c in CARDS + tuple(LABELS) if c not in KEEP for d in (0, 2)} | dlg.ids()
+            | {c + d for c in OBJ_LABELS for d in (0, 3)})
 
 
 def edits(tbl, dat, unpack):
     """{ez index: bytes} for build.py."""
-    want = {i + d for i, _ in jobs() for d in range(3)} | {i + d for i in LABELS for d in range(3)} | {336, 337}
+    want = ({i + d for i, _ in jobs() for d in range(3)} | {i + d for i in LABELS for d in range(3)} | {336, 337}
+            | {i + d for i in OBJ_LABELS for d in (0, 3)})
     raw = unpack(tbl, dat, want)
     fonts = {f: _glyphs(f, raw[f]) for f in (336, 337)}
     out = {}
@@ -403,6 +483,9 @@ def edits(tbl, dat, unpack):
     for cid, text in jobs():
         g, s, _ = card(raw[cid], raw[cid + 2], raw[cid + 1], text, cid in SERIF)
         out[cid], out[cid + 2] = g + bytes(-len(g) % 16), s + bytes(-len(s) % 16)  # EZ size word rule
+    for cid, labels in OBJ_LABELS.items():
+        g, r = obj_edits(raw[cid], raw[cid + 3], labels, fonts[337])
+        out[cid], out[cid + 3] = g + bytes(-len(g) % 16), r + bytes(-len(r) % 16)
     out.update(dlg.edits(tbl, dat, unpack))  # 3D-layer textures: staff roll
     return out
 

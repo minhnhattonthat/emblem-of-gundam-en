@@ -88,9 +88,11 @@ class Extract(unittest.TestCase):
 
     def test_arm9_strings_are_pointed_at_and_reencode(self):
         found = arm9.strings(self.rom.arm9)
-        # 351 + 6 glued to binary data with no NUL before them + 2 below the old 0x72170 bound (phase 7)
-        self.assertEqual(len(found), 359)
+        # 351 + 6 glued to binary data with no NUL before them + 2 below the old 0x72170 bound (phase 7) + 5 at
+        # 0x71FD4-0x71FFC (phase 8 combat playtest: 戦闘開始/戦闘終了 on the battle status bar)
+        self.assertEqual(len(found), 364)
         self.assertIn(0x72150, dict(found))  # ユニットの売却, found by jp_left
+        self.assertIn(0x71FE4, dict(found))  # 戦闘開始
         self.assertIn(0x73CBC, dict(found))  # セーブをしますか？ after a pointer table
         for off, text in found:
             end = self.rom.arm9.find(b"\0", off)

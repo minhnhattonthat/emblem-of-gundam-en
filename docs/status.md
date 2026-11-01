@@ -2,7 +2,27 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase:** 7 review remediation **complete**; resume phase8 QA (2026-11-01).
+- **Phase 8 (2026-11-02), in progress:** combat now English end to end (two playtests, `work/play/combat2`,
+  `combat3`; verified cold on build `70d48851`, session `work/play/fc3`: Confirm Move popup, forecast, battle,
+  result). Fixed this session:
+  - **Shared page lines** (D23): the VM reuses a line across pages (ST02 tutorial "In this state, press left / Here
+    you can move units"); `tools/pages.py` lists them (`--narration`, `--shape`), `tests/test_pages.py` gates
+    quote/indent shape. Two translator passes rewrote ~100 tutorial/narration pages (`docs/shared-lines-*brief.md`).
+    Stiff but left: 0088:0427 "Earlier I wrote that by the [Baton]" (every clearer version > 180 px), 0093:0520-0521.
+  - OBJ sprites (`gfx.OBJ_LABELS`, `tools/ncer.py`): Team Formation stat icons 攻防移消補機 -> 32x16 Atk..Mob (D22);
+    forecast odds 前進/後退/連戦 -> 3x5 caps ADVANCE/RETREAT/CHAIN (`gfx.CAPS`; the 9 px font hid the 1 of 100%),
+    battle 攻/防 -> Atk/Def. DLG 2177 move-cost popup 物資量 -> SUPPLIES; 2183/2185 Attacker/Defender caption kept
+    inside x 2-45 (was "Defende Retreat"). 0402 placeholder 建物 -> Building.
+  - arm9 region starts at 0x71FD4 (戦闘開始/戦闘終了 status bar -> Battle Start/End). Skill names capped at 19 bytes
+    (forecast skill list copies 20 bytes, no NUL): Matilda's Guard, All-Round Piloting, Transform Piloting.
+  - Font ' and " redrawn as straight ticks (read as ´). `extract.py` needs `--overwrite` now (a bare run wiped
+    script/ this session; restored from git, the JP dump is in `git stash`).
+  - Credits end caption: gone with the D16 erase (checked to the Produced-by card, `work/qa/credits_end`).
+  - **Gotcha:** a savestate only works on the ROM build that made it (the game caches the EZ file table: an old
+    state on a new build hangs DeSmuME). Regenerate with `warp_all.py --only` after each build; play sessions from
+    a frozen ROM copy (`work/play/rom_p8*.nds`).
+  - **Next:** full re-tour + `qa_gate.py init` + verdicts (fresh read-only pass), smoke, then phase 9.
+- **Phase 7:** review remediation **complete** (2026-11-01).
   See `docs/phase7-remediation.md`. I1-I5 and M1 repaired; width coverage reports zero unresolved lines.
   Native call/domain evidence is in `docs/re/native-widths.md`, `native-domains.md` and `retirement-route.md`.
   Caller evidence excludes 263 unused BBQ description/series lines and 42 hidden debug labels, and maps

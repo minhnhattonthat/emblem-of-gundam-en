@@ -27,7 +27,9 @@ SPACE_ADVANCE = 3  # the space glyph has no ink; 3 + the renderer's 1 px gap = a
 # redrawn glyphs, rows from the top of the cell: 0336's own > and < are 11 px tall parens ("->" read as "-)",
 # visual QA); chevrons with the tip on the "-" row
 _CHEVRON = ["", "", "#", ".#", "..#", "...#", "..#", ".#", "#"]
-GLYPHS = {336: {">": _CHEVRON, "<": [r.ljust(4, ".")[::-1] if r else r for r in _CHEVRON]}}
+# ' and " are 3 px diagonals that read as acute accents ("Let´s", playtest): straight ticks instead
+_TICKS = {"'": ["#", "#"], '"': ["#.#", "#.#"]}
+GLYPHS = {336: {">": _CHEVRON, "<": [r.ljust(4, ".")[::-1] if r else r for r in _CHEVRON], **_TICKS}, 337: _TICKS}
 
 
 def _chunks(d):

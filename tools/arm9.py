@@ -1,6 +1,6 @@
 """arm9.py: the ARM9's own Shift-JIS strings, their pointers, and growing them into the ITCM autoload tail.
 
-The strings live NUL-terminated in the main code section's tail, file 0x72150-0x77140 (RAM 0x02072150 upward):
+The strings live NUL-terminated in the main code section's tail, file 0x71FD4-0x77140 (RAM 0x02071FD4 upward):
 shop, team-building, save/load, options, turn prompts and the leftover debug menu. Every one is reached from a
 4-byte literal pointer (ARM's literal pools; a pointer table for a few menus), stored in arm9 itself, so a string can
 be extracted by scanning the region and told apart from the binary data around it by requiring a pointer to its start.
@@ -21,7 +21,9 @@ import sys
 import unicodedata
 
 BASE = 0x02000000
-LO, HI = 0x72150, 0x77140  # file offsets of the string region (main section tail; jp_left found 0x72150/60)
+# file offsets of the string region (main section tail; jp_left found 0x72150/60, the combat playtest 戦闘開始/戦闘終了
+# on the battle screen's status bar at 0x71FE4/F0, below them only binary data)
+LO, HI = 0x71FD4, 0x77140
 ITCM_RAM = 0x01FF8000
 ITCM_LIMIT = 0x8000  # 32 KiB of ITCM
 # Writable buffers whose default text looks like a string: code strcpy's into them and reads them as struct fields

@@ -42,6 +42,16 @@ decodes cleanly with this (`tests/test_vm.py`).
   were shortened, mostly the dev stage-jump list). Probes: `tools/lua/vmalloc.lua` (logs every string temp the VM
   allocates, with its size, source and bytecode), `tools/lua/writelog.lua`.
 
+## Message pages share lines (phase 8)
+A message page is a run of string pushes, last line first: `[push str16/str32][line][id] [0x0E][line][..]`. Most
+pages are consecutive ids, but the script writer reused lines: three ST02 tutorial pages open with 0412
+「この状態で、」, retreat quotes pair one opening line with a shared closing line, narration reuses a clause. A
+translation reflowed over consecutive ids shows a line from the wrong sentence on the borrowing page (playtest:
+"In this state, press left / Here you can move units ..."). `tools/pages.py` lists every page that is not one
+consecutive run (`--narration`: story/tutorial pages only, `--shape`: borrowed lines whose quote/indent differs
+from the Japanese; `tests/test_pages.py` keeps that at 0). Run it on the original files (`work/ez`): `bbq.widen`
+changes the push op.
+
 ## Stage record (type 5, entry 0)
 90 stage tables have an 84-byte record: `char name[64]` + 5 words. The map's stage-info panel shows this name (not
 the pool string). Each record's name equals a pool string (#351 mostly); `bbq.stage_name` writes that string's

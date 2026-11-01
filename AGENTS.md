@@ -4,7 +4,7 @@ Skill: translate-retro-game; `python tools/skill.py` prints its folder. Read its
 
 ## Commands (run from repo root)
 - Build:    `python -X utf8 tools/build.py`  -> build/eog_en.nds (checks the dump against `rom.sha1` first; applies `script/`, `--no-script` skips it)
-- Extract:  `python -X utf8 tools/extract.py` (ROM -> `script/`; `--check` lists holes, exit 1)
+- Extract:  `python -X utf8 tools/extract.py --check` (lists holes, exit 1); `--overwrite` re-dumps the ROM's Japanese over `script/` (destroys the translation)
 - Check:    `python -X utf8 tools/check.py`  (unittest suite in tests/ + lint; the pre-commit hook runs this; hooks: `git config core.hooksPath tools/hooks`)
 - Phase 7 gate: `python -X utf8 tools/check.py --phase7` (adds strict measured-width coverage; unit tests alone do not certify phase completion)
 - Smoke:    `python -X utf8 "$(python tools/skill.py)/scripts/emu.py" build/eog_en.nds --out work/qa/smoke --route tools/routes/boot.txt --smoke`

@@ -168,5 +168,7 @@ if __name__ == "__main__":
             print(f"HOLE {where}: {problem}")
         print(f"{len(holes)} holes")
         sys.exit(1 if holes else 0)
+    if sys.argv[1:] != ["--overwrite"]:  # a bare run (or `--help`) once replaced the whole translation with JP
+        sys.exit("extract.py overwrites script/ with the ROM's Japanese: pass --overwrite (or --check)")
     for path, n in dump(data):
         print(f"{path.relative_to(ROOT)}: {n} strings")

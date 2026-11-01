@@ -283,6 +283,9 @@ TEXT = {
         (1, "Next"), (2, "Back"), (3, "End"), (4, "Menu"), (5, "OK"), (6, "Start"), (7, "End"), (8, "Info"),
         (9, "Move"), (10, "Hold"))],
     2215: [(24, (10, 1, 21, 14), "End", (337,), "outline")],  # greyed-out B button
+    # move-cost popup rows (Confirm Move, combat playtest): 物資量 beside the game's own tiny MOVE/BATTLE -> 3x5 caps,
+    # "Supplies" like the 物資量 boxes of the stage-info screen (0375)
+    2177: [(t, (1, 0, 34, 8), "SUPPLIES", ("caps",), "outline") for t in (4, 7, 8, 9)],
 }
 TEXT[2139].append((0, (3, 1, 90, 14), "Merit Points", (336,), "outline"))  # result bar, "pts" at right kept
 TEXT.update({
@@ -296,8 +299,9 @@ TEXT.update({
            (3, (1, 1, 160, 32), "Character Skill", 18, "outline")],
     2179: [(0, None, "Chain", 16, "outline")],  # battle-forecast mode banners
     2181: [(0, None, "Advance", 16, "outline")],
-    2183: [(0, None, "Retreat", 16, "outline"), (1, None, "Attacker", (336,), "outline")],
-    2185: [(0, None, "Retreat", 16, "outline"), (1, None, "Defender", (336,), "outline")],
+    # side caption: only x 2-45 of its 64 px shows, the Retreat plate covers the rest ("Defende Retreat", playtest)
+    2183: [(0, None, "Retreat", 16, "outline"), (1, (1, 1, 46, 14), "Attacker", (337,), "outline")],
+    2185: [(0, None, "Retreat", 16, "outline"), (1, (1, 1, 46, 14), "Defender", (337,), "outline")],
     2187: [(0, None, "Continue", 16, "outline")],
     2193: [(0, None, "WIPED", 24, "outline"), (1, None, "OUT", 24, "outline"), (15, (1, 1, 14, 14), "", 8, "solid")],  # 全|滅, 機
     2211: [(0, None, "Shot", 14, "outline"), (1, None, "Down", 14, "outline"), (12, None, "", 8, ""),  # 撃|破 N 機
@@ -322,7 +326,7 @@ def ids():
 def edits(tbl, dat, unpack):
     import gfx
     raw = unpack(tbl, dat, ids() | {i - 1 for i in TEXT} | {336, 337})
-    fonts = {(f,): gfx._glyphs(f, raw[f]) for f in (336, 337)}
+    fonts = {(f,): gfx._glyphs(f, raw[f]) for f in (336, 337)} | {("caps",): gfx.CAPS}
     out = {i: credit_page(raw[i], CREDITS[i]) for i in CREDITS}
     out.update({i: relabel(raw[i], raw[i - 1], e, fonts) for i, e in TEXT.items()})
     return out
@@ -355,7 +359,7 @@ def preview_text(only=None):
     """work/gfx_en/tex_<id>.png: every edited sub-texture, original left, English right, x3."""
     import gfx
     ez, dst = ROOT / "work" / "ez", ROOT / "work" / "gfx_en"
-    fonts = {(f,): gfx._glyphs(f, (ez / f"{f:04d}.bin").read_bytes()) for f in (336, 337)}
+    fonts = {(f,): gfx._glyphs(f, (ez / f"{f:04d}.bin").read_bytes()) for f in (336, 337)} | {("caps",): gfx.CAPS}
     for i, e in TEXT.items():
         if only and i not in only:
             continue
