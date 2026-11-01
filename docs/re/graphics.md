@@ -33,7 +33,12 @@ u32 pixel bytes P, u32 palette bytes L; pixels at 0x1c, then the BGR555 palette.
 (256/512; 0 in some). Format not fully decoded: palette sizes of 200/136 colours suggest several sub-textures per
 file (table in the LGA). Clear cases:
 - **4137-4169 (17 files): staff roll pages**, 256x192 4bpp 16 colours, Japanese roles and names (【脚本】 芝村 裕吏 ...)
-  as white serif text. 4133/4135/4171 blank/plain.
+  as white serif text. 4133/4135/4171 blank/plain. **Done** (`tools/dlg.py`, in the build, seen in-game
+  `work/qa/credits_en/`).
+- UI group finds so far: 2197 戦闘開始, 2199 戦闘結果, 2203/2205 スキル発動 + ユニットスキル/キャラクタースキル,
+  2233 勝利条件/敗北条件 banners, 2235 result panel (戦果合計/獲得ポイント...), 2245 選択 banners; 2193/2239/2243 small
+  text to zoom. These hold several sub-textures of different widths packed back to back (2233 at width 256 shows
+  the banner rows shifted), so each needs its (byte offset, width) found before editing; the LGA tail has UV rects.
 - **2127-2245 (UI group g9):** win/lose and result banners, 2203/2205 スキル習得 panels, "MISSION CLEAR / FAIL",
   "DELAZ FLEET" bars, buttons... to survey at the right width/format.
 - 2248-4131 (g10-g12): unit battle sprites and cut-ins (to survey for text).

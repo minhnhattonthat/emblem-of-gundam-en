@@ -18,6 +18,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import nitro2d  # noqa: E402
+import dlg  # noqa: E402
 
 FONTS = ROOT / "fonts"
 CARDS = tuple(range(1111, 1313, 3))
@@ -331,7 +332,7 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
 
 def ids():
     """EZ entries edits() may change (tools/romcheck.py)."""
-    return {c + d for c in CARDS + tuple(LABELS) if c not in KEEP for d in (0, 2)}
+    return {c + d for c in CARDS + tuple(LABELS) if c not in KEEP for d in (0, 2)} | dlg.ids()
 
 
 def edits(tbl, dat, unpack):
@@ -346,6 +347,7 @@ def edits(tbl, dat, unpack):
     for cid, text in jobs():
         g, s, _ = card(raw[cid], raw[cid + 2], raw[cid + 1], text, cid in SERIF)
         out[cid], out[cid + 2] = g + bytes(-len(g) % 16), s + bytes(-len(s) % 16)  # EZ size word rule
+    out.update(dlg.edits(tbl, dat, unpack))  # 3D-layer textures: staff roll
     return out
 
 

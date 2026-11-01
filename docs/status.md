@@ -135,7 +135,11 @@ Updated at the end of every session. Keep it to what the next session needs; his
   likely the moved `鳥00`/`未設定` buffers (now kept in place), not re-run.
 - **Waiting on the user:** (non-blocking) series logo art on stage cards (Gundam/08th/0080/0083/Zeta, with small
   Japanese inside the logo) planned to stay as official logo art per D5; title katakana subtitle under the English
-  logo planned to be replaced by nothing or English.
+  logo planned to be replaced by nothing or English. Staff roll (D2/D3, Hepburn, given name first,
+  `tools/dlg.py` CREDITS): readings guessed for 重信康 Ko Shigenobu, 華南恋 Ren Kanan, 山本眞生 Mao Yamamoto,
+  福家真広 Masahiro Fuke, 小野剛 Tsuyoshi Ono, 久野綾子 Ayako Kuno, 太田東孝 Harutaka Ota, 経塚斗茂 Tomo Kyozuka,
+  小松央典 Hisanori Komatsu, 黒澤豪 Go Kurosawa, 野澤芽与 Meyo Nozawa, 松田宙 Sora Matsuda, 田村烈 Retsu Tamura;
+  correct any you know (one edit in CREDITS).
 - **Tooling gotchas:**
   - **The cards and message windows type the text on.** A width shot taken at the default `--frames 300` measures
     typing progress, not the box: three lines of the same 60-digit string read 96/192/42 px at 300 frames and

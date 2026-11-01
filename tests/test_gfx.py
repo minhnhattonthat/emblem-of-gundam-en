@@ -28,6 +28,12 @@ class Cards(unittest.TestCase):
             top_a = gfx.index_image(*gfx.parse(old[cid], old[cid + 2])).crop((0, 0, 256, 128))
             top_b = gfx.index_image(*gfx.parse(new[cid], new[cid + 2])).crop((0, 0, 256, 128))
             self.assertNotEqual(list(top_a.getdata()), list(top_b.getdata()), f"card {cid}: caption unchanged")
+        for i in gfx.dlg.CREDITS:  # staff roll textures: same size, redrawn, one English line per Japanese line
+            self.assertEqual(len(new[i]), len(old[i]))
+            self.assertNotEqual(new[i], old[i], f"credits {i} unchanged")
+            rows = gfx.dlg.unpack4(gfx.dlg.parse(new[i])[0], gfx.dlg.W)
+            want = sum(1 for t in gfx.dlg.CREDITS[i] if t is None or t)
+            self.assertEqual(len(gfx.dlg.bands(rows)), want, f"credits {i}: lines merged or lost")
 
 
 if __name__ == "__main__":
