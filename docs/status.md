@@ -30,8 +30,10 @@ Updated at the end of every session. Keep it to what the next session needs; his
     retirement notice (2179-2245), seen in-game; "Weapon" W (5 px W for font 337); "Shooting" -> "Ranged"; one-word
     lines st40/st52; **0444 all four quadrants** (TL team info, BL prep 編成チーム情報, TR ユニット情報 = scene
     `map_unit`, BR キャラクター情報 = `map_chara`; D18 short forms Atk/Def/.../Mob, Lnd/Rgh/Wtr/Air/Spc; title bars
-    whose glyphs reuse the glow colours use the `h` erase). Still open: (e) save dialog cursor brackets frame
-    いいえ's width, not "No"; (f) extras title art reading + help bar "Music..." clipped at x=0.
+    whose glyphs reuse the glow colours use the `h` erase); save dialog "Yes      /      No" spaced under the fixed
+    はい/いいえ cursor brackets; extras top art 0372 reading erased (D16); font 0336 `>`/`<` redrawn as chevrons
+    (`font.GLYPHS`: "->" read as "-)"); dev wipe names "NW -> SE". Left as is: extras help bar starts at x=0 like
+    the Japanese.
   - **Next:** 0340/0344 sprite tile sheets, 0402 建物, 0450 scenario menu (needs a warp); small textures 2169 (red
     digits, no text), 2177 (6 px kanji bars), 2239 (corner tags): too small for the fonts, decide or leave; end
     caption `- エンブレム オブ ガンダム -`; `docs/synopsis.md` old stage names. Then re-tour

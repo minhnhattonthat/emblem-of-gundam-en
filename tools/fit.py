@@ -28,7 +28,7 @@ def refresh():
     import font
     rom = ndspy.rom.NintendoDSRom(build.ROM.read_bytes())
     tbl, dat = (rom.getFileByName(n) for n in ("EZ_TBL.BIN", "EZ_DAT.BIN"))
-    d = font.proportional(extract.unpack(tbl, dat, {336})[336])
+    d = font.proportional(extract.unpack(tbl, dat, {336})[336], font.GLYPHS.get(336))
     CACHE.write_text(json.dumps({c: v[2] for c, v in font.advances(d).items()}, indent=0), encoding="utf-8")
 
 

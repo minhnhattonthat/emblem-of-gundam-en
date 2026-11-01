@@ -24,6 +24,10 @@ import nftr  # noqa: E402
 FONT_IDS = (336, 337)
 PRINTABLE = range(0x20, 0x7F)
 SPACE_ADVANCE = 3  # the space glyph has no ink; 3 + the renderer's 1 px gap = a 4 px word gap
+# redrawn glyphs, rows from the top of the cell: 0336's own > and < are 11 px tall parens ("->" read as "-)",
+# visual QA); chevrons with the tip on the "-" row
+_CHEVRON = ["", "", "#", ".#", "..#", "...#", "..#", ".#", "#"]
+GLYPHS = {336: {">": _CHEVRON, "<": [r.ljust(4, ".")[::-1] if r else r for r in _CHEVRON]}}
 
 
 def _chunks(d):
@@ -59,11 +63,23 @@ def advances(d):
     return {c: f["widths"][f["cmap"][c]] for c in PRINTABLE if c in f["cmap"] and f["cmap"][c] in f["widths"]}
 
 
-def proportional(d):
-    """Font bytes with every printable ASCII advance set to its ink width. Same length; kana untouched."""
+def proportional(d, glyphs=None):
+    """Font bytes with every printable ASCII advance set to its ink width. Same length; kana untouched.
+    glyphs = {char: rows of "#"/"."} redraws those glyphs first (1 bpp fonts)."""
     f = nftr.parse(d)
     first, body = _cwdh(d)
     out = bytearray(d)
+    for ch, rows in (glyphs or {}).items():
+        assert f["bpp"] == 1, f["bpp"]
+        w, h, size = f["cell_w"], f["cell_h"], f["glyph_size"]
+        bits = 0
+        for r in range(h):
+            row = rows[r] if r < len(rows) else ""
+            for c in range(w):
+                bits = bits << 1 | (c < len(row) and row[c] == "#")
+        at = f["glyph_off"] + f["cmap"][ord(ch)] * size
+        out[at:at + size] = (bits << (size * 8 - w * h)).to_bytes(size, "big")
+    d = bytes(out)
     for c in PRINTABLE:
         g = f["cmap"].get(c)
         if g is None or g not in f["widths"]:
@@ -94,7 +110,7 @@ def width(text, table, halfwidth=0):
 def edits(tbl, dat, unpack):
     """{ez index: font bytes} with the proportional table, for build.py. `unpack` is extract.unpack."""
     fonts = unpack(tbl, dat, set(FONT_IDS))
-    return {i: proportional(f) + bytes(-len(f) % 16) for i, f in fonts.items()}
+    return {i: proportional(f, GLYPHS.get(i)) + bytes(-len(f) % 16) for i, f in fonts.items()}
 
 
 if __name__ == "__main__":
@@ -132,7 +148,7 @@ if __name__ == "__main__":
         d = (ROOT / "work" / "ez" / f"{fid:04d}.bin").read_bytes()
         f = nftr.parse(d)
         old = advances(d)
-        new = proportional(d)
+        new = proportional(d, GLYPHS.get(fid))
         n = nftr.parse(new)
         print(f"font {fid}: {f['cell_w']}x{f['cell_h']}, encoding {f['encoding']}")
         print("  old advances", {chr(c): t[2] for c, t in list(old.items())[:8]})

@@ -24,7 +24,14 @@ class Vwf(unittest.TestCase):
         cls.rom = ndspy.rom.NintendoDSRom(build.ROM.read_bytes())
         cls.tbl, cls.dat = (cls.rom.getFileByName(n) for n in ("EZ_TBL.BIN", "EZ_DAT.BIN"))
         cls.orig = extract.unpack(cls.tbl, cls.dat, set(font.FONT_IDS))
-        cls.new = {i: font.proportional(d) for i, d in cls.orig.items()}
+        cls.new = {i: font.proportional(d, font.GLYPHS.get(i)) for i, d in cls.orig.items()}
+
+    def test_redrawn_glyphs(self):
+        for i, glyphs in font.GLYPHS.items():
+            g = nftr.parse(self.new[i])
+            for ch, rows in glyphs.items():
+                got = ["".join("#" if v else "." for v in r).rstrip(".") for r in nftr.glyph(g, self.new[i], g["cmap"][ord(ch)])]
+                self.assertEqual(got, [r.rstrip(".") for r in rows] + [""] * (len(got) - len(rows)), f"font {i} {ch!r}")
 
     def test_length_and_kana_untouched(self):
         for i, d in self.orig.items():
@@ -43,7 +50,7 @@ class Vwf(unittest.TestCase):
             for c in font.PRINTABLE:
                 if c not in f["cmap"]:
                     continue
-                ink = font.ink_width(f, d, f["cmap"][c])
+                ink = font.ink_width(g, self.new[i], g["cmap"][c])
                 want = font.SPACE_ADVANCE if c == 0x20 else max(1, ink)
                 self.assertEqual(table[c][2], want, f"font {i} {chr(c)!r}")
 
@@ -70,7 +77,7 @@ class Vwf(unittest.TestCase):
 
         got = extract.unpack(tbl, dat, set(font.FONT_IDS))
         for i in font.FONT_IDS:
-            self.assertEqual(font.advances(got[i]), font.advances(font.proportional(self.orig[i])), f"font {i}")
+            self.assertEqual(font.advances(got[i]), font.advances(font.proportional(self.orig[i], font.GLYPHS.get(i))), f"font {i}")
 
 
 if __name__ == "__main__":

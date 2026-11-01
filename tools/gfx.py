@@ -190,6 +190,7 @@ LABELS = {
     360: [  # title: the katakana reading under the English logo goes (D16), © 創通・サンライズ -> SOTSU・SUNRISE
         (86, 112, 92, 12, 337, ""), (168, 179, 86, 12, 337, "SOTSU・SUNRISE", "l"),
     ],
+    372: [(86, 124, 82, 11, 337, "")],  # extras top screen: the faded title art, its katakana reading goes too (D16)
     2121: [  # staff roll "Produced by" card
         (18, 95, 220, 20, ("LiberationSerif-Bold.ttf", 15), "BANDAI NAMCO Games Inc."),
     ],

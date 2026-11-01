@@ -205,7 +205,7 @@ def main():
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_bytes(build.build(ez, None))
         print(out)
-        adv = font.advances(font.proportional(extract.unpack(tbl, dat, {336})[336]))
+        adv = font.advances(font.proportional(extract.unpack(tbl, dat, {336})[336], font.GLYPHS.get(336)))
         for ln in lines:
             print(f"  {font.width(ln, adv)} px  {ln!r}")
         return
