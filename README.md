@@ -1,6 +1,6 @@
-# <Game title> English translation
+# Emblem of Gundam English translation
 
-Unofficial English fan translation of **<Game title>** (<platform>, <publisher>, <year>): the source text and tools
+Unofficial English fan translation of **Emblem of Gundam** (Nintendo DS, Bandai Namco Games, 2007): the source text and tools
 that build the patch.
 
 **Just want to play?** Download the patch from [Releases](../../releases) and follow its README. This repository holds
@@ -13,13 +13,13 @@ helps most.
 
 | Part | Status |
 |---|---|
-| <Dialogue / story> | <Translated> |
-| <Menus, items, skills, system messages> | <Translated> |
-| <Title screen, logos, graphics with text> | <Translated / Left in Japanese> |
-| <Name entry> | <Translated / Japanese kana only> |
-| <Songs, voiced lines, credits roll> | <Left in Japanese> |
+| Story, briefings, battle dialogue, tutorial | Translated |
+| Menus, units, characters, skills, system messages | Translated |
+| Stage title cards, UI graphics with text | Translated |
+| Staff roll | Translated |
+| Title logo | Kept |
 
-Known issues: <none known / see [Issues](../../issues)>.
+Known issues: see [Issues](../../issues).
 
 ## What's here
 
@@ -40,11 +40,11 @@ Known issues: <none known / see [Issues](../../issues)>.
 Needs Python 3.12+ and your own dump of the Japanese game.
 
 ```sh
-git clone https://github.com/minhnhattonthat/<repo>
-cd <repo>
-# copy your dump to: rom/<file>
-#   (<size> bytes, SHA-1 <sha1>; the build refuses any other dump, see rom.sha1)
-python -X utf8 tools/build.py                          # -> build/<game>_en.<ext>
+git clone https://github.com/minhnhattonthat/emblem-of-gundam-en
+cd emblem-of-gundam-en
+# copy your dump to: rom/Emblem of Gundam (Japan).nds
+#   (67108864 bytes, SHA-1 c60906c2084281daf2c948b17443c25040f3d365; the build refuses any other dump, see rom.sha1)
+python -X utf8 tools/build.py                          # -> build/eog_en.nds
 python -X utf8 tools/check.py                          # tests + text lint
 ```
 
@@ -56,8 +56,8 @@ If you enjoy this translation, you can support my work on Ko-fi:
 
 ## Licence
 
-Tools and English translation: MIT. The original Japanese text in `script/` is <publisher>'s and is included only so
-the translation can be checked against it. <Game title> is (c) <publisher>; this project is not affiliated with them.
+Tools and English translation: MIT. The original Japanese text in `script/` is Bandai Namco Games' and is included only so
+the translation can be checked against it. Emblem of Gundam is (c) SOTSU / SUNRISE and Bandai Namco Games; this project is not affiliated with them.
 Do not share patched ROMs.
 
 The translation was made with extensive AI assistance (Claude by Anthropic). Corrections are very welcome.

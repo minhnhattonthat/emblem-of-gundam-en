@@ -539,3 +539,261 @@ script refuses to run while any line is unticked.
 - [ ] 0305:0366 - st60 intro "The battle to survive / had begun." while the box is present tense: "has begun"
 - [ ] 0301:0366 - st59 "The enemy makes its final attack." vs st63/st67 "launched": match tense
 - [ ] 0139:0362 - case of win/lose conditions differs between stages ("White Base destroyed" vs "All Allies Destroyed"): pick one
+
+## story pass ch01_st00-02 (work/tl/review_story_ch01.md)
+- [ ] 0086:0426 - "On the map, each team's symbol / And you control..." - verb missing ("is shown") - "each team is shown as a symbol. And you control your teams..."
+- [ ] 0086:0475-0481 - "Next, on the parameters ... / Please note" - stray capital P after comma, awkward - "Next, the parameters involved when a battle occurs. Please note the two parameters..."
+- [ ] 0088:0354 - "up to that time it had existed only in Zeon" - "it" reads as "the course of the war" (previous line), meaning is the mobile suit - "And up to that time, such a weapon had existed only in Zeon."
+- [ ] 0088:0234-0235 - Paolo "ご苦労様です、レイ大尉" - "Welcome aboard" implies Tem just arrived (he is already aboard) - "Thank you for coming, Lieutenant Ray."
+- [ ] 0088:0112 - "for his parent's job" - "for his parents' work".
+- [ ] 0089:0414/0424 - 人物 rendered "the man ... this man" for a 15-year-old narrator-corrected "boy -> person" - "no, the person ... this person".
+- [ ] 0089:0544 - sentence begins lowercase "units you add, once formed..." after a full stop; repeats "units you add" from the previous box - "Once formed into a 'Custom Team' and sent into battle, such characters or units, if destroyed, can no longer be used from the next stage on, so be careful."
+- [ ] 0092:0304 - narration box starts lowercase "the outer walls..." / "the people of space easily perish" - capitalise.
+- [ ] 0092:0328 - Char's famous line "Let me see just how good this Federation mobile suit really is" - style-reference asks for the known English form; consider the dub-closer "I'll see what this Federation mobile suit can really do." (low priority).
+- [ ] 0092:0380 / 0089:0477 - 「やります」 both "I'll take it out." - Amuro's reads over-specific; "I'll do it." fits both.
+- [ ] 0095:0080 - Mirai "...you know." adds a chatty tag; Mirai is composed/warm - "Also, they may have used up their weapons."
+- [ ] 0095:0102 - Sayla asks "can we hold out against another attack?" (守りきれます？) - EN is a declarative ending in a comma "I doubt we could hold out ... from Char," - "Could we hold out against another attack from Char?"
+- [ ] 0095:0099 - "even we, even Amuro" slightly overdone - "even we and Amuro might be able to fight."
+- [ ] Rank terms: 少佐 is "Commander" in barks (0086:0117 Karius, 0086:0249 Dren) but "Lieutenant Commander" in 0088:0065 and 0093:0361 for the same Char - use "Lieutenant Commander" in both barks.
+- [ ] 0086:0236/0243 - あなた "My dear..." (Hamon) vs "Darling!" (Zenna & Mineva) - unify.
+- [ ] 0086:0103 vs 0086:0054 - Monsha (crude, 覚えてやがれ) and Ortega (覚えておけよ) share the identical "You'll pay for this!"; Monsha could be cruder - "Damn it!! Remember this, you bastards!"
+- [ ] 0086:0259 - Alice 撤退するわ gets a flat "We're pulling out!" - fine, optional "I'm pulling out!" for her own unit.
+- [ ] 0089:0379 "the Zakus" / 0092:0096 "I'll send the Zakus" vs 0092:0263 "two Zaku" - pick one plural (Zaku or Zakus).
+- [ ] Tutorial tags: [Move]/[Edit]/[Info] (0089:0613-0644) lowercase vs glossary upper-case tag style ([MOVE], [MOBILITY]) - check against the in-game labels.
+- [ ] 0093:0545-0553 - 'Conversely, ... exit the 'Edit' screen, Also, 'Edit' does not just merge into one.' - sentence ends unfinished; JP box order is also cut, so only fix if a box can carry the missing "(the teams do not count as acted)".
+
+## story pass ch02_st03-05 (work/tl/review_story_ch02.md)
+- [ ] 0096:0418 - "this skill is one / that takes effect..." - lowercase window start (new sentence in JP) - "This skill is one that takes effect...".
+- [ ] 0096:0423 - "for the terrain / this team is on now, / is 'Ranged'" - broken grammar - "However, the terrain this team is on now is 'Ranged', so ...".
+- [ ] 0100:0402 - "you likely saw / --that was the 'Supply' notice" - stray dash, run-on - "You likely saw it when the turn began; that was the 'Supply' notice."
+- [ ] 0100:0405 - window starts lowercase "the amount supplied / builds up here" - "The amount supplied builds up here ...".
+- [ ] 0100:0438 / 0100:0459 - "'Cost' x 3 is likewise the amount / Now, for real, ..." - the JP also breaks mid-sentence (同様に / では、), so the window reads as a cut-off. Only fixable if the window split can be moved; otherwise leave.
+- [ ] 0103:0413 - "[Occupy] / only one side's teams / are present." - fragment, no verb - "Met when only one side's teams are present."
+- [ ] 0103:0434 - "[Station] / for the given period, / a team stays put." - reads as a fragment - "Means staying put in the area for the given period."
+- [ ] 0102:0170 - "Amuro, / You're past the time limit." - stray capital after the comma - "Amuro, you're past the time limit."
+- [ ] 0103:0361 - `"How many times does this make?" / Amuro..."` - stray closing quote after "?" - `"How many times does this make? / Amuro..."`.
+- [ ] 0102:0264 - Char to Crown, "I'm sorry" for 気の毒だが - warms the cold Char of this scene (he sacrifices Crown as a lure) - "A Zaku can't break through the atmosphere. A pity, but..."
+- [ ] 0096:0054 / 0096:0103 / 0096:0296 - Ortega, Monsha, Bask all "You'll pay for this" / "make you pay" - repeats, loses Ortega's "Remember this!" and Monsha's crude "Remember that, you bastards!" - Ortega "Remember this!", Monsha "Damn it!! You'll regret this, you bastards!".
+- [ ] 0099:0155 - Dren "No, sir." for はい - answers Char's negative question correctly in English but reads oddly next to "Yes"; fine, optional "No, sir. They haven't."
+
+## story pass ch03_st06-08 (work/tl/review_story_ch03.md)
+- [ ] 0108:0061 / 0108:0065 / 0112:0111 - speaker column carries sentence fragments ("the main fighter of the Federation", "and old records all agree:", "went by names like"). If those words are not shipped in the text body, the player reads broken sentences: "In those days, / space forces was the 'Saberfish.'", and "...and, making light of it, / 'Red Comet' or...". Verify they are in the displayed string. If not, fold them in: "...the Federation's main space fighter was the 'Saberfish.'"
+- [ ] 0112:0108 - JP "knew it all too well" only; "making light of it" is invented tone, and it dangles without the verb. Suggest "And they knew it all too well, / and took names like..."
+- [ ] 0112:0175 - JP "これもまた、" is a cut-off fragment; EN "This, too, went Zeon's way." asserts a completion. Acceptable, but check it against the following battle text.
+- [ ] 0109:0387 - "On our side, / are allowed losses / of fewer than 30 units." Broken grammar. Suggest "We may lose fewer than / 30 units. Fight well!!"
+- [ ] 0109:0375 - clunky "It is because on Federation ships the Saberfish cannot be operated; in the end, that is what has put the Federation at a disadvantage." Suggest "Federation warships cannot operate Saberfish, and in the end that leaves the Federation at a disadvantage."
+- [ ] 0115:0016 - "Even converting national power to strength ten times better than the Federation" is garbled. Suggest "Even if Zeon turned national power into strength ten times as efficiently as the Federation, it was no match."
+- [ ] 0115:0040 - stray capital "But" after the comma ("...basis of war, / But this"). Make it "war. / But this".
+- [ ] 0106:0249 / 0106:0117 / 0106:0339 (and the other stage copies) - 少佐 rendered "Commander" (Dren to Char, Karius to Gato), but style-reference gives 少佐 = Lieutenant Commander (Char 0079). The same Gato is "Commander" (Karius) and "Lieutenant" (Titans Officer, 大尉), both following the JP. Settle the rank form.
+- [ ] 0106:0272 - Delaz "So I've gone and been the captain who loses his ship again..." is too colloquial for the grave Delaz. Suggest "Have I become the captain who loses his ship once more...?"
+- [ ] 0106:0128 - Quattro "Damn it!" for ええい is blunt against his measured style. Suggest "Tsk. A bad hit, and this is the result."
+- [ ] 0106:0041 - Ral self-talk is neutral, but nothing in it carries a quirk. No change needed (noted only).
+
+## story pass ch04_st09-11 (work/tl/review_story_ch04.md)
+- [ ] 0124:0226 - Hayato: Tank unit confirmed - "Tank unite" reads as a typo - "Tank unit confirmed."
+- [ ] 0116:0367 (and 0119/0122 equivalents n/a) - "as in the last one," starts lowercase at the head of a card; reads as a continuation - "As in the last battle, / keep your losses to a minimum / as you withdraw from the enemy."
+- [ ] 0116:0103 - Monsha: crude 畜生/覚えてやがれ - identical to Ortega's 0116:0054 "You'll pay for this!"; Monsha's crude/mocking edge not distinct - "Damn it!! Just you wait, you bastards!" (or similar)
+- [ ] 0116:0190 - Haman: 俗物 - "Vulgar fool" is passable but not regal - "Ngh... Philistine...!" / "Ngh... Common rabble...!"
+- [ ] 0124:0216 - Bright: ああ……だが - "Yeah... but..." is a touch casual for Bright's clipped command voice - "Yes... but..."
+- [ ] 0124:0144 - narrator: せっせと (diligently, ironic jab at M'Quve) - "dutifully" loses the dry sting - "busily shipping them up".
+- [ ] 0118:0110 - narration: 一手に率いる - "to carry on their own" is muddled - "fell to one outdated admiral and the sailors under him alone."
+- [ ] 0121:0145 - narration: 地上の民は地上では強かった - "landfolk" is odd for the closing punch - "The people of Earth were strong on Earth."
+- [ ] 0116:0211 - Matilda: 確認急げ - "Check on it, quickly!" stiff - "Confirm it, quick!"
+- [ ] 0124:0127 - narrator: そして。 - "And so." as a one-word beat; "And then." keeps the pause (optional).
+
+## story pass ch05_st12-14 (work/tl/review_story_ch05.md)
+- [ ] 0128:0314 - narration, "everyone has begun to want a mere boy to be a man" - lowercase "and" opener plus tense shift after past-tense narration - "And everyone had begun to want a mere boy like this to become a man."
+- [ ] 0135:0176 - "Impregnable, in this era? / it meant..." stray "?" - "In this era, impregnable / meant being hard to make out from space."
+- [ ] 0132:0044 - 軍人としてはともかく ("setting aside his soldiering") - "soldier or not" implies Garma was no soldier - "whatever he was as a soldier, as a governor..."
+- [ ] 0132:0296 - Char's thought "(Revenge as his sister?" - "his" ambiguous (Char? Garma?) - "(Revenge as Garma's sister? Or...)"
+- [ ] 0132:0084 vs 0132:0291 - speaker label "Honor Guard" vs text/glossary "Royal Guard" (親衛隊) - align label if it is shown to the player.
+- [ ] 0129:0412, 0129:0423 - Matilda's さあ rendered "Who knows." twice; curt for a warm, gentle officer - "Well..." / "Hard to say."
+- [ ] 0129:0438 - Amuro to Matilda "Yes, sir." - "Yes, ma'am."
+- [ ] 0135:0305 - "Amuro, Sayla, launching!" reads as a list of names - "Amuro, this is Sayla, launching!" (or split by speaker).
+- [ ] 0125:0103 - Monsha "Damn it!! You'll pay for this!" identical to Ortega's 0125:0054 and not crude/mocking enough for his row - "Damn it!! Remember this, you bastards!"
+- [ ] 0135:0092 - こりゃ駄目だ ("this is no good") flattened to "written off" - fine, optional.
+
+## story pass ch06_st15-17 (work/tl/review_story_ch06.md)
+- [ ] 0139:0360 - Battle End line "White Base can't move. ... Amuro..." - stray closing quote after "move." (`"White Base / can't move." / Amuro..."`) - `"White Base / can't move. / Amuro..."`
+- [ ] 0143:0206-0208 / 0138:0011-0063 - nothing to fix; callbacks kept. Woody scene: "Matilda-san" (Amuro) vs bare "Matilda" (Woody) and "Amuro-kun" match D10. Woody's 'Don't flatter yourself' is quoted in the 0138:0130 narration with the same wording as 0138:0049/0051, so the callback lands.
+- [ ] 0136:0128 - Quattro "ええい" -> "Damn it!" is blunter than his measured style row; Char uses "Blast." for the same ええい at 0139:0387 - "Blast! One bad hit, and this is what happens!"
+- [ ] 0136:0117 / 0136:0339 - Karius calls Gato 少佐 ("Commander"), a bark officer calls him 大尉 ("Lieutenant Gato"). Same man, two ranks in one stage; probably the JP itself, but worth a check against the 0083 rank used elsewhere in the script.
+- [ ] 0146:0013 - "For while tall mobile suits were often spotted from far off, in a tall jungle, this happened extremely rarely" - reads as a garble - "Tall mobile suits were often spotted from far off, but in a jungle of tall trees that happened extremely rarely, which is why."
+
+## story pass ch07_st18-20 (work/tl/review_story_ch07.md)
+- [ ] 0154:0097 - Shiro 少尉 - "an ensign" is the navy form. Style-reference says the ground war (08th MS Team) uses army ranks, so this should be "Second Lieutenant". Check against D12-D14 - suggested EN: "a second lieutenant".
+- [ ] 0154:0091 - Karen's furious parting line, あんた...最低の兵隊だよ - "You are the worst soldier I've ever met!" is stiff against her earlier "Men, every last one of 'em" colloquial voice - suggested EN: "You're the worst soldier I've ever met!"
+- [ ] 0153:0033 - Norris, 木の叉から生まれたわけではない ("I wasn't born from a tree fork", i.e. I didn't spring from nowhere) - "carved out of wood" misses the joke and the point that he has a past - suggested EN: "I didn't sprout from a tree stump, you know."
+- [ ] 0147:0395 - Aina answers Norris's "resume the test" with はい - "Yes, sir." is odd, since she is the one he calls "Lady" - suggested EN: "Yes."
+- [ ] 0147:0397 - 警戒ライン - "watch line" is odd, and a stray echo of the watch motif - suggested EN: "alert line" / "defensive line".
+- [ ] 0147:0073 vs 0151:0379 - Karen's 手玉に取られた appears as "Me and Sanders... toyed with" and "Sanders and I got played for fools". The wording differs between the bark and the stage line, and "Me and Sanders" is a little ungrammatical for Karen - suggested EN: use "toyed with" in both ("Sanders and I... toyed with like that...").
+- [ ] 0150:0120 - 正解を引き当てる - "draw the winning ticket" - suggested EN: "hit on the right answer" / "find the right one".
+- [ ] 0147:0117, 0147:0249 - 少佐 rendered "Commander", while style-reference uses "Lieutenant Commander" for 少佐 (Char 0079, D15 reserves "Commander" for 中佐). Check who is addressed; 0147:0339 "Lieutenant Gato" (大尉) is the same family of rank issue - suggested EN: "Lieutenant Commander" or "Major" per the speaker's service.
+- [ ] 0147:0272 - Delaz, 艦長を - "the captain who loses his ship again" is clunky - suggested EN: "Once again, the captain who loses his ship..."
+- [ ] 0147:0322 - 閣下 - bare "Excellency!" - suggested EN: "Your Excellency! Help His Excellency!"
+
+## story pass ch08_st21-23 (work/tl/review_story_ch08.md)
+- [ ] 0161:0050 - lowercase start "it deserves special mention..." after a full stop at 0161:0046 - capitalise: "It deserves special mention that..."
+- [ ] 0164:0068 - "this was not by his own wish." follows a full stop - capitalise "This was not by his own wish."
+- [ ] 0168:0031-0032 - sentence is split across two ids so the quote lands awkwardly ("Zeon named this M'Quve, its / 'foremost Earth expert,' theater commander.") - reads acceptably in sequence, polish only: "Zeon named M'Quve, its 'foremost Earth expert,' as theater commander."
+- [ ] 0159:0253 - Eledore "Gimme a break!" is the style-reference signature for Kai, while Kai's own bark 0159:0011 has none. Not wrong, but consider Eledore "Give me a break!" / something less Kai-coded.
+- [ ] 0159:0190 - Haman "く…俗物が…！" - "Ngh... Vulgar fool...!" is a little low-register for a regal, contemptuous voice; suggest "Hmph... vulgar creatures...!" (drop the grunt).
+
+## story pass ch09_st24-26 (work/tl/review_story_ch09.md)
+- [ ] 0172:0171 - Amuro 一兵卒 - "a mere private" clashes with "Sergeant Major Amuro" at 0180:0233 (曹長) - "A hero, yes, but a mere foot soldier."
+- [ ] 0180:0219 - Sleggar's fake-turbulence gag: 「そうか？」 answers "It isn't shaking!" - "Am I?" does not answer that - "Is it?" / "You think?"
+- [ ] 0179:0044 - Char 「すまん」 to his aide, "Sorry." too casual for Char's formal voice - "My apologies." / "Forgive me."
+- [ ] 0176:0212 - Char 「そう、私のプライドを傷つけたモビルスーツだからな」 - "Yes, for that mobile suit wounded my pride." reads stiff - "Yes. That mobile suit wounded my pride, after all."
+- [ ] 0169:0128 - Quattro ええい！ "Damn it!" a bit crude for his measured mentor voice - "Tch! A bad hit, and this is the result!"
+- [ ] 0179:0209 - Kai 電気屋 (electronics/appliance shop) - "repair shop" loses the joke of opening a shop on Amuro's tools - "open an electronics shop".
+- [ ] 0169:0120 - Amuro 「まるで僕たちが戦争を激化させたみたいに」 - "As if we made the war escalate." flat - "As if we were the ones who escalated the war."
+
+## story pass ch10_st27-29 (work/tl/review_story_ch10.md)
+- [ ] 0183:0110-0113 - Char: "If this Zanzibar hadn't been preparing the Bigro test, we couldn't have chased the Trojan Horse down" (JP 追いきれなかった, past negative) - EN "the Trojan Horse would be gone" reads as a different cause/effect and sits oddly after "Was Lady Kycilia angry? / I can see why" - suggest "...we couldn't have caught the Trojan Horse." or recheck the intended logic.
+- [ ] 0181:0117 vs 0181:0339 (Karius) - JP 少佐 "Commander" vs 大尉 "Lieutenant Gato" - same Karius->Gato relationship shows two different ranks; follows JP, so only a note: confirm 0117 is not meant for Gato (else unify).
+- [ ] 0186:0344-0347 (Steiner) - JP だから... "So..." chain; EN "Besides, dying now or later may be all the same" adds a connective the JP does not have and slightly muddles the logic (nuke can be stopped -> so dying is fine) - suggest "So it may not matter when we die." Only if page order matches ID order.
+- [ ] 0184:0357 - literal "\n" in both JP and EN ("Victory conditions not met\nAll allies destroyed"); verify the engine renders it as a break, not text.
+- [ ] 0190:0354 (Amuro to Tem) - "Y-yes, sir." JP は、はい; "sir" to his father is a touch stiff next to "Dad" elsewhere in the scene; "Y-yes." is enough. (Arguably works as the cold-father beat.)
+- [ ] 0187:0417 - "Changing the display / Will this work?" is developer test text; leave unless it can be shown in play.
+
+## story pass ch11_st30-32 (work/tl/review_story_ch11.md)
+- [ ] 0194:0043 - JP "第3艦隊と囮である" (the Third Fleet and the decoy). EN "Given command of the Third Fleet" drops 囮 (decoy). The decoy idea pays off in Bright's bark (0191:0197 "we're the decoy after all") and Wakkein's "hold out 15 minutes"; narration no longer sets it up. Optional: "Given command of the Third Fleet, the decoy force".
+- [ ] 0198:0004 - JP is ソーラ・レイシステム (Solar Ray System). EN "The Solar System, a new weapon" loses "Ray" and could read as the planetary system. Suggested EN: "The Solar Ray System, a new weapon," (or "The Solar System weapon").
+- [ ] 0191:0243 vs 0194:0273/0283 - Zenna to Dozle: 「あなた」 is "Dear" twice, "Darling!" once in the bark (Hamon's 0191:0236 is "My dear..."). Harmonize to "Dear!".
+- [ ] 0191:0117, 0191:0249 (and the 0339 variant) - 少佐 rendered "Commander" (Karius to Gato, Dren to Char). Style ruling: 少佐 = Lieutenant Commander/Major; "Commander" is 中佐 (D15). 0339 then says "Lieutenant Gato" for 大尉, so the same speaker is addressed with two different ranks (the JP differs too, but "Commander" is the wrong tier). Suggested EN: "Major..." / "Lieutenant Commander, we're pullin' out!".
+- [ ] 0202:0216 vs 0202:0359 - 大佐 is "Captain Asakura" but "Colonel Char" in the same scene. Navy form for Zeon space forces suggests "Captain" for both; style-reference allows "Colonel Char" only in 0087 flashbacks. Pick one rule.
+- [ ] 0202:0114/0125/0126 (page 114,125,126) - "And I, Hitler's tail, / Do watch / how I fight it." "it" has no referent. Suggested EN: "Hitler's tail will show you / how he fights. Watch."
+- [ ] 0202:0118 - Gihren answers his father "Yes, sir." JP 「はい」; Gihren elsewhere says "Father". "Yes, Father." fits the icy-formal register better.
+- [ ] 0193:0025 - Lalah "Yes, sir." to Char; her register is soft and personal. "Yes." (or "Yes, Captain/Char") is closer to the Lalah row.
+- [ ] 0198:0058/0057 - card titles "Amuro and Fraw" / "Mirai and Sleggar" drop 関係 (relationship). Width-driven; fine unless a longer form fits.
+- [ ] 0198:0269-0272 - the narration "Moved by Mineva's crying ... thought was unlike him" has no clear subject for "him" (M'Quve? Barom?). Check the assembled page; the intended sense is that M'Quve acted out of character on hearing Mineva cry.
+
+## story pass ch12_st33-35 (work/tl/review_story_ch12.md)
+- [ ] 0206:0217 - Char 「はっきり言う。気にいらんな」 - EN "You speak plainly. I don't like it." gives the frankness to the soldier; it is Char being blunt, and 「どうも」 "Thank you." answers that - "Let me be frank: I don't like it."
+- [ ] 0206:0230 - Kycilia 「連邦もよくやります」 - "sure keeps at it" is too casual for her icy register - "The Federation is persistent."
+- [ ] 0206:0266 - Lalah 「アムロとは いつでも遊べるから」 is third-person ("with Amuro"); EN turns it into "you, Amuro", blurring who she is addressing before 0273 (direct address) - "Heh heh. I can always play with Amuro."
+- [ ] 0206:0348 - 「ジオンの忘れ形見」 - "the child Zeon left behind" reads as the country; if Deikun is meant, "Deikun's child" / "the child Zeon Deikun left behind".
+- [ ] 0209:0010 - Kycilia 「死なすことはありませんでしたな」 - "no need to let him die" softens the accusation (causative: made him die); 0209:0015 patricide then lands harder - "You needn't have killed him, Supreme Commander."
+- [ ] 0209:0024 - Towning "Your orders, Excellency Kycilia." - "Your orders, Your Excellency."
+- [ ] 0209:0088 - Amuro 「それは理屈だ」 - "sophistry" is above a sulky teen's register - "That's just talk!"
+- [ ] 0209:0165 - Char 「ガルマ、私の手向けだ」 - "parting gift" loses the offering-to-the-dead sense (cf. 0206:0078 "tribute") - "Garma, this is my offering."
+- [ ] 0203:0379 - Char 「うおおっ、ガンダム」 - "Whoa!" is out of his cool register - "Ugh! The Gundam!"
+- [ ] 0203:0365 - "Someone's calling." then "It's calling..." changes subject; pick one ("Something's calling.").
+- [ ] 0210:0213/0213:0190/0210:0182 - ranks: Quattro (大尉) is "Lieutenant" and Emma/Apolly/Roberto (中尉) are also "Lieutenant", so the hierarchy vanishes ("Lieutenant Quattro", Emma to Quattro "Lieutenant,"). D12-14 allows Captain for 大尉; consider "Captain Quattro" in AEUG scenes.
+- [ ] 0203:0117 vs 0203:0339 (also ST34/35) - Karius calls Gato "Commander" then "Lieutenant"; mirrors JP 少佐/大尉, no change needed unless the polish pass wants uniformity.
+- [ ] 0210:0303 - JP 「トーキョーにほど近い、」 ("near Tokyo,") - EN "born in New Seat City" invents a place; check that the neighbouring page carries Tokyo.
+- [ ] 0210:0334 - Kamille "that the one called Kamille is me" is clunky - "Everyone'll know it's me, Kamille!"
+- [ ] 0210:0757 - Quattro 「どうか！」 "Well!?" - "Are you all right!?" / "Well? Can you manage?"
+- [ ] 0210:0281 - page begins lowercase "cannon-caliber Vulcans..." (mid-sentence); verify the preceding id.
+- [ ] 0213:0200 - Quattro "with his parents' lives as a shield" - "his" is unclear - "Kamille's parents'" / "with hostages' lives as a shield".
+- [ ] 0213:0216 - Kamille "act the parent as your mother and father" - "as parents".
+- [ ] 0213:0145-0147 - "he was well suited / with their many different ideals." lacks "to rally people" (verify 0146).
+
+## story pass ch13_st36-38 (work/tl/review_story_ch13.md)
+- [ ] 0217:0200/0202 - Wong "それに / 宇宙の民は...支持してくれる" - EN reads "And then, / and the people of space will back..." with a
+- [ ] 0224:0063/0067 - Bright "よろしく" -> "Pleasure's mine." Quattro's reply "The pleasure is mine" (こちらこそ) then repeats it
+- [ ] 0217:0042 - Blex "that's only natural, no?" - the tag sounds foreign for the dignified commodore. Suggested: "...that's
+- [ ] 0217:0124 - "his father, Zeon" is ambiguous after Char/Quattro. Suggested: "his father, Zeon Deikun."
+- [ ] 0214:0370 - Kamille "...her! You didn't have to kill her!" - the JP has no object ("殺す事はなかったんだ"). "her" commits to
+- [ ] 0224:0279/0282 - 発進よろしく "cleared for launch" implies the pilot is granted permission; "ready for launch" / "Mk-II,
+- [ ] 0217:0151/0154 - Kamille asks to be treated as 中尉, then calls Quattro 大尉; both render "Lieutenant", so the one-rank
+
+## story pass ch14_st39-41 (work/tl/review_story_ch14.md)
+- [ ] 0228:0592/0685, 0236:0420/0514 vs 0228:0659 - Gato's 少佐 is "Commander" in dialogue (narration says Lieutenant Commander, 0228:0484/0651), while Cima's 中佐 is also "Commander" (D15); in 0228:0668 Gato and Cima call each other "Commander". Pick distinct forms in the exchange (e.g. Cima to Gato "Lieutenant Commander" if width allows).
+- [ ] 0236:0672 - "General Cowen at Jaburo" vs "Vice Admiral" John Cowen in 0232:0144 and glossary - `"Admiral Cowen"` or match D15.
+- [ ] Cima voice: smooth sarcastic in 0228:0610-0687, but "Ain't nothin' I hate more" (0232:0631) and "Watch it, or I'll smack you" (0232:0923) shift register mid-chapter. JP is rough あたし/さぁね throughout; consider a little more grit in the early lines or less in these.
+- [ ] 0232:0472 - Kelley 軍人ならぼくなんて言うな hinges on Kou's 僕 vs 自分 (0471 "Um... I..." then 0474 "I am Kou Uraki"). EN "quit sounding like a kid" works but Kou's switch back to "ぼく" (0585, 0910) has no echo; optional "Um... I..." -> keep, add nothing.
+- [ ] 0229:0128 (page 128,230) / 0225:0128 - Kycilia "Damn it! What on earth are they doing!": "Damn it" is flat for icy, imperious Kycilia; same shared ええい line is fine for Quattro/Jamaican. `"How infuriating! What are they doing!"` if the page is separate.
+- [ ] 0225:0272 / 0229:0272 - Bright "So I've gone and been the captain who loses his ship again..." clunky; `"Losing another ship... what kind of captain am I?"`.
+- [ ] 0228:0719 - Delaz "needed ... were indispensable" tense mix; `"Operation Stardust's success demanded the Gundam you seized / and our fleet at full strength..."`.
+
+## story pass ch15_st42-44 (work/tl/review_story_ch15.md)
+- [ ] 0237:0117 vs 0237:0339 / 0241:0117 vs 0241:0339 - Karius calls Gato 少佐 "Commander" in one bark and 大尉 "Lieutenant Gato" in the other, inside the same stage (JP itself differs). Pick one reading per D12-14 for Gato in 0083 (also "Lieutenant Burning" and "Lieutenant Uraki" both being Lieutenants, 0240:0489/0380).
+- [ ] 0240:0551 - Delaz: "If you meant to act, you should have before we took the colony!" - drop the dangling "have": "you should have done it before we seized the colony!"
+- [ ] 0240:0708 - Cima: "You see that, yes?" is stiff for her register - "You can see that, can't you?"
+- [ ] 0240:0008 - missing article: "The Earth Federation's worst blunder."
+- [ ] 0240:0418 - Synapse: "The service won't pay you..." - dry joke is soft; "The military won't be paying you for this, you know..."
+- [ ] 0240:0917/0920 - Bask: "this symbol of space" - 宇宙 here is "the universe"/cosmos, and EN elsewhere uses "space" for the Spacenoid side, so Bask appears to call Earth the symbol of the Spacenoids. - "this symbol of the universe".
+- [ ] 0240:0983-0986 - "Gato's spirit returned the warrior to the woman who loved him." / "Nina and Kou's spirit will carry" - singular "spirit" for two people, minor; "Nina and Kou's hearts".
+- [ ] 0239:0037-0040 - 阿鼻叫喚 rendered literally "hell's screams"; reads as a mistranslation of a set phrase. - "There is a phrase for it: 'screams from the pit of hell.'"
+- [ ] 0237:0322 - Lacock: "Excellency! Someone help him!" - mixed person; "Your Excellency! Somebody save His Excellency!"
+- [ ] 0237:0039 / 0237:0128 - Garma's retreat bark is neutral ("Ngh... I'm withdrawing!") and Kycilia's "Damn it! What on earth are they doing!" is rougher than her icy/imperious row; "Tch... Withdrawing for Zeon!" / "How dare they! What are they doing?" would hold the voice. Low impact (barks).
+- [ ] 0245:0357 - literal "\n" in both JP and EN ("Victory conditions not met\nAll allies destroyed"); same in JP so probably original, but check how it renders.
+- [ ] 0244:0102 - Jerid: "Glad you came, looking every inch the Titans." fine in meaning; a touch more brash would suit him ("Look at you, real Titans now. Glad you made it.").
+
+## story pass ch16_st45-47 (work/tl/review_story_ch16.md)
+- [ ] 0254:0357 - "Victory conditions not met\nAll allies destroyed" - literal `\n` in the EN (JP has it too, so may be an engine break); check it renders as a line break, else "Victory conditions not met: all allies destroyed".
+- [ ] 0254:0363 - the objective sentence reads "...'Von Braun Gate 2'. / must be seized." - stray period after the closing quote; join: "and 'Von Braun Gate 2' / must be seized."
+- [ ] 0251:0369 - Lila 「ニュータイプだというのか……？」 - "You're telling me he's a Newtype...?" sounds addressed to someone; she is musing alone - "He's a Newtype, then...?"
+- [ ] 0248:0282 (Kai, borrowed page 45) - 「…もう充分だろう。撤退する」 - "That should be enough." is neutral and does not sound like Kai's cynical drawl - "...Guess that's enough. I'm out." (optional; JP itself is stiff).
+- [ ] 0248:0128 (Quattro) - 「ええい！」 "Damn it!" a touch rough for Quattro's measured mentor voice - "Tsk! One bad hit, and this is what comes of it!" (optional).
+- [ ] 0248:0236 / 0248:0243 - Hamon 「あなた…」 "My dear..." vs Zenna 「あなた！」 "Darling!" - same JP word rendered two ways; harmless, could unify.
+- [ ] 0253:0085 - Jerid 「ティターンズを使ってみせる」 "I'd be running the Titans" - 使う is "make use of / wield"; "I'd be using the Titans someday" keeps his ambition and ties to Lila's lecture; fine as is.
+
+## story pass ch17_st48-50 (work/tl/review_story_ch17.md)
+- [ ] 0264:0060 - "--or so Fa Yuiry would have said, with jealousy": no quoted remark precedes it in the chapter file (ids 0057-0059 absent), so the aside dangles. Verify that those ids are not text lost in extraction. I could not confirm this.
+- [ ] 0264:0089 - 因縁の赤いモビルスーツ - "a mobile suit of his old nemesis' red" is garbled - "the red mobile suit of his old nemesis".
+- [ ] 0264:0109 - 'it had nothing in common with one' has no antecedent - "with a Gundam".
+- [ ] 0258:0371 - 「ライラはどこにもいなかったんだ！赤いガルバルディはっ！」 - "Not that red Galbaldy!" is ambiguous - "Lila wasn't anywhere! Not the red Galbaldy, either!"
+- [ ] 0264:0454 - あそこに / あの飛行機 - "In there... That aircraft" right after Kamille says "go to the Audhumla" blurs whether she means the Audhumla or the Psycho Gundam she then boards - "Over there... That machine will bring my memories back to me!"
+- [ ] 0264:0535 vs 0265:0369/0388 - Bran (少佐) is "Lieutenant Commander" in narration but "Commander Bran" in ST50. Bright (中佐) is also "Commander" at 0264:0367. Unify to "Lieutenant Commander", or accept it as D12-D15 shorthand.
+- [ ] 0258:0124 / 0264:0499 - same JP line (gravity drags the human heart) is worded differently in the Kamille bark and in Amuro's speech ("down into the depths" vs "into the depths"). Make both identical; the bark should echo the story line.
+- [ ] 0258:0128 page (128,230) - Kycilia borrows "Damn it!" from Quattro's page. This is slightly off her icy voice, but it is an engine-shared page (D23), so low priority.
+- [ ] 0258:0376 - "For most of the Federation Forces had abandoned..." is a stiff sentence opener - "That was because most of the Federation Forces had abandoned Jaburo and pulled out."
+- [ ] 0264:0008 - "Earth's anti-Earth Federation group" is clumsy - "an anti-Federation organization of Earth".
+- [ ] 0260:0301 - "the nuke here" is singular, but earlier lines say two nukes. The JP is singular, so this is optional.
+
+## story pass ch18_st51-53 (work/tl/review_story_ch18.md)
+- [ ] 0273:0375 - Four: "The machine Four's riding is coming! Four!" - stray closing quote mid-entry (`coming!" /  Four!"`). Fix: `"The machine Four's riding / is coming! Four!"`.
+- [ ] 0275:0013 - "正気か！" (reaction to Kamille climbing in) - "Are they insane!?" plural has no referent. Suggested: "Are you out of your mind!?"
+- [ ] 0277:0372 - Emma answers Kamille's call "何か？" - "Sir?" wrong for Emma (superior, woman). Suggested: "What is it?"
+- [ ] 0276:0113 - Kamille's "はい！" after a superior's ご苦労 - "Yes, ma'am!" fixes the addressee as female; the neighbouring lines (0276:0114 "〜んと", male) suggest Bright. Safer: "Yes!" / "Yes, sir!" - check who said 0276:0112.
+- [ ] 0276:0392 - closing aside "義はゆらがないゆえに義なのである" - "Justice that wavers is no justice." The section is built on 義 = "righteousness" (0276:0342, 0344); the last line switches to "Justice". Suggested: "Righteousness does not waver; that is why it is righteousness."
+- [ ] 0277:0412 vs 0269:0119 - 甘え rendered "complacency" in the story line and "being soft" in the retreat bark; same word callback. Suggested: use one term (e.g. "being soft" in both).
+- [ ] 0272:0086 - "it was Amuro's tireless effort that made it so" - antecedent of "it" unclear (JP: the Newtype potential Kamille hopes for is something Amuro's effort produced). Suggested: "...that Amuro's tireless effort was what had made him what he was".
+- [ ] 0273:0043? (n/a). 0269:0243 "Ah! Darling!" (Zenna & Mineva) vs 0269:0236 Hamon "My dear..." - same JP あなた, two renderings; harmless, optional unify.
+
+## story pass ch19_st54-56 (work/tl/review_story_ch19.md)
+- [ ] 0288:0023 - "は、はい" answering Emma's order - "Y-yes, sir." Emma is a woman, and 0288:0026 has "Y-yes, ma'am!" - "Y-yes, ma'am."
+- [ ] 0284:0059 - 分かるか。すごいな... (Char admires Reccoa's guess) - "You saw it." is stiff and reads as "you saw it happen" - "You figured it out? Impressive..."
+- [ ] 0287:0038 / 0287:0040 vs 0284:0226 / 0284:0228 - the same JP lines get two different EN renderings. 0287 clips the tag question and the sigh: "you can't see?" and "We'll need eyes and instinct..." - reuse the 0284 wording: "you can't see them either, right?" and "We'll just have to rely on our eyes and instincts..."
+- [ ] 0288 (various), 0291, 0281:0184 - Rosamia (label, narration, 0288:0123) vs Rosamie (all dialogue). This is deliberate for ロザミィ vs ロザミア, but the glossary has no ロザミィ entry. Add one so the split is ruled.
+- [ ] 0292:0080 - Haman, dry: "What a grand order to place" - "My, what a grand order you place, don't you?" is slightly chatty and ungrammatical for her regal register - "...Quite the grand order you place."
+- [ ] 0281:0190 - Haman retreat bark: 俗物が - "Vulgar fool" is acceptable. "Philistine" or "Vulgar creature" would sound more contemptuous.
+- [ ] 0284:0206 - Yazan, gleeful brute: "Heh! Paptimus Scirocco, you're an interesting one." is a bit tame for him - "Hah! Paptimus Scirocco, you're one interesting bastard."
+
+## story pass ch20_st57-59 (work/tl/review_story_ch20.md)
+- [ ] 0293:0190 / 0299:0040 / 0299:0042 / 0299:0082 - 俗物 (Haman's recurring insult for Kamille) is "Vulgar fool" in the bark but
+- [ ] 0297:0380, 0299:0052, 0299:0152, 0299:0156 - ロザミィ rendered "Rosamie" while name labels and narration use "Rosamia".
+- [ ] 0293:0117, 0293:0249 - 少佐 rendered "Commander", which is the D15 value for 中佐; style-reference gives 少佐 as
+- [ ] 0293:0385 - Sarah, "レコアなんて私にとってはただのあてつけ": "just there to make me jealous" is a loose reading. Suggest
+- [ ] 0303:0215 - "Kuh...!!" is the only such spelling; the chapter uses "Ngh..." for the same grunt. Suggest "Ngh...!!".
+- [ ] 0300:0238 - narrator slips into first person ("I would rather not believe"); the JP has no subject. Optional: "one would rather not believe".
+
+## story pass ch21_st60-62 (work/tl/review_story_ch21.md)
+- [ ] 0311:0049 - Four, shocked that Kamille is coming aboard, says 正気か！ - EN "Are they insane!?" has a plural third person where she is speaking to him - "Are you insane!?"
+- [ ] 0311:0146 - Woodar's broadcast sign-off - stray closing quote after "Audhumla." (`"...catch the Audhumla." / That is all."`) - drop the first closing quote.
+- [ ] 0312:0089 - Haman, regal, answering Jamitov's threat (さて、どうですか？) - EN "Well, now, will you?" is vague, and the "......" opening is odd - "...Oh? Is that so? Then Axis shall sink the Gate of Zedan."
+- [ ] 0316:0252 - Haman, セ ending "シャアーッ！！" - EN "Chaaar?!" turns the cry into a question - "Chaaar!!"
+- [ ] 0316:0241 - Quattro, ティターンズの艦隊をやらせるわけにはいかん - EN "I can't let them hit the Titans fleet" may reverse the intent. Quattro is trying to keep the laser cannon intact, so check the JP object/agent. Meaning is unclear in context.
+- [ ] 0305:0117 / 0305:0249 - 少佐 rendered "Commander" (Karius to Gato, Dren). The style-reference ranks give 少佐 = Lieutenant Commander/Major, and "Commander" is 中佐 (D15). Align: "Lieutenant Commander" or "Major". Also check 0305:0339 "Lieutenant Gato" (大尉, 0079 era) against it.
+- [ ] 0305:0272 - Delaz, 「また艦を失う艦長をやってしまったか…」 - "who loses his ship again" is stilted - "Another ship lost... what kind of captain am I..."
+- [ ] 0308:0117 - 空は飛べないものだ、という固定観念がない - "no fixed notion that the sky could not be flown" is awkward - "no fixed notion that the sky was out of reach."
+
+## story pass ch23_st66-67 (work/tl/review_story_ch23.md)
+- [ ] 0330:0011 - Scirocco: 私の赤色十文字の光をトレースしろ - "follow the light of my red cross" reads as a religious/medical cross - "the red cross-shaped light" / "trace my red crossing light".
+- [ ] 0330:0070 - "I am merely a witness to history, so it may seem so, but it lets me stay calmer..." - "so it may seem so" is clumsy - "I'm merely a witness to history. It may look that way, but it keeps me calmer than Char."
+- [ ] 0330:0396 - eight years needed before people could accept such play - "But the room in their hearts to accept it-- for people in the postwar era to win that back had taken eight years." stumbles - "But it took eight years of postwar life before people regained the room in their hearts to accept it."
+- [ ] 0333:0149 - Qubeley "ビット" rendered "bits" - glossary term is Funnel - "Now you can't use your funnels! Haman!" (or keep JP "bits" deliberately; confirm).
+- [ ] 0333:0147 - Haman: シロッコ、やってしまったのか？ - "has he been finished off?" shifts to third person, but she is addressing Kamille - "Sc... Scirocco... did you finish him?" (check the target).
+- [ ] 0328:0249 - Dren to 少佐 Char: "Commander" - consistent with D15 but Char's 0079 form is "Lieutenant Commander"; low priority.
+- [ ] 0333:0027/0030 - Mouar's spirit taunting Jerid (feminine でしょ): EN is neutral and reads as Jerid speaking. Fine as is; the gendered lilt is lost, so optional "That's what happens, isn't it..." for softness.
+
+## story pass ch22_st63-65 (work/tl/review_story_ch22.md)
+- [ ] 0323:0174 - Kamille: "Did that bastard teach you that saying so fools people?" - EN "That saying that fools people?" is clunky. Suggested EN "Did he teach you people fall for that?"
+- [ ] 0323:0240 - narration repeats "White Base's crew" twice in one sentence. Suggested EN "...and so many of White Base's crew, and crushing the Earth supremacism that oppressed its people."
+- [ ] 0323:0299 - Sarah: "え？" - EN "Hm?" reads calmer than the surprise. Suggested EN "Huh?"
+- [ ] 0324:0365 - "こいつ！？" - EN "What the!?" is cut off. Suggested EN "What the--!?" or "Who is this guy!?"
+- [ ] 0319:0047 - "ぬかったな！シャア" - EN "Careless of you!" is too mild for Haman's contempt. Suggested EN "You blundered, Char!!"
+- [ ] 0321:0387 - "盛りおって" - EN "Overeager pups!" is fine, but check the speaker. If it is Cima, "Looks like one of Cowen's ships" is her line and "pups" should be rougher: "Hot-headed fools!"
+- [ ] 0320:0173 - "そこまで言うのなら あえてとは……" is ambiguous. Synapse relents before Burning's confession, which the EN supports. Optional: "If you insist, I won't press the point..."
