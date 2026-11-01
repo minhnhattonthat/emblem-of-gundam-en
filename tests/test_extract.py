@@ -110,11 +110,9 @@ class Extract(unittest.TestCase):
         with self.assertRaises(ValueError):
             arm9.replace(self.rom.arm9, {off: text * 4})
 
-    def test_untouched_script_changes_nothing_but_the_vwf_font_table(self):
-        ez_new, arm9_new = build.script()
-        self.assertIsNone(arm9_new)
-        self.assertEqual(set(ez_new), set(font.FONT_IDS))  # only the advance tables, no text table changed
-        self.assertEqual(build.build(None, None), build.ROM.read_bytes())  # --no-script: byte-identical
+    def test_no_script_build_is_byte_identical(self):
+        # script/ holds the translation from phase 6 on, so only the --no-script path can be compared to the ROM
+        self.assertEqual(build.build(None, None), build.ROM.read_bytes())
 
 
 if __name__ == "__main__":

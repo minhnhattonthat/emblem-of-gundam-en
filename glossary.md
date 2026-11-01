@@ -227,6 +227,102 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | ジュピトリス | Jupitris | | | |
 | ドゴス・ギア | Dogosse Giar | | | |
 | アウドムラ | Audhumla | | | |
+| 陸戦型ガンダム | Gundam Ground Type | | short label: Ground Gundam | |
+| 陸戦型ジム | GM Ground Type | | short label: Ground GM | |
+| ジムコマンド | GM Command | | | |
+| ジムスナイパーⅡ | GM Sniper II | | | |
+| ジムキャノンⅡ | GM Cannon II | | | |
+| ジムカスタム | GM Custom | | | |
+| ジムクゥエル | GM Quel | | | |
+| ジムⅡ | GM II | | | |
+| アレックス | Alex | | | |
+| ズゴックＥ | Z'Gok-E | | | |
+| グラブロ | Gublo | | | |
+| アッザム | Adzam | | | |
+| ビグロ | Bigro | | | |
+| ザクレロ | Zakrello | | | |
+| ザメル | Zamel | | | |
+| ドラッツェ | Dra-C | | | |
+| ガーベラ・テトラ | Gerbera Tetra | | | |
+| Ｇディフェンサー | G-Defenser | | | |
+| スーパーガンダム | Super Gundam | | | |
+| Ｚガンダム | Zeta Gundam | | | |
+| ディジェ | Dijeh | | | |
+| メタス | Methuss | | | |
+| ガブスレイ | Gabthley | | | |
+| ガルバルディβ | Galbaldy Beta | | | |
+| バーザム | Barzam | | | |
+| バイアラン | Byarlant | | | |
+| ハンブラビ | Hambrabi | | | |
+| パラス・アテネ | Palace Athene | | | |
+| ボリノーク・サマーン | Bolinoak Sammahn | | | |
+| ガザＣ | Gaza-C | | | |
+| ギャプラン | Gaplant | | | |
+| アッシマー | Asshimar | | | |
+| バウンド・ドック | Baund Doc | | | |
+| メッサーラ | Messala | | | |
+| アクトザク | Act Zaku | | | |
+| セイバーフィッシュ | Saberfish | | | |
+| フライマンタ | Fly Manta | | | |
+| ６１式戦車 | Type 61 Tank | | | |
+| ガトル | Gattle | | | |
+| ベースジャバー | Base Jabber | | | |
+| コアブースター | Core Booster | | | |
+| トロイホース | Trojan Horse | | | |
+| コロンブス | Columbus | | | |
+| パプワ | Papua | | | |
+| ギャロップ | Gallop | | | |
+| リリー・マルレーン | Lili Marleen | | | |
+| ラーディッシュ | Radish | | | |
+| ラビアンローズ | La Vie en Rose | | | |
+| アレキサンドリア | Alexandria | | | |
+| マッドアングラー | Mad Angler | | | |
+| スードリ | Sudori | | | |
+| デラーズフリート; デラーズ・フリート | Delaz Fleet | | | |
+| ヒートホーク | Heat Hawk | | | |
+| ヒートロッド | Heat Rod | | | |
+| ファンネル | Funnel | | | |
+| メガ粒子砲 | mega particle cannon | | | |
+| ジェットストリームアタック | Jet Stream Attack | | | |
+
+## UI and stat tags
+| JP | EN | max | notes | Avoid |
+|---|---|---|---|---|
+| 【攻戦】 | [ATK] | | upper-case tags | |
+| 【防戦】 | [DEF] | | | |
+| 【攻・防】 | [ATK/DEF] | | | |
+| 【移動】 | [MOVE] | | | |
+| 【補給】 | [SUPPLY] | | | |
+| 【消費】 | [COST] | | | |
+| 【機動】 | [MOBILITY] | | unit stat; distinct from 【移動】 [MOVE] | [Mobility] |
+| 名称未設定 | Untitled | | dev placeholder | |
+| ルウム | Loum | | ルウム戦役 Battle of Loum | |
+| 赤い彗星 | Red Comet | | "Char the Red Comet" | |
+| キャスバル | Casval | | | |
+| 木馬 | Trojan Horse | | Zeon's name for White Base | |
+| 公王 | Sovereign | | デギン公王 Sovereign Degwin | |
+| 青い巨星 | Blue Giant | | Ramba Ral's nickname | |
+| コアファイター | Core Fighter | | | |
+| 南極条約 | Antarctic Treaty | | | |
+| アイランド・イフィッシュ | Island Iffish | | | |
+| ブリティッシュ作戦 | Operation British | | | |
+| 親衛隊 | Royal Guard | | | |
+| ジンバ・ラル | Jimba Ral | | | |
+| ハロ | Haro | | | |
+| ケルゲレン | Kergelen | | | |
+| ジムスナイパー | GM Sniper | | | |
+| ニューヤーク | New Yark | | anime spelling | New York |
+| 北米大戦 | North American War | | stage title "The North American War" | Great North American War |
+| シナリオ初期化 | Reset Scenario | | stage-system label | Scenario Reset; Initialize Scenario |
+| シナリオ解放 | Unlock Scenario | | | Scenario Unlocked |
+| シナリオ再開 | Resume Scenario | | | Scenario Resumed |
+| 立てよ国民 | Rise up | | Gihren's speech: "Rise up, my people!" | |
+| 一週間戦争 | One Week Battle | | | |
+| ルナ2; ルナツー | Luna II | | | Luna Two |
+| 【勝利条件】 | [Victory Conditions] | | | |
+| 【敗北条件】 | [Defeat Conditions] | | | |
+| ダイクン | Deikun | | ジオン・ズム・ダイクン Zeon Zum Deikun | Daikun |
+| 暗礁宙域 | Shoal Zone | | | |
 
 ## Decisions from earlier batches
 - (none yet)

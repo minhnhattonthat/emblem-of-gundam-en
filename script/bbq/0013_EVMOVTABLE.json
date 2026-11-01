@@ -2,18 +2,18 @@
  "ez_index": 13,
  "name": "EVMOVTABLE.BBQ",
  "strings": [
-  "名称未設定",
-  "宇宙/香港/アムロ",
-  "宇宙/香港/シャア",
-  "宇宙/香港/平均",
-  "宇宙/東南アジア/アムロ",
-  "宇宙/東南アジア/シャア",
-  "宇宙/東南アジア/平均",
-  "地上/香港/アムロ",
-  "地上/香港/シャア",
-  "地上/香港/平均",
-  "地上/東南アジア/アムロ",
-  "地上/東南アジア/シャア",
-  "地上/東南アジア/平均"
+  "Untitled",
+  "Space/Hong Kong/Amuro",
+  "Space/Hong Kong/Char",
+  "Space/Hong Kong/Average",
+  "Space/Southeast Asia/Amuro",
+  "Space/Southeast Asia/Char",
+  "Space/Southeast Asia/Average",
+  "Ground/Hong Kong/Amuro",
+  "Ground/Hong Kong/Char",
+  "Ground/Hong Kong/Average",
+  "Ground/Southeast Asia/Amuro",
+  "Ground/Southeast Asia/Char",
+  "Ground/Southeast Asia/Average"
  ]
 }

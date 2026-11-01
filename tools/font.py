@@ -71,6 +71,10 @@ def proportional(d):
         adv = ink_width(f, d, g) if c != 0x20 else SPACE_ADVANCE
         if struct.unpack_from("<H", d, body)[0] <= g <= struct.unpack_from("<H", d, body + 2)[0]:
             out[body + 8 + 3 * (g - first) + 2] = max(1, adv)
+            # The renderer draws the glyph at pen + CWDH left; with the advance cut to the ink width that left
+            # offset pushes the ink under the next glyph's cell ('in' drew as 'n' in-game). Ink starts at column 0
+            # in this font, so left = 0 puts it at the pen.
+            out[body + 8 + 3 * (g - first)] = 0
     return bytes(out)
 
 

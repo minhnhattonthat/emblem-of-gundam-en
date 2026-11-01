@@ -2,10 +2,10 @@
  "ez_index": 7,
  "name": "FORCETABLE.BBQ",
  "strings": [
-  "名称未設定",
-  "水中",
-  "陸地",
-  "荒地",
-  "宇宙"
+  "Untitled",
+  "Underwater",
+  "Land",
+  "Rough",
+  "Space"
  ]
 }

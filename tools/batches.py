@@ -277,8 +277,8 @@ def check(name):
         for forms, e, avoid in gl:
             if any(has_term(jp, x) for x in forms) and e and e not in en and e.lower() not in en.lower():
                 errs.append(f"{block_ids[0]}: glossary {forms[0]} -> '{e}' missing")
-            for a in avoid:
-                if re.search(r"\b" + re.escape(a) + r"\b", en):
+            for a in avoid:  # per line: a block's lines joined can fake a match across a break
+                if any(re.search(r"\b" + re.escape(a) + r"\b", ln) for ln in block_en):
                     errs.append(f"{block_ids[0]}: avoid '{a}' (glossary: {e})")
         block_jp.clear()
         block_en.clear()
@@ -304,7 +304,7 @@ def check(name):
             errs.append(f"{i}: \\u escape")
         if JP_RE.search(en):
             errs.append(f"{i}: Japanese left")
-        tj = sorted(TOKEN_RE.findall(jp.replace("%%", "")))
+        tj = sorted(TOKEN_RE.findall(jp.replace("％", "%").replace("%%", "")))
         te = sorted(TOKEN_RE.findall(en.replace("%%", "")))
         if tj != te:
             errs.append(f"{i}: codes {tj} != {te}")

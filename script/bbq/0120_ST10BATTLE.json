@@ -3,18 +3,18 @@
  "name": "ST10BATTLE.BBQ",
  "strings": [
   "",
-  "名称未設定",
-  "チームA",
-  "チームB",
-  "チームC",
-  "チームD",
-  "チームE",
-  "チームF",
-  "敵チームA",
-  "敵チームB",
-  "敵チームC",
-  "敵チームD",
-  "敵チームE",
-  "敵チームF"
+  "Untitled",
+  "Team A",
+  "Team B",
+  "Team C",
+  "Team D",
+  "Team E",
+  "Team F",
+  "Enemy Team A",
+  "Enemy Team B",
+  "Enemy Team C",
+  "Enemy Team D",
+  "Enemy Team E",
+  "Enemy Team F"
  ]
 }

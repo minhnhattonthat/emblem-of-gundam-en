@@ -3,18 +3,18 @@
  "name": "MAP03.BBQ",
  "strings": [
   "",
-  "名称未設定",
-  "廃棄コロニー群",
-  "コロニー破片",
-  "コロニー残骸",
-  "暗礁宙域",
-  "宇宙空間Ａ",
-  "魔の宙域",
-  "宇宙空間B",
-  "地球近海",
-  "デブリ帯",
-  "デブリベルトＡ",
-  "デブリベルトＢ",
-  "衛星軌道"
+  "Untitled",
+  "Derelict Colony Cluster",
+  "Colony Fragments",
+  "Colony Wreckage",
+  "Shoal Zone",
+  "Space A",
+  "Devil's Zone",
+  "Space B",
+  "Earth Vicinity",
+  "Debris Field",
+  "Debris Belt A",
+  "Debris Belt B",
+  "Satellite Orbit"
  ]
 }

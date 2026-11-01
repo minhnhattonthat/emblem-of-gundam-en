@@ -142,11 +142,9 @@ def check(rom_bytes):
         got = json.loads(path.read_text(encoding="utf-8"))
         if got.get("ez_index") != i:
             out.append((name, f"ez_index {got.get('ez_index')}"))
-        if got["strings"] != strs:
-            if len(got["strings"]) != len(strs):
-                out.append((name, f"{len(got['strings'])} strings, ROM has {len(strs)}"))
-            else:
-                out.append((name, "string text differs from the ROM"))
+        # text may differ from the ROM once translated (phase 6); the string count may not
+        if len(got["strings"]) != len(strs):
+            out.append((name, f"{len(got['strings'])} strings, ROM has {len(strs)}"))
     # arm9
     path = SCRIPT / "arm9.json"
     want9 = [(f"{arm9.BASE + off:#x}", t) for off, t in arm9_text(rom.arm9)]
@@ -155,11 +153,9 @@ def check(rom_bytes):
         out.append(("arm9.json", "missing"))
     else:
         got9 = [(s["at"], s["text"]) for s in json.loads(path.read_text(encoding="utf-8"))["strings"]]
-        if got9 != want9:
-            have9, wantd = dict(got9), dict(want9)
-            for at in sorted(set(wantd) | set(have9)):
-                if have9.get(at) != wantd.get(at):
-                    out.append((f"arm9 {at}", f"script {have9.get(at)!r} vs ROM {wantd.get(at)!r}"))
+        have9, wantd = dict(got9), dict(want9)
+        for at in sorted(set(wantd) ^ set(have9)):
+            out.append((f"arm9 {at}", "only in script" if at in have9 else f"missing: ROM {wantd[at]!r}"))
     print(f"{len(tables)} tables, {total} strings", flush=True)
     return out
 

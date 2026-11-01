@@ -3,17 +3,17 @@
  "name": "MAP04.BBQ",
  "strings": [
   "",
-  "名称未設定",
-  "宇宙空間Ａ",
-  "宇宙空間Ｂ",
-  "宇宙空間Ｃ",
-  "宇宙空間Ｄ",
-  "宇宙空間Ｅ",
-  "宇宙空間Ｆ",
-  "宇宙空間Ｇ",
-  "宇宙空間Ｈ",
-  "衛星軌道",
-  "月制空圏内",
-  "月"
+  "Untitled",
+  "Space A",
+  "Space B",
+  "Space C",
+  "Space D",
+  "Space E",
+  "Space F",
+  "Space G",
+  "Space H",
+  "Satellite Orbit",
+  "Lunar Control Zone",
+  "Moon"
  ]
 }
