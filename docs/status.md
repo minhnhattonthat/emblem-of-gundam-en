@@ -2,8 +2,32 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase:** 6 (translate) **done** 2026-11-01; next is phase 7 (insert, fit, check: width/overflow lint against
-  `tbl/windows.json`, control codes, `romdiff.py`, `jp_left.py`).
+- **Phase:** 7 (insert, fit, check) **done** 2026-11-01; next is phase 8 (QA in the emulator: smoke, warp tours
+  with contact sheets + visual-QA verdicts via `qa_gate.py`, graphics text: 68 stage cards, 6 UI screens, title,
+  GAME OVER, credits).
+- **Phase 7 (this session):**
+  - Gates green: build, `tools/check.py` 37 tests (incl. `test_lint` = `tools/lint.py` 0 errors: font chars, control
+    codes JP==EN, trailing space, width vs `tbl/windows.json`, stub last lines), `tools/romcheck.py` 0 unexpected
+    changes (per-component diff; the NDS filesystem is re-laid out, so this replaces a flat `romdiff.py`), smoke ok,
+    `extract.py --check` 0 holes. Build sha1 44c2f7fd... (2026-11-01 16:16).
+  - Leftover Japanese: every BBQ string and arm9 string in the built ROM is English except the 90 `ｶﾂ&ﾚﾂ&ｷｯｶ` keys
+    (data). Raw scan: `jp_left.py work/arm9_en.bin --orig work/arm9_jp.bin --sjis [--halfwidth] --range 72000-78000`
+    = 0 (it found ユニットの売却/購入 at 0x02072150/60 below the old region start; `arm9.LO` now 0x72150, 359 strings).
+    No overlays; the only files are EZ_DAT/EZ_TBL/sound_data.sdat.
+  - Fixes: script VM string pushes widened to fit English (`bbq.widen`, win/lose condition text spilled into the
+    defeat line); stage-record name field copied from the pool (`bbq.stage_name`, stage-info panel kept Japanese);
+    6 arm9 strings glued to binary data now extracted; **arm9 writable buffers** (`未設定` x7, `鳥00`) must never be
+    relocated: moving them blanked the stage-info panel (found by `tools/a9bisect.py`). `arm9.BUFFERS` + a test that
+    every strcpy/strncpy/memset destination is listed (`docs/re/text.md`). Story stubs rewritten, dev-menu titles
+    shortened to their VM slot.
+  - Widths: measured `char_name` 118, `skill_name` 104, `unit_name` 118, `terrain_cell` 57 px (`Underwater` fits
+    exactly). **Not measured** (lint warns, phase 8 visual QA covers them): `arm9_ui` 371 lines, `unit_desc`/`char_desc`
+    (placeholder fields like `About Amuro`, `Gundam description text`, maybe never drawn), `stage_name_list`,
+    `sound_list`, `gallery_list`, `series_name`, `extras`; guessed `stage_info_panel`, `prep_condition_row`,
+    `list_row`, `area_info`.
+  - Tools: `tools/lint.py`, `tools/romcheck.py`, `tools/stress.py ID=TEXT|@ruler` (one-string stress ROM for widths),
+    `tools/a9bisect.py` (bisects arm9 edits against a scene region's ink), `tools/lua/writelog.lua`,
+    `tools/lua/vmalloc.lua`, scenes `briefNN` (win/lose screen).
 - **Done:**
   - Step 0: DeSmuME QA fork qa-2 in `tools/desmume/`, smoke boots the original ROM (title -> menu -> opening card),
     Lua probe logs, pre-commit rejects a failing test, guard hook blocks `sed -i`, `rom.sha1` pinned, `tools/check.py`.
@@ -72,7 +96,8 @@ Updated at the end of every session. Keep it to what the next session needs; his
   - Graphics text is phase 8: stage title cards (68), the 6 UI screens, the credits caption
     `- エンブレム オブ ガンダム -`, `GAME OVER`, and the title's katakana subtitle are **not** in `script/` (confirmed
     with the marker build: they stayed Japanese).
-- **Open bugs:** none.
+- **Open bugs:** none in the build. Unverified: a `mark.py --arm9-move` ruler build timed out on the `load` scene;
+  likely the moved `鳥00`/`未設定` buffers (now kept in place), not re-run.
 - **Waiting on the user:** (non-blocking) series logo art on stage cards (Gundam/08th/0080/0083/Zeta, with small
   Japanese inside the logo) planned to stay as official logo art per D5; title katakana subtitle under the English
   logo planned to be replaced by nothing or English.

@@ -2,6 +2,14 @@
  "note": "arm9 strings, keyed by RAM address (file offset = at - 0x02000000). See docs/re/text.md.",
  "strings": [
   {
+   "at": "0x2072150",
+   "text": "Sell Units"
+  },
+  {
+   "at": "0x2072160",
+   "text": "Buy Units"
+  },
+  {
    "at": "0x2072170",
    "text": "Assign Characters"
   },
@@ -183,7 +191,7 @@
   },
   {
    "at": "0x2072814",
-   "text": "Bird 00"
+   "text": "Bd00"
   },
   {
    "at": "0x2072914",
@@ -966,12 +974,20 @@
    "text": "Units unsuited\nto the terrain\nhave been lost."
   },
   {
+   "at": "0x207363c",
+   "text": "./EZ_TBL.BIN"
+  },
+  {
    "at": "0x207364c",
    "text": "./EZ_DAT.BIN"
   },
   {
    "at": "0x207365c",
    "text": "%d/%d/%d %d:%d:%d"
+  },
+  {
+   "at": "0x2073c40",
+   "text": "Basket D"
   },
   {
    "at": "0x2073c50",
@@ -984,6 +1000,10 @@
   {
    "at": "0x2073c70",
    "text": "Basket A"
+  },
+  {
+   "at": "0x2073cbc",
+   "text": "Save the game?"
   },
   {
    "at": "0x2073cd0",
@@ -1008,6 +1028,10 @@
   {
    "at": "0x2073d7c",
    "text": "Loading failed.\nThe data is corrupted,\nso it will be erased."
+  },
+  {
+   "at": "0x2073e78",
+   "text": "While saving, don't turn off\nthe power or remove\nthe DS Card.\nTouch to begin."
   },
   {
    "at": "0x2073ed0",
@@ -1067,31 +1091,31 @@
   },
   {
    "at": "0x20746fc",
-   "text": "Not set"
+   "text": "Unset"
   },
   {
    "at": "0x207471e",
-   "text": "Not set"
+   "text": "Unset"
   },
   {
    "at": "0x207473e",
-   "text": "Not set"
+   "text": "Unset"
   },
   {
    "at": "0x2074746",
-   "text": "Not set"
+   "text": "Unset"
   },
   {
    "at": "0x207474e",
-   "text": "Not set"
+   "text": "Unset"
   },
   {
    "at": "0x2074756",
-   "text": "Not set"
+   "text": "Unset"
   },
   {
    "at": "0x207475e",
-   "text": "Not set"
+   "text": "Unset"
   },
   {
    "at": "0x2074778",
@@ -1322,6 +1346,10 @@
    "text": "%07d"
   },
   {
+   "at": "0x2076ee0",
+   "text": "%s %s"
+  },
+  {
    "at": "0x2076ee8",
    "text": "Sep  4 2007"
   },
@@ -1396,6 +1424,10 @@
   {
    "at": "0x20770cc",
    "text": "Weapon %d-%s-%s"
+  },
+  {
+   "at": "0x2077118",
+   "text": "Backlog"
   },
   {
    "at": "0x2077124",

@@ -133,6 +133,8 @@ def build_marked(out, map_path=None, ruler=RULER, only=None, arm9_mark_on=True, 
         rebuilt = bbq.rebuild(raw, [s.encode("cp932") for s in new])
         ez[i] = rebuilt + bytes(-len(rebuilt) % 16)
     ez.update(font.edits(tbl, dat, extract.unpack))
+    if move:  # writable buffers cannot move (arm9.BUFFERS): they keep their Japanese in a moved-marker build
+        a9_plan = {o: t for o, t in a9_plan.items() if o not in arm9.BUFFERS}
     a9 = arm9.relocate(rom.arm9, a9_plan) if move and a9_plan else arm9.replace(rom.arm9, a9_plan)
     data = build.build(ez, a9)
     out = Path(out)

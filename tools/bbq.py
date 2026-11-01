@@ -53,6 +53,87 @@ def rebuild(d, strs):
     return bytes(out)
 
 
+SIZES = [4] * 8 + [16, 32, 64, 128, 256]  # VM type -> bytes (arm9 0x02070F6C); 8-12 are str16..str256
+NATIVE = 0x0E  # op: hand the string on top of the stack to a native function, as its own type
+
+
+def code_words(d):
+    """(section, list of u32) of the type-6 bytecode, or (None, [])."""
+    for s in sections(d):
+        if s["type"] == 6:
+            return s, list(struct.unpack_from(f"<{s['size'] // 4}I", d, s["data"]))
+    return None, []
+
+
+def instructions(w):
+    """Yield (word index, op word, args): each instruction is [op][source line][args]; op = code | type << 10 |
+    nargs << 16 (arm9 decoder 0x02046E84)."""
+    i = 0
+    while i < len(w):
+        n = w[i] >> 16
+        yield i, w[i], w[i + 2:i + 2 + n]
+        i += 2 + n
+
+
+def widen(d, strs):
+    """Return (file, problems) with every string push grown to fit its new text (docs/re/bbq.md §VM strings).
+
+    Op 0 with a string type pushes string #arg as a temp of that type's size: a longer string is cut without a NUL,
+    and the native call that takes it (op 0x0E, its own type) then reads the next stack bytes as text. The compiler
+    sized each push from the Japanese, so English needs a bigger type: the smallest that holds bytes + NUL, never
+    above the consuming native's type (a temp bigger than that is a VM type error). A push that feeds anything else
+    (a script-function argument, ops 0x2D/0x2E) can't grow; it is reported as (string index, bytes + NUL, limit)."""
+    s, w = code_words(d)
+    if s is None:
+        return d, []
+    out, problems = list(w), []
+    ins = list(instructions(w))
+    for k, (i, op, args) in enumerate(ins):
+        typ = (op >> 10) & 0x1F
+        if op & 0x3FF or not 8 <= typ <= 12 or not args or args[0] >= len(strs):
+            continue
+        need = len(strs[args[0]]) + 1
+        if need <= SIZES[typ]:
+            continue
+        nxt = ins[k + 1][1] if k + 1 < len(ins) else 0
+        cap = (nxt >> 10) & 0x1F if nxt & 0x3FF == NATIVE else typ
+        fit = next((t for t in range(typ, cap + 1) if SIZES[t] >= need), None)
+        if fit is None:
+            problems.append((args[0], need, SIZES[cap] - 1))
+            continue
+        out[i] = op & ~0x7C00 | fit << 10
+    if out == w:
+        return d, problems
+    b = bytearray(d)
+    struct.pack_into(f"<{len(out)}I", b, s["data"], *out)
+    return bytes(b), problems
+
+
+NAME_FIELD = 64  # stage record (type 5, entry 0, 84 bytes): char name[64] + 5 words
+
+
+def stage_name(d, old, new):
+    """Return the file with its stage record's name field set to the new text of the pool string that held the
+    same Japanese (all 90 stage tables have one, #351 mostly). The stage-info panel on the map reads this field, not
+    the pool (docs/re/bbq.md). Files without the 84-byte record come back unchanged."""
+    s = next((x for x in sections(d) if x["type"] == 5), None)
+    if s is None:
+        return d
+    lo, hi = struct.unpack_from("<2I", d, s["index"]) if s["count"] > 1 else (0, s["size"])
+    at = s["data"] + lo
+    if hi - lo != 84:
+        return d
+    name = d[at:at + NAME_FIELD].split(b"\0")[0]
+    if name not in old:
+        raise ValueError(f"stage record name {name!r} has no pool copy")
+    text = new[old.index(name)]
+    if len(text) >= NAME_FIELD:
+        raise ValueError(f"stage name {text!r} is over {NAME_FIELD - 1} bytes")
+    b = bytearray(d)
+    b[at:at + NAME_FIELD] = text.ljust(NAME_FIELD, b"\0")
+    return bytes(b)
+
+
 if __name__ == "__main__":
     d = open(sys.argv[1], "rb").read()
     for s in sections(d):

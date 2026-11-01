@@ -4,8 +4,8 @@
  "strings": [
   "",
   "[btldir.q] Attacker",
-  "[btldir.q] Score =",
-  "[btldir.q] Count   =",
+  "[btldir.q] Score = ",
+  "[btldir.q] Count   = ",
   "[btldir.q] Defender"
  ]
 }

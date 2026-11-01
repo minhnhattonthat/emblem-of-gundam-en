@@ -53,6 +53,13 @@ SCENES.prep_mapcheck = extend("st30_prep", { { "press", "a" } })              --
 SCENES.prep_team = extend("st30_prep", { { "press", "down" }, { "press", "a" } })  -- オリジナル隊編成
 SCENES.shop = extend("st30_prep", { { "press", "down", 2 }, { "press", "a" } })   -- 強化メニュー
 SCENES.prep_brief = extend("st30_prep", { { "press", "down", 3 }, { "press", "a" } }) -- 作戦内容確認
+-- briefNN: the same win/lose screen on stage NN (width/byte-cap checks of each stage's condition strings)
+for k = 0, 67 do
+  if stage_ok(k) then
+    SCENES[string.format("brief%02d", k)] =
+      extend(string.format("st%02d_prep", k), { { "press", "down", 3 }, { "press", "a" } })
+  end
+end
 SCENES.chart = extend("st30_prep", { { "press", "down", 4 }, { "press", "a" } })  -- シナリオチャート
 SCENES.save = extend("st30_prep", { { "press", "down", 5 }, { "press", "a" } })   -- セーブ
 -- Map: start the battle, then open the map command menu (A on an empty cell), with its デバッグ item.

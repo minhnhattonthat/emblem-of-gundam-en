@@ -40,14 +40,20 @@ def ez_edits(unpacked, script=None):
     Rebuilt files are padded to a multiple of 16, the size the archive's size word reports (ez.repack): the game
     mallocs that many bytes, so the padding is what the parser sees after the table's own tail."""
     script = tables() if script is None else script
-    out = {}
+    out, problems = {}, []
     for i, strs in script.items():
         if i not in unpacked:
             raise KeyError(f"script/bbq has ez_index {i}, which is not a text table in this ROM")
         raw = unpacked[i]
-        new = bbq.rebuild(raw, [s.encode("cp932") for s in strs])
+        enc = [s.encode("cp932") for s in strs]
+        widened, bad = bbq.widen(raw, enc)  # string pushes sized for the Japanese (docs/re/bbq.md)
+        widened = bbq.stage_name(widened, bbq.strtab(raw)[1], enc)  # the map panel's copy of the stage name
+        problems += [f"{i:04d}:{k:04d} needs {n} bytes, the script call takes {lim}: {strs[k]!r}" for k, n, lim in bad]
+        new = bbq.rebuild(widened, enc)
         if new != raw:
             out[i] = new + bytes(-len(new) % 16)
+    if problems:
+        raise ValueError("strings too long for their script slot (shorten them):\n" + "\n".join(problems))
     return out
 
 

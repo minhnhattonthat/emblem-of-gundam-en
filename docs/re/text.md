@@ -12,6 +12,18 @@
    pools, plus small pointer tables for the menus), and no pointer into that region lands inside binary data or on a
    string we don't extract (`tests/test_extract.py`). Pointers are 4-aligned words holding `0x02000000 + file offset`,
    so a string can be moved by rewriting them (needed from phase 5 on; see below).
+   **Phase 7 correction:** 357 strings. Six follow binary data with no NUL in between, so the run didn't decode and
+   the old scan skipped them: `セーブをしますか？` (0x02073CBC, the save prompt, glued to a pointer table), the save
+   warning 0x02073E78, `バックログ`, `バスケットＤ`, `%s %s`, `./EZ_TBL.BIN`. `arm9.strings` now also takes the
+   first pointed-at offset inside an undecodable run. Then 359: `jp_left.py` on the built arm9 found
+   `ユニットの売却`/`ユニットの購入` at 0x02072150/60, below the old 0x72170 start (pointer table 0x0207207C);
+   the region now starts at 0x72150.
+   **Writable buffers:** `未設定` x7 (0x020746FC-0x0207475E) and `鳥00` (0x02072814) are RAM buffers the code
+   strcpy/strncpy/memsets into and reads as struct fields. Relocating one moved only the default text (the stage-info
+   panel went blank). `arm9.BUFFERS` lists them; `relocate` refuses them, so their English must fit in place;
+   `tests/test_arm9.py` checks every strcpy/strncpy/memset destination string is listed.
+   **Also:** each stage table's type-5 record holds a second copy of the stage name (`bbq.md` §Stage record) that the
+   map panel shows; the build fills it from the pool string.
 3. **Graphics** (`graphics.md`): stage cards and a handful of UI screens.
 4. Not text: LGA node names (internal: `鳥00`, `百式00`), SDAT, and the 1-2 byte runs the pointer scan hits in
    binary tables (not drawable strings).

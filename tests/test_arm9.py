@@ -76,8 +76,36 @@ class Grow(unittest.TestCase):
         with self.assertRaises(ValueError):
             arm9.relocate(self.arm9, {self.strings[0][0]: "A" * (arm9.itcm_room(self.arm9) + 1)})
 
+    def test_buffer_move_is_refused(self):
+        with self.assertRaises(ValueError):
+            arm9.relocate(self.arm9, {0x746FC: "Not set"})
+
+    def test_every_write_destination_is_a_buffer(self):
+        """A string whose address the code passes as r0 to strcpy/strncpy/memset is a RAM buffer: it must be in
+        BUFFERS so relocate refuses it (moving 未設定 at 0x020746FC blanked the stage-info panel)."""
+        writers = {0x020102EC, 0x020103B4, 0x0200DF60}  # strcpy, strncpy (zero-fills), memset
+        starts = {arm9.BASE + off for off, _ in self.strings}
+        d, found = self.arm9, set()
+        for off in range(0, arm9.LO, 4):
+            w = struct.unpack_from("<I", d, off)[0]
+            if w & 0x0F7F0000 != 0x051F0000 or w >> 28 == 0xF or (w >> 12) & 0xF != 0:
+                continue  # want LDR r0, [pc, #imm]
+            lit = off + 8 + (w & 0xFFF if w & 0x00800000 else -(w & 0xFFF))
+            val = struct.unpack_from("<I", d, lit)[0]
+            if val not in starts:
+                continue
+            for k in range(1, 5):  # the call follows within a few instructions
+                nxt = struct.unpack_from("<I", d, off + 4 * k)[0]
+                if (nxt >> 24) & 0xF == 0xB:
+                    tgt = arm9.BASE + off + 4 * k + 8 + (((nxt & 0xFFFFFF) ^ 0x800000) - 0x800000) * 4
+                    if tgt in writers:
+                        found.add(val - arm9.BASE)
+                    break
+        self.assertTrue(found)
+        self.assertLessEqual(found, arm9.BUFFERS)
+
     def test_all_strings_moved_at_once_still_fits(self):
-        moves = {off: f"a{k}" for k, (off, _) in enumerate(self.strings)}
+        moves = {off: f"a{k}" for k, (off, _) in enumerate(self.strings) if off not in arm9.BUFFERS}
         new = arm9.relocate(self.arm9, moves)
         params, lst, ents = arm9.layout(new)
         self.assertLessEqual(ents[0][1], arm9.ITCM_LIMIT)

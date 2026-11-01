@@ -88,7 +88,10 @@ class Extract(unittest.TestCase):
 
     def test_arm9_strings_are_pointed_at_and_reencode(self):
         found = arm9.strings(self.rom.arm9)
-        self.assertEqual(len(found), 351)
+        # 351 + 6 glued to binary data with no NUL before them + 2 below the old 0x72170 bound (phase 7)
+        self.assertEqual(len(found), 359)
+        self.assertIn(0x72150, dict(found))  # ユニットの売却, found by jp_left
+        self.assertIn(0x73CBC, dict(found))  # セーブをしますか？ after a pointer table
         for off, text in found:
             end = self.rom.arm9.find(b"\0", off)
             self.assertEqual(text.encode("cp932"), self.rom.arm9[off:end], f"{arm9.BASE + off:#x}")

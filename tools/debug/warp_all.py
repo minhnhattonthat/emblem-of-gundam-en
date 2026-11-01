@@ -29,6 +29,8 @@ def scene_names():
     src = open(os.path.join(DEBUG, "scenes.lua"), encoding="utf-8").read()
     names = [f"st{k:02d}_{ph}" for k in range(68) if k != 6 for ph in ("open", "battle", "end", "prep")]
     assert "return k ~= 6 end" in src and '"st%02d_prep"' in src, "scenes.lua stage loops changed: update scene_names()"
+    if '"brief%02d"' in src:
+        names += [f"brief{k:02d}" for k in range(68) if k != 6]
     names += re.findall(r"^SCENES\.(\w+) =", src, re.M)
     return names
 

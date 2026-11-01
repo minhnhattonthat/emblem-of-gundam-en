@@ -53,10 +53,10 @@
   "BG Display ON",
   "BG Display OFF",
   " ",
-  "[Unit]",
-  "[Video]",
-  "[Background]",
-  "[Wipe]",
+  "[Unit] ",
+  "[Video] ",
+  "[Background] ",
+  "[Wipe] ",
   "[Frame]",
   "PAUSE!"
  ]

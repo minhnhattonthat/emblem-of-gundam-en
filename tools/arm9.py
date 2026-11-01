@@ -1,6 +1,6 @@
 """arm9.py: the ARM9's own Shift-JIS strings, their pointers, and growing them into the ITCM autoload tail.
 
-The strings live NUL-terminated in the main code section's tail, file 0x72170-0x77140 (RAM 0x02072170 upward):
+The strings live NUL-terminated in the main code section's tail, file 0x72150-0x77140 (RAM 0x02072150 upward):
 shop, team-building, save/load, options, turn prompts and the leftover debug menu. Every one is reached from a
 4-byte literal pointer (ARM's literal pools; a pointer table for a few menus), stored in arm9 itself, so a string can
 be extracted by scanning the region and told apart from the binary data around it by requiring a pointer to its start.
@@ -21,9 +21,12 @@ import sys
 import unicodedata
 
 BASE = 0x02000000
-LO, HI = 0x72170, 0x77140  # file offsets of the string region (main section tail)
+LO, HI = 0x72150, 0x77140  # file offsets of the string region (main section tail; jp_left found 0x72150/60)
 ITCM_RAM = 0x01FF8000
 ITCM_LIMIT = 0x8000  # 32 KiB of ITCM
+# Writable buffers whose default text looks like a string: code strcpy's into them and reads them as struct fields
+# (0x020746F8 + 4: the stage-info name; 0x02072814: 8 x 32-byte names, memset 0x100), so moving one breaks the game.
+BUFFERS = {0x72814, 0x746FC, 0x7471E, 0x7473E, 0x74746, 0x7474E, 0x74756, 0x7475E}
 
 
 def valid(text):
@@ -75,8 +78,21 @@ def pointers(d, off):
 
 def strings(d):
     """[(file offset, text)] for every string a pointer reaches, in address order. Runs below two bytes are
-    binary data whose address a table happens to hold, not text."""
-    return [(off, t) for off, end, t in runners(d) if t and end - off >= 2 and pointers(d, off)]
+    binary data whose address a table happens to hold, not text. A string can follow binary data with no NUL in
+    between (セーブをしますか？ right after a pointer table at 0x02073CBC): inside a run that doesn't decode, the first
+    pointed-at offset from which the rest decodes is the string."""
+    out = []
+    for off, end, t in runners(d):
+        if t:
+            if end - off >= 2 and pointers(d, off):
+                out.append((off, t))
+            continue
+        for p in range(off + 1, end - 1):
+            s = decode(d[p:end])
+            if s and pointers(d, p):
+                out.append((p, s))
+                break
+    return out
 
 
 def replace(d, edits):
@@ -125,7 +141,11 @@ def itcm_room(d):
 def relocate(d, texts):
     """Return arm9 with {file offset: text} moved into the ITCM tail: the ITCM section grows by the data, the DTCM
     source and the autoload list slide up, the list's own address moves in the module params, and every 4-byte
-    pointer to a moved string is rewritten. The old slot is zeroed. Raises when ITCM would overflow."""
+    pointer to a moved string is rewritten. The old slot is zeroed. Raises when ITCM would overflow or a text is a
+    BUFFERS entry (those must fit in place)."""
+    bad = sorted(BASE + off for off in texts if off in BUFFERS)
+    if bad:
+        raise ValueError(f"writable buffers cannot move, shorten them to fit: {[hex(a) for a in bad]}")
     got = layout(d)
     if got is None:
         raise ValueError("no autoload list found: cannot grow arm9 strings")

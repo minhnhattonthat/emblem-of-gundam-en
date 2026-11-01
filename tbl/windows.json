@@ -1,5 +1,25 @@
 {
  "note": "Text budgets per box variant, px of drawn text from the pen origin on one line, measured in-game from the marker/ruler build (docs/re/width.md). `measured` means a ruler was drawn until the box clipped it and the shot is recorded; `guess` means it is inferred from the UI geometry and must be replaced before a translator writes against it. The lint (phase 7) reads this file: a line whose variant has no measured budget warns.",
+ "tables_note": "Which box each string id (`EEEE_NAME:IIII`, `a9:XXXXXXXX`) is drawn in; first match wins (tools/lint.py). Optional condition: mod = [m, r] on the string index, jp = regex on the Japanese. `dev` = developer menus and test rooms (not reachable in the release, not linted for width).",
+ "tables": [
+  ["^00(1[7-9]|2\\d|3[0-8])_|^0084_", "dev"],
+  ["^0003_SETABLE:", "char_desc", {"jp": "説明"}],
+  ["^0003_SETABLE:", "char_name"],
+  ["^0004_CHARTABLE:", "info_desc", {"jp": "[\\n$【％]|.{11}"}],
+  ["^0004_CHARTABLE:", "skill_name"],
+  ["^0005_SKILLTABLE:", "unit_desc", {"jp": "説明"}],
+  ["^0005_SKILLTABLE:", "unit_name"],
+  ["^0006_UNITTABLE:", "faction"],
+  ["^0007_FORCETABLE:", "terrain_cell"],
+  ["_MAP\\d\\d:", "area_info"],
+  ["^0000_", "stage_name_list"],
+  ["^000[12]_", "sound_list"],
+  ["^001[23]_", "gallery_list"],
+  ["^0014_", "series_name"],
+  ["^008[0-3]_", "extras"],
+  ["^a9:", "arm9_ui"],
+  [".", "story_dialogue"]
+ ],
  "font": {"main": 336, "small": 337, "advance_rule": "pen += CWDH advance + 1 px; tools/font.py sets ASCII advance = ink width, space = 3"},
  "variants": {
   "stage_card_narration": {
@@ -31,6 +51,41 @@
    "px": 150, "lines": 1, "x": 20, "font": 336, "measured": false,
    "note": "Generic list rows (extras, load, options, sysflags, movie viewers). Guessed: several of these are wider than menu_row.",
    "shots": ["work/qa/markers_id/extras/final.png", "work/qa/markers_id/load/final.png"]
+  },
+  "char_name": {
+   "px": 118, "lines": 1, "x": 8, "font": 336, "measured": true,
+   "note": "Budgets here are tools/fit.py px (ink + the renderer's 1 px gap per glyph), so ink width + 1. Character full name (SETABLE index %3 == 0). Team-edit panel (X on the map): the left panel clips at x=124 (117 px from x=8); the character-info screen (Y) is wider (160 px). Stress build tools/stress.py 3:3=@ruler.",
+   "shots": ["work/play/st2/0001.png", "work/play/st1/0001.png"]
+  },
+  "skill_name": {
+   "px": 104, "lines": 1, "x": 8, "font": 336, "measured": true,
+   "note": "Character skill / weapon name (CHARTABLE names): clipped at x=110 on the character-info screen and the team panel (same 103 px both).",
+   "shots": ["work/play/st1/0001.png", "work/play/st2/0001.png"]
+  },
+  "info_desc": {
+   "px": 247, "lines": 2, "x": 8, "font": 336, "measured": true,
+   "note": "Skill / weapon description lines (CHARTABLE descriptions, \\n = second line): run to the screen edge (x=255) on the character-info and unit-info screens. $L counts 2 digits, $Pnn 3.",
+   "shots": ["work/play/st1/0001.png", "work/play/st2/0002.png"]
+  },
+  "unit_name": {
+   "px": 118, "lines": 1, "x": 8, "font": 336, "measured": true,
+   "note": "Unit name (SKILLTABLE odd index): team panel clips at x=124 like char_name; unit-info screen 160 px.",
+   "shots": ["work/play/st3/0002.png", "work/play/st2/0002.png"]
+  },
+  "faction": {
+   "px": 108, "lines": 1, "x": 145, "font": 336, "measured": true,
+   "note": "Faction name bar on the map's stage-info panel (UNITTABLE), centred in x 144-253.",
+   "shots": ["work/play/st2/0000.png"]
+  },
+  "terrain_cell": {
+   "px": 57, "lines": 1, "x": 144, "font": 336, "measured": true,
+   "note": "Terrain cell (地形属性) under AREA INFO on the map panel, centred, clips at x 144-199 (ruler 7:4=@ruler shows D..M whole). `Underwater` (fit.px 57 = 56 ink) draws x 144-198 with every glyph whole (stress 7:4=Underwater, map warp).",
+   "shots": ["work/qa/terrain/final.png", "work/qa/terrain2/final.png"]
+  },
+  "area_info": {
+   "px": 150, "lines": 1, "x": 0, "font": 336, "measured": false,
+   "note": "AREA INFO bar (MAPnn area names) on the map panel: `<area name><terrain suffix>` centred in ~198 px; the suffix (arm9 射撃 etc.) takes the rest. Guess.",
+   "shots": ["work/play/st4/0001.png", "work/qa/p7_sb/map/final.png"]
   },
   "story_dialogue": {
    "px": 180, "lines": 3, "line_pitch": 12, "x": 9, "font": 336, "measured": true,
