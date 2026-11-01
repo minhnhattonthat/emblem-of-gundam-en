@@ -34,9 +34,15 @@ Updated at the end of every session. Keep it to what the next session needs; his
     はい/いいえ cursor brackets; extras top art 0372 reading erased (D16); font 0336 `>`/`<` redrawn as chevrons
     (`font.GLYPHS`: "->" read as "-)"); dev wipe names "NW -> SE". Left as is: extras help bar starts at x=0 like
     the Japanese.
-  - **Next:** 0340/0344 sprite tile sheets, 0402 建物, 0450 scenario menu (needs a warp); small textures 2169 (red
-    digits, no text), 2177 (6 px kanji bars), 2239 (corner tags): too small for the fonts, decide or leave; end
-    caption `- エンブレム オブ ガンダム -`; `docs/synopsis.md` old stage names. Then re-tour
+  - 2239 portrait tags (preview only: no warp state has a deployed/full team): 出撃中 "Sortie", 配属/配備/強化限界
+    "Assign/Deploy/Upgr." over "Max" (`dlg` style `z` blanks an overlay sub-texture first). Font 337 graphics
+    labels: 5 px M and W. New scenes: map_unit, map_chart, map_ops, prep_upgrade, prep_assign, prep_upunits,
+    st01_after (level-up + save screen after the stage 1 result).
+  - **Next:** combat screens (forecast 0378, battle sprites 0340/0344 with 前進/後退/連戦/攻/防 cells) via a
+    playtester (`docs/playtester-brief.md`, session `work/play/combat1`); 0402 建物 (check whether drawn); 0450
+    scenario menu: labels done, no path found (title, extras, map menu, prep, stage end all checked); 2177 (6 px
+    kanji bars) and 2169 (red glyph tiles): too small, leave unless seen in-game; end caption
+    `- エンブレム オブ ガンダム -`. Then re-tour
     (`warp_all.py build/eog_en.nds --frames 900 --out work/qa/tour`), `qa_gate.py init` + verdicts (fresh read-only
     pass) + `check`, smoke, then release zip.
 - **Phase 7 (this session):**

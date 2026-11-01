@@ -52,6 +52,9 @@ end
 SCENES.prep_mapcheck = extend("st30_prep", { { "press", "a" } })              -- マップ確認
 SCENES.prep_team = extend("st30_prep", { { "press", "down" }, { "press", "a" } })  -- オリジナル隊編成
 SCENES.shop = extend("st30_prep", { { "press", "down", 2 }, { "press", "a" } })   -- 強化メニュー
+SCENES.prep_upgrade = extend("st30_prep", { { "press", "down", 2 }, { "press", "a" }, { "wait", 120 } }) -- 強化
+SCENES.prep_assign = extend("prep_upgrade", { { "press", "a" }, { "wait", 120 } })
+SCENES.prep_upunits = extend("prep_upgrade", { { "press", "down", 3 }, { "press", "a" }, { "wait", 120 } })
 SCENES.prep_brief = extend("st30_prep", { { "press", "down", 3 }, { "press", "a" } }) -- 作戦内容確認
 -- briefNN: the same win/lose screen on stage NN (width/byte-cap checks of each stage's condition strings)
 for k = 0, 67 do
@@ -68,7 +71,12 @@ SCENES.map_team = extend("map", { { "press", "x" }, { "wait", 120 } }, true)  --
 SCENES.map_chara = extend("map", { { "press", "y" }, { "wait", 120 } }, true) -- character info (0444 atlas)
 SCENES.map_unit = extend("map_chara", { { "press", "down" }, { "wait", 30 }, { "press", "left" }, { "wait", 120 } }, true) -- unit info (0444 atlas)
 SCENES.mapmenu = extend("map", { { "press", "right", 30 }, { "read", MAPMENU, { "a" } } }, true)
-SCENES.debugmenu = extend("mapmenu", { { "press", "down", 5 }, { "press", "a" } }, true)
+-- after the stage 1 result panel: character level-up (Basket A), then the save screen
+SCENES.st01_after = extend("st01_end", { { "wait", 300 }, { "press", "a" }, { "wait", 300 }, { "press", "a" }, { "wait", 300 },
+  { "press", "a" }, { "wait", 200 }, { "press", "a" }, { "wait", 200 }, { "press", "a" }, { "wait", 200 }, { "press", "a" }, { "wait", 300 } })
+SCENES.map_chart =extend("mapmenu", { { "press", "down", 2 }, { "press", "a" }, { "wait", 120 } }, true) -- シナリオチャート from the map
+SCENES.map_ops = extend("mapmenu", { { "press", "down" }, { "press", "a" }, { "wait", 120 } }, true) -- 作戦内容
+SCENES.debugmenu = extend("mapmenu",{ { "press", "down", 5 }, { "press", "a" } }, true)
 SCENES.victory = extend("debugmenu", { { "wait", 30 }, { "press", "a" }, { "wait", 30 }, { "press", "a" } }, true)
 SCENES.gameover = extend("debugmenu", { { "wait", 30 }, { "press", "a" }, { "wait", 30 }, { "press", "down" },
   { "press", "a" }, { "wait", 200 }, { "press", "a" }, { "wait", 60 }, { "press", "a" } }, true)

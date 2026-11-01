@@ -200,7 +200,10 @@ def relabel(d, lga, edits_, fonts=None):
         cols = {i: _rgb(pal[r["pal"] + i]) for i in range(1, n) if r["pal"] + i < len(pal)}
         lum = lambda c: c[0] * 3 + c[1] * 6 + c[2]  # noqa: E731
         inside = [cols[rows[yy][xx]] for yy in range(y, y + h) for xx in range(x, x + w) if rows[yy][xx]]
-        ink, dark = max(inside, key=lum), min(inside, key=lum)
+        if inside:  # else (a rect already blanked by "z"): the previous entry's colours
+            ink, dark = max(inside, key=lum), min(inside, key=lum)
+        if "z" in style:  # overlay tag (glyphs on transparent, touching the edges): blank the whole sub-texture
+            rows = [[0] * len(row) for row in rows]
         im = Image.new("RGB", (w, h))
         clear = set()  # rows with transparent pixels on both sides stay transparent behind the text
         for yy in range(h):
@@ -242,7 +245,7 @@ def relabel(d, lga, edits_, fonts=None):
         ua = under.load()
         for yy in range(h):
             for xx in range(w):
-                if style == "outline":
+                if "outline" in style.split():
                     ua[xx, yy] = max(ma[xx + dx, yy + dy] for dx in (-1, 0, 1) for dy in (-1, 0, 1)
                                      if 0 <= xx + dx < w and 0 <= yy + dy < h)
                 elif style == "shadow" and xx and yy:
@@ -304,6 +307,9 @@ TEXT.update({
     2227: [(12, (60, 1, 66, 14), "Scenario", (336,), "solid"), (13, (5, 1, 66, 14), "Chart", (336,), "solid")],
     2243: [(t, (2, 1, 252, 38), s, (336,), "") for t, s in (
         (3, "Saving..."), (4, "Save complete."), (8, "Creating system data..."), (9, "System data created."))],
+    2239: [(17, (1, 23, 30, 9), "Sortie", (337,), "outline z"),  # portrait tags: 出撃中, 配属/配備/強化 + 限界 (D18)
+           *[e for t, s in ((18, "Assign"), (19, "Deploy"), (20, "Upgr.")) for e in (
+               (t, (1, 1, 30, 10), s, (337,), "outline z"), (t, (1, 21, 30, 10), "Max", (337,), "outline"))]],
     2245: [(6, (60, 6, 136, 36), "Retirement Notice", 20, "shadow p16"),  # unit retirement banner, grid kept
            (7, (60, 6, 136, 36), "Retirement Notice", 20, "shadow p16")],
 })

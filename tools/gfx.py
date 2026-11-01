@@ -211,12 +211,13 @@ def _glyphs(fid, d):
             xs = [x for r in rows for x, v in enumerate(r) if v]
             if xs:
                 out[chr(c) if c < 0x80 else "・"] = [r[min(xs):max(xs) + 1] for r in rows]
-    if fid == 337:  # the font's own 4 px W has a solid middle and reads as H ("Heapon", visual QA): 5 px W
+    if fid == 337:  # the font's own 4 px W and M have solid middles and read as H ("Heapon", visual QA): 5 px
         w5 = ["#...#"] * 4 + ["#.#.#"] * 3 + ["##.##", "#...#"]
         ink = [k for k, r in enumerate(out["H"]) if any(r)]
-        out["W"] = [[0] * 5 for _ in out["H"]]
-        for k, row in zip(ink, w5):
-            out["W"][k] = [int(ch == "#") for ch in row]
+        for ch, rows in (("W", w5), ("M", w5[::-1])):
+            out[ch] = [[0] * 5 for _ in out["H"]]
+            for k, row in zip(ink, rows):
+                out[ch][k] = [int(c == "#") for c in row]
     return out
 
 
