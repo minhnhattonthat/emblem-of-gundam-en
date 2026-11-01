@@ -22,8 +22,13 @@ Updated at the end of every session. Keep it to what the next session needs; his
     one winner each) and merged: 898 lines + copies, 172 files. Win/lose labels now sentence case ("All enemies
     destroyed"), Solar Ray System in 0198. Build + 71 tests + smoke green. Waived "needs in-game check": 0316:0241
     speaker, 0333:0147 addressee, debug-only labels (0019, 0035), "Discard"/options-row widths (lint passes).
-  - **Next:** re-tour (`warp_all.py build/eog_en.nds --frames 900 --out work/qa/tour`, text changed), `qa_gate.py
-    init` + visual-qa round + `check`, then `tools/release.py`. Never publish without the user.
+  - **Re-tour + gate (2026-11-02):** tour 373/373 (brief62 timed out once, ok on `--only` rerun), visual-QA round
+    r6 (`work/qa/verdicts/r6_*.tsv`) 18/18 ok. "Delaz Freet" on st40/st43 cards is the original art's own typo.
+  - **Release v1.0 built locally:** `tools/release.py --version 1.0` passed every gate (71 tests, smoke, jp_left 0,
+    both qa gates, polish 0 open) -> `release/EmblemOfGundam_EN_v1.0.zip` (xdelta, re-apply verified), patched
+    SHA-1 `7c396dad03fb73983ba8691d7f01b47e152f2b7c`, CRC32 1516C74F. **Not published: waiting on the user.**
+  - **Next:** user playtest / publish decision. Optional nits: defeat labels mix "Victory conditions cannot be
+    met" / "not met"; 0316:0241 speaker and 0333:0147 addressee unchecked in-game.
 - **Phase 8 (2026-11-02): complete.** Build `9b51ba44d3285e109252c43e71d04705e9c50c06`: 70 tests pass, lint 0,
   smoke ok, cold tour `work/qa/tour` 373/373 scenes (ST06 is a scrapped stage, no scenes), `qa_gate.py check
   work/qa/manifest.tsv work/qa/verdicts` = 18/18 sheets ok (visual-QA rounds r3-r5, `work/qa/verdicts/r*_*.tsv`).
