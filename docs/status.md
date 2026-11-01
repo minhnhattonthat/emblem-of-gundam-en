@@ -46,6 +46,12 @@ Updated at the end of every session. Keep it to what the next session needs; his
     so `split` only queues what is left). `tools/fit.py` (px per line, `tbl/vwf336.json` cache), `tools/pairs.py`
     (reviewer input). Briefs: `docs/translator-brief.md`, `docs/reviewer-brief.md`; `docs/style-reference.md`,
     `docs/synopsis.md`, glossary seeded with official names (rulings D10, D11).
+  - Progress 2026-11-01: b001-b060 translated; b001-b042 reviewed (sonnet reviewers, all Approved/Needs-fixes,
+    no open Critical), their Important items collected in `work/tl/fixes.md` and applied by a fixer agent; b043-b060
+    reviewed by **review-and-fix agents** (`docs/review-fix-brief.md`: translator type, reviews batches it didn't
+    write, fixes Critical/Important itself, logs Minors to `work/tl/minors_<batch>.md` -> fold into docs/polish.md).
+    Use review-and-fix for the rest: reviewer agents can't write files and their full reports flood the controller.
+    b061-b090 dispatched to translators; b091-b160 not yet dispatched.
   - Workflow: translator agents (3-5 batches each) -> `batches.py check` OK -> reviewer (sonnet) on
     `pairs.py work/tl/pairs_<x>.txt <batches>` -> Critical/Important fixed by the same translator -> `merge` ->
     commit. Minors go to `docs/polish.md`. work/tl is gitignored: **merge + commit after every wave**, a lost

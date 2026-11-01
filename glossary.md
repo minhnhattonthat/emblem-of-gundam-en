@@ -309,6 +309,9 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | 親衛隊 | Royal Guard | | | |
 | ジンバ・ラル | Jimba Ral | | | |
 | ハロ | Haro | | | |
+| ゼダンの門 | Gate of Zedan | | | |
+| νガンダム | Nu Gundam | | | |
+| サイクロプス隊 | Cyclops Team | | | |
 | ケルゲレン | Kergelen | | | |
 | ジムスナイパー | GM Sniper | | | |
 | ニューヤーク | New Yark | | anime spelling | New York |
