@@ -4,7 +4,7 @@ px clip or byte cap in-game (references/pipeline.md §Width gate).
     python -X utf8 tools/stress.py 3:3=ABC.. 4:8=@abc [--out work/marker/stress.nds]
     python -X utf8 tools/stress.py 4:8=@ruler       # `@ruler` = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`
 
-Ids are `EZ:INDEX` (BBQ) or `a9:XXXXXXXX` (arm9 RAM address). Distinct letters show both a px clip (where the ink
+Ids are `EZ:INDEX` (BBQ), `EZ:*` (all nonempty text in that table), or `a9:XXXXXXXX` (arm9 RAM address). Distinct letters show both a px clip (where the ink
 stops) and a byte cap (which letter is last) in one shot."""
 import argparse
 import string
@@ -31,10 +31,25 @@ def main():
         sid, _, text = e.partition("=")
         text = text.replace("@ruler", RULER).replace("\\n", "\n")
         if sid.startswith("a9:"):
-            a9[int(sid[3:], 16) - 0x02000000] = text
+            if sid == "a9:*":
+                import arm9
+                import mark
+                # Formatter templates and generated team names are copied into small native buffers.
+                # Stress literal UI labels only; targeted IDs remain available for a specific buffer test.
+                import re
+                a9 = {off: text if off not in arm9.BUFFERS and mark.classify(s)[0] == "text"
+                      and not re.search(r"[%$]|(?:Team|Character|Unit) [A-Z]$", s) else s
+                      for off, s in a9.items()}
+            else:
+                a9[int(sid[3:], 16) - 0x02000000] = text
         else:
-            t, k = (int(x) for x in sid.split(":"))
-            script[t][k] = text
+            table, index = sid.split(":")
+            t = int(table)
+            if index == "*":
+                import mark
+                script[t] = [text if mark.classify(s)[0] == "text" else s for s in script[t]]
+            else:
+                script[t][int(index)] = text
     import ndspy.rom
     rom = ndspy.rom.NintendoDSRom(build.ROM.read_bytes())
     tbl, dat = (rom.getFileByName(n) for n in ("EZ_TBL.BIN", "EZ_DAT.BIN"))

@@ -9,11 +9,11 @@
   "Space/Southeast Asia/Amuro",
   "Space/Southeast Asia/Char",
   "Space/Southeast Asia/Average",
-  "Ground/Hong Kong/Amuro",
-  "Ground/Hong Kong/Char",
-  "Ground/Hong Kong/Average",
-  "Ground/Southeast Asia/Amuro",
-  "Ground/Southeast Asia/Char",
-  "Ground/Southeast Asia/Average"
+  "Land/Hong Kong/Amuro",
+  "Land/Hong Kong/Char",
+  "Land/Hong Kong/Average",
+  "Land/Southeast Asia/Amuro",
+  "Land/Southeast Asia/Char",
+  "Land/Southeast Asia/Average"
  ]
 }

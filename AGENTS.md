@@ -6,6 +6,7 @@ Skill: translate-retro-game; `python tools/skill.py` prints its folder. Read its
 - Build:    `python -X utf8 tools/build.py`  -> build/eog_en.nds (checks the dump against `rom.sha1` first; applies `script/`, `--no-script` skips it)
 - Extract:  `python -X utf8 tools/extract.py` (ROM -> `script/`; `--check` lists holes, exit 1)
 - Check:    `python -X utf8 tools/check.py`  (unittest suite in tests/ + lint; the pre-commit hook runs this; hooks: `git config core.hooksPath tools/hooks`)
+- Phase 7 gate: `python -X utf8 tools/check.py --phase7` (adds strict measured-width coverage; unit tests alone do not certify phase completion)
 - Smoke:    `python -X utf8 "$(python tools/skill.py)/scripts/emu.py" build/eog_en.nds --out work/qa/smoke --route tools/routes/boot.txt --smoke`
 - Warp:     `python -X utf8 "$(python tools/skill.py)/scripts/emu.py" build/eog_en.nds --out work/qa/warp --script tools/debug/scenes.lua --script tools/debug/warp.lua --var "SCENE='<name>'" --frames 900 --sheet` (frames count after the warp; scenes `stNN_open|battle|prep|end` NN 00-67, `shop save chart map mapmenu debugmenu victory gameover title title_menu load extras credits`...: `tools/debug/scenes.lua`, notes `docs/re/debug.md`; never ask the user to play to a scene)
 - Warp all: `python -X utf8 tools/debug/warp_all.py [ROM] [--only REGEX]` (every scene from cold boot -> `work/states/<scene>.dst` + `work/qa/warps/sheet_*.png`; rerun after code/font/graphics changes). play.py sessions: `--script tools/debug/devmenu.lua` boots the dev menu.

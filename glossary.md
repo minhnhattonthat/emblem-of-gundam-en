@@ -1,9 +1,11 @@
 # Glossary - Emblem of Gundam
 
 Binding for every translator and reviewer. Agents propose additions in reports; only the controller edits this file.
-`tools/batches.py check` enforces it: when a JP form (several separated by `;`) appears in a block, the EN form must
+`tools/batches.py check` and `tools/lint.py` enforce it: when a JP form (several separated by `;`) appears in a block, the EN form must
 appear in that block's English (case-insensitive); an `Avoid` spelling fails the check. Katakana terms match whole
 katakana runs only (ジム does not match inside ジムカスタム).
+An optional sixth table column contains approved short alternatives for menu labels only. Avoid spellings are
+case-sensitive to distinguish proper-name errors such as "Banning" from the ordinary verb "banning".
 
 ## Rulings (asked of the user once; options and reasons in docs/decisions.md)
 - Honorifics: kept, hyphenated (Amuro-san); 様 -> Lord/Lady X (series' official English); ranks as English ranks (D10).
@@ -230,8 +232,8 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | 宇宙機動軍 | Space Mobile Forces | | | |
 
 ## Units and ships
-| JP | EN | max | notes | Avoid |
-|---|---|---|---|---|
+| JP | EN | max | notes | Avoid | Short labels |
+|---|---|---|---|---|---|
 | ガンダム | Gundam | | ガンダム試作1号機 Gundam GP01, 2号機 GP02A, 3号機 GP03 | |
 | ガンタンク | Guntank | | | |
 | ガンキャノン | Guncannon | | | |
@@ -337,7 +339,7 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | ヒートホーク | Heat Hawk | | | |
 | ヒートロッド | Heat Rod | | | |
 | ファンネル | Funnel | | | |
-| メガ粒子砲 | mega particle cannon | | | |
+| メガ粒子砲 | mega particle cannon | | 104 px weapon label: approved synonym in sixth column; full term in prose | | Mega Particle Gun |
 | ジェットストリームアタック | Jet Stream Attack | | | |
 | モンブラン | Montblanc | | ship | |
 | ガンダリウムγ | Gundarium Gamma | | | |

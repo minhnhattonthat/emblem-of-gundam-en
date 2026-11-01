@@ -3,11 +3,10 @@
 The arm9 grows (relocated strings), so ndspy lays the filesystem out again and a flat byte diff of the two ROMs is
 noise past the arm9. Instead, against the original:
   - every file but EZ_TBL.BIN / EZ_DAT.BIN, arm7, the overlays, banner and icon are byte-identical;
-  - every EZ entry is identical unpacked, except the text tables script/ changed, the two fonts
-    and the graphics-text images (tools/gfx.py);
-  - arm9 (romdiff.check): the main section differs only inside the string region and at the pointer words the
-    relocation rewrote, plus the two autoload-params words; the ITCM block is the original + the moved strings;
-    the DTCM block is identical; the autoload list differs only in the ITCM size.
+  - every EZ entry is identical unpacked, except exact planned text, VM type/layout, font and graphics writes;
+  - ARM9 string slots, every relocated pointer and its exact target content, and the autoload splice match an
+    independent plan against the clean original. There is no blanket permission for the surrounding string region.
+  - romdiff checks expected preimages, final bytes and overlaps. The CLI/build records component plans in build/writes.
 
     python -X utf8 tools/romcheck.py [BUILT]      # exit 1 on any unexpected change (default: build in memory)"""
 import struct
@@ -20,10 +19,14 @@ import ndspy.rom
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import arm9  # noqa: E402
+import bbq  # noqa: E402
 import build  # noqa: E402
 import ez  # noqa: E402
 import font  # noqa: E402
 import gfx  # noqa: E402
+import insert  # noqa: E402
+import layout  # noqa: E402
+import extract  # noqa: E402
 import romdiff  # noqa: E402
 
 EZ_FILES = ("EZ_TBL.BIN", "EZ_DAT.BIN")
@@ -36,40 +39,119 @@ def entries(tbl, dat):
     return out
 
 
-def check_arm9(old, new):
-    errs = []
-    p0, l0, e0 = arm9.layout(old)
-    p1, l1, e1 = arm9.layout(new)
-    src0 = l0 - e0[1][1] - e0[0][1]  # ITCM source start; the main section ends here
-    if l1 - e1[1][1] - e1[0][1] != src0:
-        errs.append("arm9: the main section changed length")
-    allowed = set(range(arm9.LO, arm9.HI))
-    moved = {o for o, _ in arm9.strings(old)}
-    for o in moved:
-        for p in arm9.pointers(old, o):
-            if new[p:p + 4] != old[p:p + 4]:
-                if not arm9.ITCM_RAM <= struct.unpack_from("<I", new, p)[0] < arm9.ITCM_RAM + arm9.ITCM_LIMIT:
-                    errs.append(f"arm9 {arm9.BASE + p:#x}: pointer rewritten outside ITCM")
-                allowed.update(range(p, p + 4))
-    allowed.update(range(p0, p0 + 8))
-    e, _ = romdiff.check(old[:src0], new[:src0], allowed, [])
-    errs += [f"arm9 main: {x}" for x in e]
-    itcm0, itcm1 = old[src0:src0 + e0[0][1]], new[src0:src0 + e1[0][1]]
-    if itcm1[:len(itcm0)] != itcm0:
-        errs.append("arm9: the original ITCM code changed")
-    if new[src0 + e1[0][1]:l1] != old[src0 + e0[0][1]:l0]:
-        errs.append("arm9: the DTCM block changed")
-    if e1[1:] != e0[1:] or e1[0][0] != e0[0][0] or e1[0][2] != e0[0][2]:
-        errs.append("arm9: autoload entries changed beyond the ITCM size")
-    if new[l1 + 12 * len(e1):] != old[l0 + 12 * len(e0):]:
-        errs.append("arm9: bytes after the autoload list changed")
-    return errs
+def checked_writes(old, new, writes, label, logs=None):
+    """No blanket ranges. Each planned write names its clean-original preimage and final bytes."""
+    errors, _ = romdiff.check(old, new, set(), writes)
+    if logs is not None:
+        logs.extend(writes)
+    return [f"{label}: {e}" for e in errors]
 
 
-def check(orig, built, text_ids):
+def write(old, off, data, name):
+    return off, old[off:off + len(data)].ljust(len(data), b"\xff"), data, name
+
+
+def check_arm9(old, new, texts=None, logs=None):
+    """Independently plan exact string slots, references, and autoload metadata from the clean ARM9."""
+    texts = insert.arm9_texts() if texts is None else texts
+    originals = dict(arm9.strings(old))
+    params, lst, ents = arm9.layout(old)
+    itcm_end = lst - ents[1][1]
+    writes, pool = [], bytearray()
+    for off, text in texts.items():
+        if off not in originals:
+            return [f"arm9: unknown string start {off:#x}"]
+        if originals[off] == text:
+            continue
+        size = len(originals[off].encode("cp932")) + 1
+        data = text.encode("cp932") + b"\0"
+        if len(data) <= size:
+            writes.append(write(old, off, data.ljust(size, b"\0"), f"string {off:#x}"))
+        else:
+            if off in arm9.BUFFERS:
+                return [f"arm9: writable buffer {off:#x} cannot move"]
+            target = arm9.ITCM_RAM + ents[0][1] + len(pool)
+            pool.extend(data)
+            writes.append(write(old, off, bytes(size), f"vacated string {off:#x}"))
+            for slot in arm9.pointers(old, off):
+                writes.append(write(old, slot, struct.pack("<I", target), f"pointer to string {off:#x}"))
+    pool.extend(bytes(-len(pool) % 4))
+    if ents[0][1] + len(pool) > arm9.ITCM_LIMIT:
+        return ["arm9: relocated text exceeds ITCM"]
+    if pool:
+        writes.append(write(old, params, struct.pack("<2I", arm9.BASE + lst + len(pool),
+                            arm9.BASE + lst + len(pool) + len(ents) * 12), "autoload pointers"))
+        # Variable-sized splice: validate the complete moved DTCM/list suffix, including its original code.
+        tail = bytearray(pool + old[itcm_end:])
+        struct.pack_into("<I", tail, len(pool) + lst - itcm_end + 4, ents[0][1] + len(pool))
+        writes.append(write(old, itcm_end, bytes(tail), "text pool + unchanged DTCM + autoload size"))
+    errors = checked_writes(old, new, writes, "arm9", logs)
+    if len(new) != len(old) + len(pool):
+        errors.append("arm9: unexpected length")
+    return errors
+
+
+def check_bbq(old, new, texts, logs=None, index=0):
+    """Only type-7 index/pool, the stage-name field, and approved VM type bits may change."""
+    encoded = [s.encode("cp932") for s in texts]
+    sec, original_text = bbq.strtab(old)
+    expected = insert.ez_edits({index: old}, {index: texts}).get(index, old)
+    prefix = expected[:sec["index"]]
+    writes = []
+    for off, before, after, name in (layout.OPERANDS.get(index, []) if encoded != original_text else []):
+        writes.append((off, struct.pack("<I", before), struct.pack("<I", after), name))
+    # Descriptor size is the only header word that changes when replacing the final section.
+    off = sec["at"] + 16
+    if prefix[off:off + 4] != old[off:off + 4]:
+        writes.append(write(old, off, prefix[off:off + 4], "string pool size"))
+    vm, words = bbq.code_words(old)
+    if vm:
+        for idx, op, args in bbq.instructions(words):
+            off = vm["data"] + idx * 4
+            changed = struct.unpack_from("<I", prefix, off)[0]
+            if op != changed:
+                if (op ^ changed) & ~0x7C00 or op & 0x3FF or not 8 <= ((op >> 10) & 31) <= 12:
+                    return ["unapproved VM instruction change in insertion plan"]
+                writes.append(write(old, off, struct.pack("<I", changed), "VM string operand type"))
+    stage = next((s for s in bbq.sections(old) if s["type"] == 5), None)
+    if stage:
+        lo, hi = struct.unpack_from("<2I", old, stage["index"]) if stage["count"] > 1 else (0, stage["size"])
+        if hi - lo == 84:
+            off = stage["data"] + lo
+            name = old[off:off + bbq.NAME_FIELD].split(b"\0")[0]
+            data = encoded[original_text.index(name)].ljust(bbq.NAME_FIELD, b"\0")
+            if data != old[off:off + bbq.NAME_FIELD]:
+                writes.append(write(old, off, data, "stage-name record"))
+    # A shorter component is padded with FF only for the byte checker; its logical length is checked separately.
+    extent = max(len(old), len(expected))
+    writes.append(write(old, sec["index"], expected[sec["index"]:].ljust(extent - sec["index"], b"\xff"),
+                        "type-7 index/pool + original tail/alignment"))
+    errors = checked_writes(old, new.ljust(extent, b"\xff"), writes, "BBQ", logs)
+    if len(new) != len(expected):
+        errors.append("BBQ text component has unexpected length")
+    return errors
+
+
+def asset_writes(old, expected):
+    """Exact changed spans in the approved font/graphics rendering, never spans from the candidate ROM."""
+    extent = max(len(old), len(expected))
+    a, b = old.ljust(extent, b"\xff"), expected.ljust(extent, b"\xff")
+    writes, i = [], 0
+    while i < extent:
+        if a[i] == b[i]:
+            i += 1
+            continue
+        start = i
+        while i < extent and a[i] != b[i]:
+            i += 1
+        writes.append(write(old, start, b[start:i], "approved font/graphics rendering"))
+    return writes
+
+
+def check(orig, built, text_ids, writes_dir=None):
     """Error lines; text_ids = EZ entries the script may change."""
     a, b = ndspy.rom.NintendoDSRom(orig), ndspy.rom.NintendoDSRom(built)
-    errs = []
+    errs, logs = [], {"arm9": []}
     for name in ("arm7", "iconBanner", "arm9OverlayTable", "arm7OverlayTable"):
         if getattr(a, name) != getattr(b, name):
             errs.append(f"{name} changed")
@@ -83,13 +165,38 @@ def check(orig, built, text_ids):
     eb = entries(*(b.getFileByName(n) for n in EZ_FILES))
     if ea.keys() != eb.keys():
         errs.append("EZ entry count changed")
-    ok = set(text_ids) | set(font.FONT_IDS) | gfx.ids()
+    scripts = insert.tables()
+    tbl, dat = (a.getFileByName(n) for n in EZ_FILES)
+    assets = font.edits(tbl, dat, extract.unpack)
+    assets.update(gfx.edits(tbl, dat, extract.unpack))
     for i in ea:
-        if ea[i] != eb.get(i) and i not in ok:
-            errs.append(f"EZ entry {i} changed but is not a text table, font or graphics-text image")
+        if i not in eb:
+            continue
         if ea[i][0] != eb[i][0]:
             errs.append(f"EZ entry {i} key changed")
-    return errs + check_arm9(a.arm9, b.arm9)
+        old, new = ea[i][1], eb[i][1]
+        if i in text_ids:
+            log = logs.setdefault(f"ez_{i:04d}", [])
+            errs.extend(f"EZ entry {i}: {e}" for e in check_bbq(old, new, scripts[i], log, index=i))
+        elif i in assets:
+            expected = assets[i]
+            log = logs.setdefault(f"ez_{i:04d}", [])
+            extent = max(len(old), len(expected))
+            errs.extend(checked_writes(old, new.ljust(extent, b"\xff"), asset_writes(old, expected), f"EZ entry {i}", log))
+            if len(new) != len(expected):
+                errs.append(f"EZ entry {i}: font/graphics length differs from approved rendering")
+        elif new != old:
+            errs.append(f"EZ entry {i}: unexpected change")
+    errs.extend(check_arm9(a.arm9, b.arm9, logs=logs["arm9"]))
+    if writes_dir is not None:
+        dest = Path(writes_dir)
+        dest.mkdir(parents=True, exist_ok=True)
+        for component, writes in logs.items():
+            (dest / f"{component}.txt").write_text(
+                "# Component offsets; clean-original preimage; FF pads resized components for romdiff.\n" +
+                "".join(f"{off:X} {before.hex()} {after.hex()} {name}\n" for off, before, after, name in writes),
+                encoding="utf-8")
+    return errs
 
 
 if __name__ == "__main__":
@@ -100,7 +207,7 @@ if __name__ == "__main__":
     else:
         ez_new, a9 = build.script()
         built = build.build(ez_new, a9)
-    errs = check(orig, built, insert.tables().keys())
+    errs = check(orig, built, insert.tables().keys(), ROOT / "build" / "writes")
     for e in errs:
         print(e)
     print(f"{len(errs)} unexpected changes")

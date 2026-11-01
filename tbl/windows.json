@@ -1,13 +1,13 @@
 {
- "note": "Text budgets per box variant, px of drawn text from the pen origin on one line, measured in-game from the marker/ruler build (docs/re/width.md). `measured` means a ruler was drawn until the box clipped it and the shot is recorded; `guess` means it is inferred from the UI geometry and must be replaced before a translator writes against it. The lint (phase 7) reads this file: a line whose variant has no measured budget warns.",
+ "note": "Text budgets per box variant, px of drawn text from the pen origin on one line, measured in-game from the marker/ruler build (docs/re/width.md). `measured` means the recorded shot demonstrates either the clip limit or an explicitly documented conservative lower bound; false means inferred geometry requiring measurement. Strict phase-7 lint rejects every changed line without a measured budget. Optional bytes constrains a native text-copy buffer independently of pixels.",
  "tables_note": "Which box each string id (`EEEE_NAME:IIII`, `a9:XXXXXXXX`) is drawn in; first match wins (tools/lint.py). Optional condition: mod = [m, r] on the string index, jp = regex on the Japanese. `dev` = developer menus and test rooms (not reachable in the release, not linted for width).",
  "tables": [
   ["^00(1[7-9]|2\\d|3[0-8])_|^0084_", "dev"],
-  ["^0003_SETABLE:", "char_desc", {"jp": "説明"}],
+  ["^0003_SETABLE:", "char_desc", {"ids": [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 34, 36, 38, 40, 42, 45, 47, 50, 53, 56, 59, 62, 65, 68, 71, 74, 77, 80, 83, 86, 89, 92, 95, 98, 101, 104, 107, 110, 112, 114, 118, 121, 124, 126, 129, 132, 135, 138, 141, 144, 147, 150, 153, 156, 159, 162, 165, 168, 171, 174, 177, 180, 183, 186, 189, 192, 194, 197, 200, 203, 206, 209, 212, 215, 218, 221, 223, 225, 228, 231, 233, 235, 238, 241, 244, 247, 250, 253, 256, 259, 262, 265, 269, 272, 275, 280, 282, 285, 288, 291, 294, 296, 298, 300, 302, 304, 306, 309, 313, 315, 317, 319, 321, 324, 326, 329, 332, 335, 337, 340, 345, 347, 349, 351]}],
   ["^0003_SETABLE:", "char_name"],
   ["^0004_CHARTABLE:", "info_desc", {"jp": "[\\n$【％]|.{11}"}],
   ["^0004_CHARTABLE:", "skill_name"],
-  ["^0005_SKILLTABLE:", "unit_desc", {"jp": "説明"}],
+  ["^0005_SKILLTABLE:", "unit_desc", {"ids": [2, 4, 6, 8, 10, 12, 14, 16, 19, 21, 23, 25, 27, 30, 32, 34, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 62, 65, 68, 70, 73, 76, 78, 81, 83, 86, 88, 90, 92, 95, 98, 101, 104, 107, 110, 112, 114, 116, 118, 122, 124, 127, 130, 132, 135, 138, 141, 143, 145, 147, 150, 153, 155, 157, 160, 163, 165, 168, 170, 172, 175, 177, 180, 183, 185, 187, 189, 191, 193, 196, 198, 201, 204, 206, 209, 212, 215, 218, 221, 223, 226, 228, 230, 232, 234, 237, 239, 242, 244, 247, 249, 251, 253, 255, 257, 259, 261, 263, 265, 267, 269, 271, 273, 275, 278, 280, 282, 285, 288, 290, 292, 294, 297, 299, 302, 304, 309, 311, 314, 318, 320]}],
   ["^0005_SKILLTABLE:", "unit_name"],
   ["^0006_UNITTABLE:", "faction"],
   ["^0007_FORCETABLE:", "terrain_cell"],
@@ -15,21 +15,79 @@
   ["^0000_", "stage_name_list"],
   ["^000[12]_", "sound_list"],
   ["^001[23]_", "gallery_list"],
-  ["^0014_", "series_name"],
+  ["^0014_LEVELTABLE:000[0-5]$", "series_name"],
+  ["^0081_MAKERLOGO:(000[2468]|001[02458]|002[09])$", "extras_button"],
   ["^008[0-3]_", "extras"],
+  ["^a9:02072c0[4c]$|^a9:02072c14$", "team_cmd"],
+  ["^a9:0207(2730|2734|2738|2740|2748|2750|2760|2768|2770|2778|2780|2788|2814|2914|2920|292c|2938|2944|2950|295c|296c|297c|298c|299c|29ac|29bc|29d0|29e4|29f8|2a0c|2a20|2a44|2a50|2a64|2a80|2a98|2ab0|2ac8|2adc|2af0|2b04|2b18)$", "hidden_map_debug"],
+  ["^a9:0207(2184|219c|21b4|2418|4388|44e0|4bf8|4c20|5bc4)$", "one_icon_footer"],
+  ["^a9:0207(2494|24a0|24b4|2718|6e0c|3188|3198|31a8)$", "chart_footer_hint"],
+  ["^a9:0207(2d38|2cc0)$", "menu_row"],
+  ["^a9:02076d98$", "chart_footer_hint"],
+  ["^a9:0207(2c8[cd]|2c94|2cf0|2e7c|2e88|30ec|3110|3140|3158|3164|31c8|31d8|31e8|31f8|3208|3218|3228|3238|325c|3270|3284|32ac)$", "menu_row"],
   ["^a9:", "arm9_ui"],
   [".", "story_dialogue"]
  ],
  "font": {"main": 336, "small": 337, "advance_rule": "pen += CWDH advance + 1 px; tools/font.py sets ASCII advance = ink width, space = 3"},
  "variants": {
+  "char_desc": {
+   "excluded": true,
+   "reason": "Unused character-description record field +8 and unreferenced pool default 2; the displayed skill descriptions come from CHARTABLE +4. Exact ID set is checked against the pinned ROM's 147 records, stride 0x24.",
+   "evidence": ["docs/re/width-callers.md", "ARM9 02042be8, 02042fc0, 0204da54-0204daf4; BBQ 3 record +8"]
+  },
+  "unit_desc": {
+   "excluded": true,
+   "reason": "Unused unit-description field +8 and pool default 2. Native 145 can return descriptions for selector 2, but all three script calls use selectors 0/1. Displayed weapon descriptions come from CHARTABLE +4. Exact IDs are checked against 141 records, stride 0x34.",
+   "evidence": ["docs/re/width-callers.md", "ARM9 0205ab58; BBQ 20 calls 16a8/31d4, BBQ 81 call 2dc8"]
+  },
+  "series_name": {
+   "excluded": true,
+   "reason": "LEVELTABLE pool IDs 0..5 have no rendering consumer: record accessor 02043088 has only initializer caller 02042e70; pool ID 0 is unreferenced.",
+   "evidence": ["docs/re/width-callers.md", "ARM9 02042e50, 02043088, 02042e70"]
+  },
+  "hidden_map_debug": {
+   "excluded": true,
+   "reason": "Exact addresses consumed only by hidden map-debug routines. The release menu stops at item 4; entering 02032890 requires item 5. Separate individual-debug labels 02072758 and 02072a34 are deliberately not excluded.",
+   "evidence": ["docs/re/width-callers.md", "ARM9 02029678, 020357f4-020357fc, 020327ec-02032e68"]
+  },
+  "one_icon_footer": {
+   "px": 177, "lines": 1, "font": 336, "measured": true,
+   "note": "Conservative demonstrated bound for exact callers of 0204d218 that populate only icon slot 0 (x192). Do not apply to multi-icon footers. Caller evidence: docs/re/width-callers.md.",
+   "shots": ["work/qa/coverage_ui/prep_assign/final.png", "work/qa/coverage_ui/prep_upunits/final.png"]
+  },
+  "extras": {
+   "px": 177, "lines": 1, "font": 336, "measured": true,
+   "note": "Conservative demonstrated lower bound: a full 31-digit ruler (177 px with the narrow 1 glyph) is visible in the title strip and bottom help strip. This is not a claim that the strip clips at 177 px.",
+   "shots": ["work/qa/coverage_lists/extras/final.png", "work/qa/coverage_lists/extras_sound/final.png", "work/qa/coverage_lists/extras_event/final.png"]
+  },
+  "extras_button": {
+   "px": 112, "lines": 1, "font": 336, "measured": true,
+   "note": "Conservative bound for medium buttons (MAKERLOGO setup mode 1). The ruler has 114 px of visible ink at x73..186; 112 px leaves a margin. Title menu uses the same setup mode; the wider extras main-menu mode 2 also uses this smaller limit. Sound submenu now uses mode 1 via tools/layout.py.",
+   "shots": ["work/qa/coverage_lists/extras_sound/final.png", "work/qa/sound_medium/extras_sound/final.png"]
+  },
+  "stage_name_list": {
+   "px": 150, "lines": 1, "font": 336, "measured": true,
+   "note": "Same names as STnnSTAGE string 351; use the smallest measured prep/map name bar (stage_names lint), not the wider chart card.",
+   "shots": ["work/qa/tour/st61_prep/final.png"]
+  },
+  "sound_list": {
+   "px": 160, "bytes": 31, "lines": 1, "font": 336, "measured": true,
+   "note": "Extras music and SFX lists: centred ruler clipped at x48..207. Full-table ruler stress build coverage_all; 1200 frames after cold-boot warp.",
+   "shots": ["work/qa/coverage_all/extras_music/final.png", "work/qa/coverage_all/extras_sfx/final.png"]
+  },
+  "gallery_list": {
+   "px": 160, "bytes": 31, "lines": 1, "font": 336, "measured": true,
+   "note": "Extras battle and event gallery lists: centred ruler clipped at x48..207. Developer viewers have wider labels; use the player's narrower list.",
+   "shots": ["work/qa/coverage_all/extras_battle/final.png", "work/qa/coverage_all/extras_event/final.png"]
+  },
   "stage_card_narration": {
    "px": 180, "lines": 3, "line_pitch": 15, "x": 33, "font": 336, "measured": true,
    "note": "Stage card narration (BBQ tables 0085 BTLDIR and the per-stage <NNN>STAGE tables): 30 digits at 6 px fill it. The card types the text on, so a shot must run >= 1200 frames after the warp (at the default 300 the third line is still mid-type).",
    "shots": ["work/qa/w85c/st00_open/final.png", "work/qa/w191/st30_battle/final.png"]
   },
   "menu_row": {
-   "px": 130, "lines": 1, "x": 56, "font": 336, "measured": true,
-   "note": "One row of a command menu (map menu, shop, battle-prep menu): 22 ASCII digits fit, the 23rd is clipped. Same box for the 5-row map menu and the shop list.",
+   "px": 128, "lines": 1, "x": 64, "font": 336, "measured": true,
+   "note": "Command row and header share a 128 px surface (mode 3, width table 02070d04; construction 02024dd4-02024e70). Ruler reaches x64..191. The earlier 130 px claim assumed constant-width digits; 22 current digits advance 123 px and 23 advance 129 px. See docs/re/width-callers.md.",
    "shots": ["work/qa/a9r/mapmenu/final.png", "work/qa/a9r/shop/final.png"]
   },
   "chart_footer_hint": {
@@ -68,7 +126,7 @@
    "shots": ["work/play/st1/0001.png", "work/play/st2/0002.png"]
   },
   "unit_name": {
-   "px": 118, "lines": 1, "x": 8, "font": 336, "measured": true,
+   "px": 118, "bytes": 31, "lines": 1, "x": 8, "font": 336, "measured": true,
    "note": "Unit name (SKILLTABLE odd index): team panel clips at x=124 like char_name; unit-info screen 160 px.",
    "shots": ["work/play/st3/0002.png", "work/play/st2/0002.png"]
   },
@@ -77,15 +135,20 @@
    "note": "Faction name bar on the map's stage-info panel (UNITTABLE), centred in x 144-253.",
    "shots": ["work/play/st2/0000.png"]
   },
+  "team_cmd": {
+   "px": 28, "lines": 1, "x": 0, "font": 336, "measured": true,
+   "note": "Map team-command buttons (合流/編成/攻撃 beside 移動/情報): text centred, clipped both sides at ~28 px (\"Organize\" showed as \"rganiz\", \"Info\" 20 px whole).",
+   "shots": ["work/play/combat1_prep/0005.png"]
+  },
   "terrain_cell": {
    "px": 57, "lines": 1, "x": 144, "font": 336, "measured": true,
    "note": "Terrain cell (地形属性) under AREA INFO on the map panel, centred, clips at x 144-199 (ruler 7:4=@ruler shows D..M whole). `Underwater` (fit.px 57 = 56 ink) draws x 144-198 with every glyph whole (stress 7:4=Underwater, map warp).",
    "shots": ["work/qa/terrain/final.png", "work/qa/terrain2/final.png"]
   },
   "area_info": {
-   "px": 150, "lines": 1, "x": 0, "font": 336, "measured": false,
-   "note": "AREA INFO bar (MAPnn area names) on the map panel: `<area name><terrain suffix>` centred in ~198 px; the suffix (arm9 射撃 etc.) takes the rest. Guess.",
-   "shots": ["work/play/st4/0001.png", "work/qa/p7_sb/map/final.png"]
+   "px": 177, "bytes": 31, "lines": 1, "x": 0, "font": 336, "measured": true,
+   "note": "Conservative lower bound from a fully visible 31-digit ruler (177 px) in the AREA INFO name bar. A longer alphabetic ruler runs into the adjacent Ranged field after 32 bytes: preserve a NUL within the 32-byte copy. Do not treat that overread as a legitimate terrain suffix.",
+   "shots": ["work/qa/area_bound/map/final.png", "work/qa/coverage_lists/map/final.png"]
   },
   "story_dialogue": {
    "px": 180, "lines": 3, "line_pitch": 12, "x": 9, "font": 336, "measured": true,

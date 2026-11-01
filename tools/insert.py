@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import arm9  # noqa: E402
 import bbq  # noqa: E402
+import layout  # noqa: E402
 
 SCRIPT = ROOT / "script"
 BBQ_DIR = SCRIPT / "bbq"
@@ -46,7 +47,8 @@ def ez_edits(unpacked, script=None):
             raise KeyError(f"script/bbq has ez_index {i}, which is not a text table in this ROM")
         raw = unpacked[i]
         enc = [s.encode("cp932") for s in strs]
-        widened, bad = bbq.widen(raw, enc)  # string pushes sized for the Japanese (docs/re/bbq.md)
+        base = layout.apply(i, raw) if enc != bbq.strtab(raw)[1] else raw
+        widened, bad = bbq.widen(base, enc)  # string pushes sized for the Japanese (docs/re/bbq.md)
         widened = bbq.stage_name(widened, bbq.strtab(raw)[1], enc)  # the map panel's copy of the stage name
         problems += [f"{i:04d}:{k:04d} needs {n} bytes, the script call takes {lim}: {strs[k]!r}" for k, n, lim in bad]
         new = bbq.rebuild(widened, enc)

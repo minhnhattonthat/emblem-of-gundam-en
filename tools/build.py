@@ -65,5 +65,10 @@ if __name__ == "__main__":
         print(f"{n} text tables changed, arm9 {'changed' if arm9_new else 'unchanged'}, "
               f"VWF font table in {len(font.FONT_IDS)} fonts, {len(gfx.ids() & set(ez_new))} graphics entries")
         data = build(ez_new, arm9_new)
+        import romcheck
+        errors = romcheck.check(ROM.read_bytes(), data, insert.tables().keys(), out.parent / "writes")
+        if errors:
+            sys.exit("ROM integrity check failed:\n" + "\n".join(errors[:50]))
+        print("ROM integrity: exact component writes and relocated string targets verified")
     out.write_bytes(data)
     print(out)

@@ -10,7 +10,7 @@ Per string whose English differs from the Japanese:
   - a trailing ASCII space in the Japanese (label + value layouts) stays;
   - width: each line's px (tools/fit.py) against its box budget from tbl/windows.json `tables` (first regex over the
     id `EEEE_NAME:IIII` / `a9:XXXXXXXX` that matches). Over a measured budget = error; over a guessed one, or no
-    budget, = one summary warning line (`-v` lists them);
+    budget, = error; diagnostic callers can separately audit content with require_measured=False;
   - stub last line: a story block's last line under 6 characters that continues a sentence (` kid."`, `area.`).
 Strings still equal to the Japanese must be non-text (empty, blank, numeric, `&` keys) or listed in
 script/keep_jp.txt (`ID  reason`)."""
@@ -29,6 +29,10 @@ KEEP = ROOT / "script" / "keep_jp.txt"
 ORDINAL = re.compile(r"(%s|%d|\$P\d\d|\$L)(st|nd|rd|th)\b")
 DATA = re.compile(r"^(00[01]\d|002[0-3]|008[0-4])_")  # system/data tables; MAPnn have their own rule
 STUB_END = re.compile(r"^(\s|[a-z])")  # a continuation: starts with the speech indent or lowercase
+SPACE_EXCEPTIONS = {
+    # Quoted terminology inside narration, not a speaker's dialogue (D20).
+    "0186_ST28MILITARY:0168": "Alex acronym expansion: (Armor / Layered / EXamination).",
+}
 
 
 def keep_list():
@@ -39,7 +43,7 @@ def keep_list():
 
 def budgets():
     """[(match(id, jp) -> bool, variant name, variant dict)] in file order. A `tables` row is [id regex, variant]
-    plus an optional condition: {"mod": [m, r]} (string index % m == r) and/or {"jp": regex} (searched in the JP)."""
+    plus optional conditions: mod = [m, r], ids = exact numeric indices, jp = source regex."""
     w = json.loads(fit.WINDOWS.read_text(encoding="utf-8"))
     v = w["variants"]
     out = []
@@ -47,10 +51,12 @@ def budgets():
         rx, name, cond = re.compile(row[0]), row[1], (row[2] if len(row) > 2 else {})
         jrx = re.compile(cond["jp"]) if "jp" in cond else None
 
-        def match(sid, jp, rx=rx, mod=cond.get("mod"), jrx=jrx):
+        def match(sid, jp, rx=rx, mod=cond.get("mod"), ids=cond.get("ids"), jrx=jrx):
             if not rx.search(sid):
                 return False
             if mod and int(sid.rsplit(":", 1)[1], 16 if sid.startswith("a9:") else 10) % mod[0] != mod[1]:
+                return False
+            if ids is not None and int(sid.rsplit(":", 1)[1], 16 if sid.startswith("a9:") else 10) not in ids:
                 return False
             return not jrx or bool(jrx.search(jp))
         out.append((match, name, v.get(name)))
@@ -63,6 +69,15 @@ def width(line):
     return fit.px(line.replace("%%", "%"))
 
 
+def width_excluded(variant):
+    """Only explicit, evidenced non-player classifications waive width, not any other lint rule."""
+    if not variant or not variant.get("excluded"):
+        return False
+    if not variant.get("reason") or not variant.get("evidence"):
+        raise ValueError("width exclusion requires a reason and evidence")
+    return True
+
+
 def strings(jp, cur):
     """Yield (id, jp, en, is_story) for every string of script/ (BBQ then arm9)."""
     for stem in sorted(k for k in cur if k != "arm9"):
@@ -73,11 +88,15 @@ def strings(jp, cur):
         yield f"a9:{at}", j, cur["arm9"].get(at, j), False
 
 
-def lint(jp=None, cur=None, keep=None):
-    """(errors, warnings): errors a list of lines, warnings {kind: [lines]}."""
+def lint(jp=None, cur=None, keep=None, require_measured=True):
+    """(errors, warnings). The phase gate requires measured coverage; diagnostic callers may audit other rules
+    with require_measured=False, which is never sufficient to certify phase 7."""
     jp = batches.jp_tables() if jp is None else jp
     cur = batches.current() if cur is None else cur
     keep = keep_list() if keep is None else keep
+    coverage = coverage_errors(jp, cur)
+    if coverage:
+        return coverage, {}
     rules, t = budgets(), fit.table()
     errs, warns = [], {}
     for sid, j, e, story in strings(jp, cur):
@@ -101,20 +120,30 @@ def lint(jp=None, cur=None, keep=None):
             errs.append(f"{sid}: ordinal suffix glued to a variable: {e!r}")
         if not e and j.strip() and not story:
             errs.append(f"{sid}: empty English for {j!r}")
-        if j.endswith(" ") and not e.endswith(" ") and not story:  # story lines: a stray JP space, nothing follows
-            errs.append(f"{sid}: lost the trailing space of {j!r}: {e!r}")
+        if not story and j.strip():
+            for side, pattern in [("leading", r"^[ \u3000]+"), ("trailing", r"[ \u3000]+$")]:
+                padding = re.search(pattern, j)
+                expected = padding[0].replace("\u3000", " ") if padding else ""
+                if expected and not (e.startswith(expected) if side == "leading" else e.endswith(expected)):
+                    errs.append(f"{sid}: lost {side} layout spaces ({len(expected)} ASCII required): {e!r}")
         lim = name = None
         for match, n, var in rules:
             if match(sid, j):
                 name, lim = n, var
                 break
-        if name == "dev":  # developer menus and test rooms: the release never shows them
+        if name == "dev" or width_excluded(lim):  # proven non-player destinations only
             continue
+        if lim and "bytes" in lim and len(e.encode("cp932", errors="replace")) > lim["bytes"]:
+            errs.append(f"{sid}: exceeds {name} {lim['bytes']}-byte native text field")
         for ln in e.split("\n"):
             w = width(ln)
-            if lim is None:
-                warns.setdefault(f"no measured box ({name})", []).append(f"{sid}: {w}px {ln!r}")
-            elif w > lim["px"]:
+            if lim is None or not lim.get("measured"):
+                msg = f"{sid}: unmeasured width budget ({name}): {w}px {ln!r}"
+                if require_measured:
+                    errs.append(msg)
+                else:
+                    warns.setdefault(f"no measured box ({name})", []).append(msg)
+            if lim is not None and w > lim["px"]:
                 msg = f"{sid}: {w}px > {name} {lim['px']}px: {ln!r}"
                 if lim.get("measured"):
                     errs.append(msg)
@@ -123,7 +152,69 @@ def lint(jp=None, cur=None, keep=None):
     errs += stubs(jp, cur)
     errs += honorifics(jp, cur)
     errs += stage_names(jp, cur)
+    errs += block_checks(jp, cur, keep)
+    errs += continuation_spaces(jp, cur)
     return errs, warns
+
+
+def coverage_errors(jp, cur):
+    """Reject missing/extra tables or IDs before zip/get can silently skip them."""
+    out = []
+    if set(jp) != set(cur):
+        out.append(f"table coverage mismatch: {sorted(set(jp) ^ set(cur))}")
+    for stem in set(jp) & set(cur):
+        if stem == "arm9":
+            expected = {at for at, _ in jp[stem]}
+            if expected != set(cur[stem]):
+                out.append(f"arm9 ID coverage mismatch: {sorted(expected ^ set(cur[stem]))}")
+        elif len(jp[stem]) != len(cur[stem]):
+            out.append(f"{stem}: ID coverage mismatch ({len(jp[stem])} != {len(cur[stem])})")
+    return out
+
+
+def continuation_spaces(jp, cur):
+    """D11: nonempty English speech continuations have one ASCII space, after reflow.
+
+    A Japanese quote can also introduce a term in narration. Only blocks with the source speech
+    indentation convention qualify; the documented acronym exception retains its prose layout.
+    """
+    out = []
+    for stem in sorted(k for k in cur if k != "arm9"):
+        for form, idx in batches.blocks(stem, jp[stem]):
+            if form != "dlg" or not any(jp[stem][i].startswith(("\u3000", " ")) for i in idx[1:]):
+                continue
+            lines = [(i, cur[stem][i]) for i in idx if cur[stem][i].strip()]
+            for i, line in lines[1:]:
+                sid = f"{stem}:{i:04d}"
+                if sid not in SPACE_EXCEPTIONS and (not line.startswith(" ") or line.startswith("  ")):
+                    out.append(f"{sid}: speech continuation requires one leading ASCII space: {line!r}")
+    return out
+
+
+def block_checks(jp, cur, keep):
+    """Reflow may blank a line, never an entire source block; glossary follows that same block."""
+    out, terms = [], batches.glossary()
+    for stem in sorted(k for k in cur if k != "arm9"):
+        covered = set()
+        for form, idx in batches.blocks(stem, jp[stem]):
+            covered.update(idx)
+            sid = f"{stem}:{idx[0]:04d}"
+            j = "".join(jp[stem][i] for i in idx)
+            lines = [cur[stem][i] for i in idx]
+            if not any(e.strip() for e in lines) and sid not in keep:
+                out.append(f"{sid}: empty English block for {j!r}")
+            if not any(batches.JP_RE.search(e) for e in lines):
+                out.extend(f"{sid}: {p}" for p in batches.glossary_errors(j, lines, terms, short=form == "menu"))
+        # Punctuation-only utterances (e.g. 「……」) are not Japanese-letter matches, so the batch
+        # splitter skips them. They cannot use the per-line reflow exception without an actual block.
+        for i, j in enumerate(jp[stem]):
+            sid = f"{stem}:{i:04d}"
+            if i not in covered and j.strip() and not cur[stem][i].strip() and sid not in keep:
+                out.append(f"{sid}: empty English outside a reflow block for {j!r}")
+    for at, j in jp["arm9"]:
+        if batches.is_text(j) and not batches.JP_RE.search(cur["arm9"][at]):
+            out.extend(f"a9:{at}: {p}" for p in batches.glossary_errors(j, [cur["arm9"][at]], terms, short=True))
+    return out
 
 
 def stage_names(jp, cur):
@@ -176,8 +267,10 @@ def stubs(jp, cur):
 
 if __name__ == "__main__":
     errs, warns = lint()
-    for e in errs:
+    for e in errs if "-v" in sys.argv else errs[:30]:
         print(e)
+    if len(errs) > 30 and "-v" not in sys.argv:
+        print(f"... {len(errs) - 30} further errors (-v lists them)")
     for kind, rows in warns.items():
         print(f"warning: {len(rows)} lines {kind}" + ("" if "-v" in sys.argv else " (-v lists them)"))
         if "-v" in sys.argv:

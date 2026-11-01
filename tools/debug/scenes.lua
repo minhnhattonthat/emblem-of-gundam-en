@@ -93,6 +93,11 @@ SCENES.extras = menu(6, { "wait", 30 }, { "press", "down" }, { "press", "a" }, {
   { "press", "a" }, { "script", 0x1040 }, { "wait", 120 }, { "press", "start" }, { "wait", 60 },
   { "press", "down", 3 }, { "press", "a" })
 SCENES.battle_movies = menu(3)
+SCENES.extras_sound = extend("extras", { { "wait", 180 }, { "press", "a" }, { "wait", 180 } })
+SCENES.extras_music = extend("extras_sound", { { "press", "a" }, { "wait", 180 } })
+SCENES.extras_sfx = extend("extras_sound", { { "press", "down" }, { "press", "a" }, { "wait", 180 } })
+SCENES.extras_battle = extend("extras", { { "wait", 180 }, { "press", "down" }, { "press", "a" }, { "wait", 180 } })
+SCENES.extras_event = extend("extras", { { "wait", 180 }, { "press", "down", 2 }, { "press", "a" }, { "wait", 180 } })
 SCENES.event_movies = menu(4)
 SCENES.mapview = menu(5)
 SCENES.sysflags = menu(6)

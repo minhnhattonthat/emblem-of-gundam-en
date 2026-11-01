@@ -13,6 +13,7 @@ Japanese already appeared earlier is not queued again, `merge` copies the first 
 Input `id<TAB>speaker<TAB>form<TAB>limit<TAB>jp`, output `id<TAB>en` (`<empty>` = draw nothing on that line).
 """
 import json
+from functools import lru_cache
 import re
 import sys
 from pathlib import Path
@@ -36,17 +37,20 @@ STORY = re.compile(r"STAGE|MILITARY|EV_EVENT|BATTLE|BTLDIR|NAKAMURA|SHIKATA|TAKE
 EMPTY = "<empty>"
 
 
+@lru_cache(maxsize=1)
 def jp_tables():
-    """{stem: [jp strings]} plus {'arm9': [(at, jp)]}, from the ROM once, cached in work/tl/jp.json."""
-    if JP_CACHE.is_file():
-        return json.loads(JP_CACHE.read_text(encoding="utf-8"))
+    """Authoritative ROM extraction, cached only within this process.
+
+    Never trust work/tl/jp.json: it predates extractor changes on some workspaces.
+    A new check process always uses the current extractor and pinned original ROM.
+    """
     import build
+    import check_rom
     import extract
+    check_rom.check()
     rom, tbl, dat = extract._load(build.ROM.read_bytes())
     out = {extract.stem(i, n): s for i, (n, _, s) in extract.bbq_files(tbl, dat).items()}
     out["arm9"] = [[f"{0x02000000 + off:08x}", t] for off, t in extract.arm9_text(rom.arm9)]
-    TL.mkdir(parents=True, exist_ok=True)
-    JP_CACHE.write_text(json.dumps(out, ensure_ascii=False), encoding="utf-8")
     return out
 
 
@@ -174,6 +178,34 @@ def has_term(text, term):
         if (a == 0 or not KATA.match(text[a - 1])) and (b == len(text) or not KATA.match(text[b])):
             return True
     return False
+
+
+@lru_cache(maxsize=1)
+def glossary_short_forms():
+    """Optional sixth glossary column: approved alternatives for menu labels only."""
+    out = {}
+    for line in GLOSSARY.read_text(encoding="utf-8").splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if line.startswith("|") and len(cells) >= 6:
+            out[cells[1]] = [s.strip() for s in cells[5].split(";") if s.strip()]
+    return out
+
+
+def glossary_errors(jp, lines, terms=None, short=False):
+    """Shared block validator for batch drafts and the merged script; permits line reflow."""
+    en = " ".join(" ".join(lines).split())
+    low = en.lower()
+    out = []
+    for forms, e, avoid in glossary() if terms is None else terms:
+        alternatives = glossary_short_forms().get(e, []) if short else []
+        if any(has_term(jp, x) for x in forms) and e and e.lower() not in low \
+                and not any(a.lower() in low for a in alternatives) \
+                and not (e.endswith("y") and e[:-1].lower() + "ies" in low):
+            out.append(f"glossary {forms[0]} -> '{e}' missing")
+        for a in avoid:
+            if any(re.search(r"\b" + re.escape(a) + r"\b", ln) for ln in lines):
+                out.append(f"avoid '{a}' (glossary: {e})")
+    return out
 
 
 # ---- split -------------------------------------------------------------------------------------------------------
@@ -305,24 +337,19 @@ def check(name):
         if not block_jp:
             return
         jp, en = "".join(block_jp), " ".join(" ".join(block_en).split())  # a term may wrap across lines
-        for forms, e, avoid in gl:
-            low = en.lower()
-            if any(has_term(jp, x) for x in forms) and e and e.lower() not in low \
-                    and not (e.endswith("y") and e[:-1].lower() + "ies" in low):  # colony -> colonies
-                errs.append(f"{block_ids[0]}: glossary {forms[0]} -> '{e}' missing")
-            for a in avoid:  # per line: a block's lines joined can fake a match across a break
-                if any(re.search(r"\b" + re.escape(a) + r"\b", ln) for ln in block_en):
-                    errs.append(f"{block_ids[0]}: avoid '{a}' (glossary: {e})")
+        errs.extend(f"{block_ids[0]}: {p}" for p in glossary_errors(jp, block_en, gl, short=block_short[0]))
         errs.extend(f"{block_ids[0]}: {p}" for p in honorifics(jp, en))
         block_jp.clear()
         block_en.clear()
         block_ids.clear()
 
     block_ids = []
+    block_short = [False]
     for i, sp, form, limit, jp in rows:
         m = re.match(r"\D+(\d+)/", form)
         if not m or m.group(1) == "1":
             flush()
+            block_short[0] = form == "menu"
         if i not in out:
             continue
         en = out[i]

@@ -2,7 +2,22 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase:** 8 (QA in the emulator) **in progress** 2026-11-01. Phase 6 review (`.harness/reviews/...phase6.md`)
+- **Phase:** 7 review remediation **incomplete** 2026-11-01; phase 8 cannot be accepted yet.
+  See `docs/phase7-remediation.md`. I2-I5 repaired with regressions; I1 has 286 unresolved ARM9 width lines.
+  Caller evidence excludes 263 unused BBQ description/series lines and 42 hidden debug labels, and maps
+  another 19 ARM9 labels (`docs/re/width-callers.md`). `tools/lint.py` now fails on
+  unmeasured budgets; `tools/check.py --phase7` is the strict phase gate. The ordinary unit/content audit
+  deliberately reports code correctness separately and is not a phase-completion verdict. M1 now checks
+  layout padding and reflowed speech indentation (D20).
+  New measurements: sound/gallery 160 px, extras headers/help 177 px, buttons 112 px, MAP names 177 px/31 bytes.
+  Fixed sound-menu clipping via the checked VM layout operand, gallery label overflow, and a missing Kycilia.
+  Command rows/headers are 128 px (corrected); gallery/unit-name VM strings also have a 31-byte cap.
+  Build SHA-1 `07bc293ccb9b0d85dc298e16474fd194e2cf8428` (2026-11-01 09:58:02 UTC); integrity and smoke
+  pass; normal cold-boot tour `work/qa/remediation_tour` completed 373/373 at 1200 frames. No fresh full-tour
+  visual approval is claimed; the earlier issue verdicts remain unresolved.
+  Latest unit/content check: 59 tests pass; strict lint exits 1 with 286 unmeasured-width errors.
+  No release script/zip exists yet; do not proceed to phase 9 while these gates fail.
+- **Phase 6 review** (`.harness/reviews/...phase6.md`)
   fixed: I1 `batches.units()` keeps the JP apart from the dedup key (+ test), I2 a literal percent is its own
   token (`batches.codes`, shared by lint, + test), I3 honorific/閣下 check in `batches.check` and `lint.py` (per
   block: each distinct katakana-name+さん/くん/ちゃん needs a -san/-kun/-chan, 閣下 needs "Excellency") + the 4
@@ -45,8 +60,8 @@ Updated at the end of every session. Keep it to what the next session needs; his
     `- エンブレム オブ ガンダム -`. Then re-tour
     (`warp_all.py build/eog_en.nds --frames 900 --out work/qa/tour`), `qa_gate.py init` + verdicts (fresh read-only
     pass) + `check`, smoke, then release zip.
-- **Phase 7 (this session):**
-  - Gates green: build, `tools/check.py` 37 tests (incl. `test_lint` = `tools/lint.py` 0 errors: font chars, control
+- **Earlier phase 7 work (completion claim superseded by the review above):**
+  - Historical results: build, `tools/check.py` 37 tests (incl. `test_lint` = old `tools/lint.py` 0 errors: font chars, control
     codes JP==EN, trailing space, width vs `tbl/windows.json`, stub last lines), `tools/romcheck.py` 0 unexpected
     changes (per-component diff; the NDS filesystem is re-laid out, so this replaces a flat `romdiff.py`), smoke ok,
     `extract.py --check` 0 holes. Build sha1 44c2f7fd... (2026-11-01 16:16).
@@ -61,10 +76,8 @@ Updated at the end of every session. Keep it to what the next session needs; his
     every strcpy/strncpy/memset destination is listed (`docs/re/text.md`). Story stubs rewritten, dev-menu titles
     shortened to their VM slot.
   - Widths: measured `char_name` 118, `skill_name` 104, `unit_name` 118, `terrain_cell` 57 px (`Underwater` fits
-    exactly). **Not measured** (lint warns, phase 8 visual QA covers them): `arm9_ui` 371 lines, `unit_desc`/`char_desc`
-    (placeholder fields like `About Amuro`, `Gundam description text`, maybe never drawn), `stage_name_list`,
-    `sound_list`, `gallery_list`, `series_name`, `extras`; guessed `stage_info_panel`, `prep_condition_row`,
-    `list_row`, `area_info`.
+    exactly). Missing budgets were previously treated as warnings; that was not sufficient to complete phase 7.
+    Current unresolved coverage and new measurements are at the top of this file and in `docs/re/width.md`.
   - Tools: `tools/lint.py`, `tools/romcheck.py`, `tools/stress.py ID=TEXT|@ruler` (one-string stress ROM for widths),
     `tools/a9bisect.py` (bisects arm9 edits against a scene region's ink), `tools/lua/writelog.lua`,
     `tools/lua/vmalloc.lua`, scenes `briefNN` (win/lose screen).
