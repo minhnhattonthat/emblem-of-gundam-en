@@ -52,6 +52,15 @@ consecutive run (`--narration`: story/tutorial pages only, `--shape`: borrowed l
 from the Japanese; `tests/test_pages.py` keeps that at 0). Run it on the original files (`work/ez`): `bbq.widen`
 changes the push op.
 
+## Tutorial boxes size themselves (phase 8)
+The tutorial pages (ST00-ST05 STAGE, ST00MILITARY: 355 pages) call script function 201 with 6 args: the 4 line
+strings, then `push Y; push 8; mul; push X; push 8; mul; [0x2E][line][201][6]`. The box fill starts at
+(8X - 4, 8Y - 4) and is as wide as the longest line at **7 px per half-width byte (13 per full-width char)**,
+rounded to 8 (measured on 16 st01_prep pages, `work/qa/tut2`), not the drawn VWF width. English lines (~5.3 px a
+character drawn, 7 counted) ran 97 boxes off the right edge (frame cut; st01_prep visual QA). `bbq.tutorial_boxes`
+(run by `insert.ez_edits`, allowed by `romcheck`) lowers X until the fill ends by x 251; a line that needs X < 1
+(36+ ASCII bytes) fails the build. Y and the line breaks are left alone.
+
 ## Stage record (type 5, entry 0)
 90 stage tables have an 84-byte record: `char name[64]` + 5 words. The map's stage-info panel shows this name (not
 the pool string). Each record's name equals a pool string (#351 mostly); `bbq.stage_name` writes that string's

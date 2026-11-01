@@ -24,6 +24,7 @@ with `--frames 1200` or more, and re-shoot if two frames differ.
 | stage-card narration (BBQ 0085 BTLDIR + `<NNN>STAGE`) | 180 | 3, 15 px pitch, x=33 | 30 ASCII digits fill it; the card is the most common story screen | `work/qa/w85c/st00_open/final.png` |
 | command-menu row (map menu, shop, prep menu) | 128 | 1 | corrected: native mode-3 surface is 128 px, ruler reaches x64–191 | `work/qa/a9r/mapmenu/final.png` |
 | chart footer hint (arm9 `ステージを選択`) | 114 | 1 | clipped where the B button starts | `work/qa/a9r/chart/final.png` |
+| tutorial box (script fn 201, phase 8) | 7 px/byte, rounded to 8 | 4 | sized from bytes, not ink; the build moves X left to fit (`bbq.md` §Tutorial boxes) | `work/qa/tut3/` |
 
 The initial table above is historical. `tbl/windows.json` now also records the measured story dialogue,
 character/unit/skill names, terrain cells, and the phase 7 remediation measurements below.

@@ -116,6 +116,12 @@ def check_bbq(old, new, texts, logs=None, index=0):
                 if (op ^ changed) & ~0x7C00 or op & 0x3FF or not 8 <= ((op >> 10) & 31) <= 12:
                     return ["unapproved VM instruction change in insertion plan"]
                 writes.append(write(old, off, struct.pack("<I", changed), "VM string operand type"))
+        boxed, _ = bbq.tutorial_box_words(words, encoded)
+        for k, (a, b) in enumerate(zip(words, boxed)):
+            if a != b:
+                if not b < a or words[k - 2] & 0x3FF:  # only a push-int operand, only moved left
+                    return ["unapproved tutorial box change in insertion plan"]
+                writes.append(write(old, vm["data"] + 4 * k, struct.pack("<I", b), "tutorial box x"))
     stage = next((s for s in bbq.sections(old) if s["type"] == 5), None)
     if stage:
         lo, hi = struct.unpack_from("<2I", old, stage["index"]) if stage["count"] > 1 else (0, stage["size"])

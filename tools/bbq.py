@@ -109,6 +109,48 @@ def widen(d, strs):
     return bytes(b), problems
 
 
+TUTOR_FN = 201  # script fn 201 = tutorial box: 4 lines (pushed last-first), y = Y*8, x = X*8 (docs/re/bbq.md)
+
+
+def tutorial_box_words(w, strs):
+    """(words, problems): each fn-201 box sizes itself at 7 px per half-width byte (13 per full-width char), rounded
+    to 8, with its fill starting at 8X - 4 (measured, phase 8); English made boxes run off the right edge. Lower X
+    until the fill ends by x 251; a box that still doesn't fit at X = 1 is reported as (a line id, fill right)."""
+    out, problems = list(w), []
+    ins = list(instructions(w))
+    for k, (i, op, args) in enumerate(ins):
+        if op & 0x3FF != 0x2E or list(args[:1]) != [TUTOR_FN] or k < 6:
+            continue
+        xpush = ins[k - 3]  # push Y; push 8; mul; push X; push 8; mul; call
+        ids, j = [], k - 7
+        while j >= 1 and ins[j][1] & 0x3FF == NATIVE and ins[j - 1][1] & 0x3FF == 0 and len(ids) < 4:
+            ids.append(ins[j - 1][2][0])
+            j -= 2
+        if not ids or xpush[1] & 0x3FF or not xpush[2]:
+            continue
+        px = max(sum(13 if ord(c) > 0x7F else 7 for c in strs[s].decode("cp932")) for s in ids)
+        width = (px + 4) // 8 * 8
+        x = min(xpush[2][0], (256 - width) // 8)
+        if x < 1:
+            problems.append((ids[0], 4 + width - 1))
+            x = 1
+        out[xpush[0] + 2] = x
+    return out, problems
+
+
+def tutorial_boxes(d, strs):
+    """Return (file, problems) with tutorial_box_words applied to the bytecode."""
+    s, w = code_words(d)
+    if s is None:
+        return d, []
+    out, problems = tutorial_box_words(w, strs)
+    if out == w:
+        return d, problems
+    b = bytearray(d)
+    struct.pack_into(f"<{len(out)}I", b, s["data"], *out)
+    return bytes(b), problems
+
+
 NAME_FIELD = 64  # stage record (type 5, entry 0, 84 bytes): char name[64] + 5 words
 
 

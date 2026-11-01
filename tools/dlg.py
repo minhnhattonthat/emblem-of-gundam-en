@@ -207,10 +207,15 @@ def relabel(d, lga, edits_, fonts=None):
         im = Image.new("RGB", (w, h))
         clear = set()  # rows with transparent pixels on both sides stay transparent behind the text
         for yy in range(h):
-            a, b = rows[y + yy][x - 1], rows[y + yy][x + w]
-            if (not a or not b) and style != "solid":  # one transparent side is enough (2199: a dash on the right)
+            a = rows[y + yy][x - 1] if x else 0
+            b = rows[y + yy][x + w] if x + w < len(rows[y + yy]) else 0
+            if (not a or not b) and "solid" not in style.split():  # one transparent side is enough (2199: a dash on the right)
                 clear.add(yy)
             ca, cb = cols.get(a, (0, 0, 0)), cols.get(b, (0, 0, 0))
+            if "seam" in style:  # "seamT:X": a side off the texture's ink takes texture T's pixel X on this row
+                st, sx = map(int, style.split("seam")[1].split()[0].split(":"))
+                ref = cols.get(_get(pix, texs[st])[y + yy][sx], (0, 0, 0))
+                ca, cb = (ca if a else ref), (cb if b else ref)
             period = int(style.split("p")[-1]) if "p" in style.replace("shadow", "") else 0
             for xx in range(w):
                 if period:  # repeat the background pattern (a grid) from one period left of the rect
@@ -308,7 +313,9 @@ TEXT.update({
            (13, None, "Lost", 14, "outline"), (14, None, "", 8, "")],  # 損|失
     2225: [(0, (30, 1, 196, 14), "Select Baton Route", (336,), "outline"),
            (10, (12, 1, 232, 14), "Where will you pass the baton of history?", (336,), "outline")],
-    2227: [(12, (60, 1, 66, 14), "Scenario", (336,), "solid"), (13, (5, 1, 66, 14), "Chart", (336,), "solid")],
+    # the bar is split at its teal middle: both halves erase to that teal (tex 13 x 4), not to the transparent edge
+    2227: [(12, (60, 1, 67, 14), "Scenario", (336,), "solid seam13:4"),
+           (13, (0, 1, 71, 14), "Chart", (336,), "solid seam13:4")],
     2243: [(t, (2, 1, 252, 38), s, (336,), "") for t, s in (
         (3, "Saving..."), (4, "Save complete."), (8, "Creating system data..."), (9, "System data created."))],
     2239: [(17, (1, 23, 30, 9), "Sortie", (337,), "outline z"),  # portrait tags: 出撃中, 配属/配備/強化 + 限界 (D18)

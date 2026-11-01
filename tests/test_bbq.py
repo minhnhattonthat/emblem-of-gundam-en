@@ -25,3 +25,17 @@ class BBQStrings(unittest.TestCase):
             self.assertLessEqual(len(pool), s7["size"], f.name)
             n += len(strs)
         self.assertEqual(n, 66451)
+
+
+class TutorialBox(unittest.TestCase):
+    def test_x_lowered_to_fit(self):
+        # one fn-201 page: line 0 pushed (str32 + native), then Y=12, X=7, call; 30 bytes -> 208 px -> X 6
+        L = 0x41c
+        w = [0x12400, L, 0, 0x1280e, L, 0xa, 0x10c00, L, 12, 0x10c00, L, 8, 0xc12, L,
+             0x10c00, L, 7, 0x10c00, L, 8, 0xc12, L, 0x2002e, L, bbq.TUTOR_FN, 6]
+        out, bad = bbq.tutorial_box_words(w, [b"your own forces, starting with"])
+        self.assertEqual((out[16], bad), (6, []))
+        out, bad = bbq.tutorial_box_words(w, [b"short"])
+        self.assertEqual(out, w)  # fits where the Japanese put it
+        out, bad = bbq.tutorial_box_words(w, [b"x" * 37])
+        self.assertEqual((out[16], len(bad)), (1, 1))

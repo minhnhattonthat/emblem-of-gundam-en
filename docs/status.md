@@ -21,6 +21,12 @@ Updated at the end of every session. Keep it to what the next session needs; his
   - **Gotcha:** a savestate only works on the ROM build that made it (the game caches the EZ file table: an old
     state on a new build hangs DeSmuME). Regenerate with `warp_all.py --only` after each build; play sessions from
     a frozen ROM copy (`work/play/rom_p8*.nds`).
+  - Visual-QA round 3 (fresh tour): Team Formation "Cost" label forced white ink (`gfx` 0444, left column read
+    faint); ST28/ST56 conditions use the map names Lunar Gravity Well / Closed-Type Colony; st45 opening rewrap;
+    **tutorial boxes** (fn 201) size at 7 px a byte, so 97 English boxes ran off screen: the build now moves each
+    box's X left to fit (`bbq.tutorial_boxes`, `docs/re/bbq.md`), verified on 61 st01_prep pages (`work/qa/tut3`);
+    Scenario Chart title bar (DLG 2227) erases both halves to the middle teal (`dlg` style `seamT:X`).
+  - Not surveyed: DLG 2248-4131 (battle sprites/cut-ins); the combat playtests saw no Japanese there.
   - **Next:** full re-tour + `qa_gate.py init` + verdicts (fresh read-only pass), smoke, then phase 9.
 - **Phase 7:** review remediation **complete** (2026-11-01).
   See `docs/phase7-remediation.md`. I1-I5 and M1 repaired; width coverage reports zero unresolved lines.
