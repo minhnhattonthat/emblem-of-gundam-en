@@ -26,8 +26,9 @@ Updated at the end of every session. Keep it to what the next session needs; his
     r6 (`work/qa/verdicts/r6_*.tsv`) 18/18 ok. "Delaz Freet" on st40/st43 cards is the original art's own typo.
   - **Release v1.0 built locally:** `tools/release.py --version 1.0` passed every gate (71 tests, smoke, jp_left 0,
     both qa gates, polish 0 open) -> `release/EmblemOfGundam_EN_v1.0.zip` (xdelta, re-apply verified), patched
-    SHA-1 `7c396dad03fb73983ba8691d7f01b47e152f2b7c`, CRC32 1516C74F. **Not published: waiting on the user.**
-  - **Next:** user playtest / publish decision. Optional nits: defeat labels mix "Victory conditions cannot be
+    SHA-1 `7c396dad03fb73983ba8691d7f01b47e152f2b7c`, CRC32 1516C74F. **Published 2026-11-02** at the user's request:
+    repo public, https://github.com/minhnhattonthat/emblem-of-gundam-en/releases/tag/v1.0 (zip SHA-1 6a7499bf...).
+  - **Next:** player bug reports (`gh issue list --label bug`). Optional nits: defeat labels mix "Victory conditions cannot be
     met" / "not met"; 0316:0241 speaker and 0333:0147 addressee unchecked in-game.
 - **Phase 8 (2026-11-02): complete.** Build `9b51ba44d3285e109252c43e71d04705e9c50c06`: 70 tests pass, lint 0,
   smoke ok, cold tour `work/qa/tour` 373/373 scenes (ST06 is a scrapped stage, no scenes), `qa_gate.py check
