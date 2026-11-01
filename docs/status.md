@@ -2,7 +2,7 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase:** 5 (engine spike + marker build) done 2026-11-01. Next: phase 6 (translate in batches).
+- **Phase:** 6 (translate in batches) in progress 2026-11-01; phase 5 done.
 - **Done:**
   - Step 0: DeSmuME QA fork qa-2 in `tools/desmume/`, smoke boots the original ROM (title -> menu -> opening card),
     Lua probe logs, pre-commit rejects a failing test, guard hook blocks `sed -i`, `rom.sha1` pinned, `tools/check.py`.
@@ -36,14 +36,20 @@ Updated at the end of every session. Keep it to what the next session needs; his
     - **Warp tool hardened:** stage scenes boot straight into the stage-jump script 0x1002 (the dev menu ignores
       input for ~1 s after it is drawn, which silently dropped presses and hung ~1 warp in 3); dev-menu scenes wait
       180 frames. 291/291 scenes pass on both the marker build and the VWF build.
-- **Next (phase 6, translate):**
-  - Add a warp scene that shows a **story dialogue window with a portrait**, then measure it and fill
-    `story_dialogue` in `tbl/windows.json` (candidates: a later narration page in a stage intro, or script 0x1006
-    message-window test - the `messagetest` scene boots it but currently sits on the Bandai logo, so it needs its own
-    input route). Nothing else blocks dispatch: every string has an id, the VWF budget per line is known for
-    the main boxes, and `tools/font.py width()` can predict a line's px before it ships.
-  - Batch translation of `script/bbq/*.json` + `script/arm9.json` (glossary in `glossary.md`; style rulings D1-D5 in
-    `docs/decisions.md`), with the batch check = a lint that reads `tbl/windows.json` (phase 7 wires it in).
+- **Phase 6 (translate) - in progress:**
+  - Story box measured: the portrait message window (MILITARY tables) is 180 px x 3 lines, same 180 px line buffer as
+    the stage card (`tbl/windows.json` story_dialogue, shots `work/qa/dlg3/`; reached by warping `st01_open` and
+    mashing A for ~5250 frames).
+  - Tooling: `tools/batches.py split|check|merge|status` (dedups whole blocks: 29,650 unique JP strings / 312k chars
+    -> 160 batches b001-b160 of <=200 lines; `work/tl/dups.json` maps each first block to its copies; merge writes EN
+    into `script/` and copies it to every duplicate; a string counts as done once script/ differs from the ROM JP,
+    so `split` only queues what is left). `tools/fit.py` (px per line, `tbl/vwf336.json` cache), `tools/pairs.py`
+    (reviewer input). Briefs: `docs/translator-brief.md`, `docs/reviewer-brief.md`; `docs/style-reference.md`,
+    `docs/synopsis.md`, glossary seeded with official names (rulings D10, D11).
+  - Workflow: translator agents (3-5 batches each) -> `batches.py check` OK -> reviewer (sonnet) on
+    `pairs.py work/tl/pairs_<x>.txt <batches>` -> Critical/Important fixed by the same translator -> `merge` ->
+    commit. Minors go to `docs/polish.md`. work/tl is gitignored: **merge + commit after every wave**, a lost
+    `work/tl` is rebuilt by `split` (it only queues what script/ still has in Japanese; delete `work/tl` first).
   - Graphics text is phase 8: stage title cards (68), the 6 UI screens, the credits caption
     `- エンブレム オブ ガンダム -`, `GAME OVER`, and the title's katakana subtitle are **not** in `script/` (confirmed
     with the marker build: they stayed Japanese).
