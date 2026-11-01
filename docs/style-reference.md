@@ -7,9 +7,10 @@ Binding for translators and reviewers, after `glossary.md`. Rulings D1-D10 in do
   /0080 English subtitles). Mobile suit names as in English model kits: Zaku II, Gouf, Dom, Gelgoog, Gyan, GM, Ball,
   Guntank, Guncannon, Big Zam, Zeong, Acguy, Z'Gok, Gogg, Hygogg, Elmeth.
 - Honorifics: `-san`/`-kun`/`-chan` kept; 様 -> Lord/Lady (Lady Kycilia, Lord Garma; a bare キシリア様 addressed
-  directly -> "Lady Kycilia"); 閣下 -> Your Excellency; ranks in English: 大将 General, 中将 Lieutenant General,
-  少将 Major General, 准将 Commodore (Federation/Titans navy) or Brigadier, 大佐 Colonel (Char is "Colonel Char" in
-  0087 flashbacks), 中佐 Lieutenant Commander/Lieutenant Colonel, 少佐 Lieutenant Commander/Major (Char 0079:
+  directly -> "Lady Kycilia"); 閣下 -> Your Excellency; ranks in English (navy/army): 大将 Admiral/General,
+  中将 Vice Admiral/Lieutenant General (Revil stays "General Revil", the official form), 少将 Rear Admiral/Major
+  General, 准将 Commodore/Brigadier, 大佐 Captain/Colonel (Char is "Colonel Char" in 0087 flashbacks; a ship's 艦長
+  is "Captain" either way), 中佐 Commander/Lieutenant Colonel (D15), 少佐 Lieutenant Commander/Major (Char 0079:
   "Lieutenant Commander Char"), 大尉 Lieutenant/Captain, 中尉 Lieutenant (JG)/First Lieutenant, 少尉 Ensign/Second
   Lieutenant, 曹長 Sergeant Major, 軍曹 Sergeant, 伍長 Corporal. Navy forms for ship crews and Zeon space forces,
   army forms for the ground war (08th MS Team, Odessa, Jaburo).

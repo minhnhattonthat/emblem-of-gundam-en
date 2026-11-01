@@ -80,7 +80,10 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | エレドア | Eledore | | | |
 | ミケル | Michel | | | |
 | キキ | Kiki | | キキ・ロジータ Kiki Rosita | |
-| アリス・ミラー; ミラー | Miller | | アリス・ミラー Alice Miller | |
+| アリス・ミラー | Miller | | Alice Miller; bare ミラー may be a mirror (偏光ミラー), not checked | |
+| ソーラ・レイ | Solar Ray | | | |
+| ズム・シティ | Zum City | | | |
+| サイコミュ | psycommu | | | |
 | バーニィ | Bernie | | バーナード・ワイズマン Bernard Wiseman | Barney |
 | クリス | Chris | | クリスチーナ・マッケンジー Christina Mackenzie | |
 | アル | Al | | アルフレッド・イズルハ Alfred Izuruha | |
@@ -136,6 +139,13 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | パオロ | Paolo | | パオロ・カシアス Paolo Cassius | |
 | モスク・ハン | Mosk Han | | | |
 | バロム | Barom | | | |
+| ジーン・コリニー | Gene Collinny | | | |
+| ウォン・リー | Wong Lee | | name label "Wong" | |
+| ゲモン・バジャック | Gemon Bajack | | | |
+| マイッツァー・ロナ | Meitzer Ronah | | | |
+| メラニー | Melanie | | Melanie Hue Carbine | |
+| ノイエン・ビッター | Noyen Bitter | | | |
+| ソロモンの悪夢 | Nightmare of Solomon | | Gato's title | |
 
 ## Factions, places, eras
 | JP | EN | max | notes | Avoid |
@@ -173,6 +183,22 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | ソーラ・システム | Solar System | | | |
 | コロニー落とし | colony drop | | | |
 | 戦果ポイント | Merit Points | | currency for buying units | |
+| アンマン | Anmann | | lunar city | |
+| スウィート・ウォーター | Sweetwater | | | |
+| グリプス | Gryps | | | |
+| ペルガミノ | Pergamino | | | |
+| アイランド・イーズ | Island Ease | | | |
+| 木星開発事業団 | Jupiter Development Agency | | | |
+| ジオン共和国 | Republic of Zeon | | | |
+| ジオン独立戦争 | Zeon War of Independence | | | |
+| ジーク・ジオン | Sieg Zeon | | | |
+| トリントン | Torrington | | base | |
+| ナイメーヘン | Nijmegen | | | |
+| ジオニック | Zeonic | | | |
+| ガンダム開発計画 | Gundam Development Project | | | |
+| デラーズ紛争 | Delaz Conflict | | | |
+| カラマ・ポイント | Karama Point | | | |
+| 地球圏 | Earth Sphere | | | |
 
 ## Units and ships
 | JP | EN | max | notes | Avoid |
@@ -284,6 +310,12 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | ファンネル | Funnel | | | |
 | メガ粒子砲 | mega particle cannon | | | |
 | ジェットストリームアタック | Jet Stream Attack | | | |
+| モンブラン | Montblanc | | ship | |
+| ガンダリウムγ | Gundarium Gamma | | | |
+| ゼフィランサス | Zephyranthes | | GP01 | |
+| サイサリス | Physalis | | GP02A | |
+| ルナタンク | Luna Tank | | | |
+| バリュート | ballute | | | |
 
 ## UI and stat tags
 | JP | EN | max | notes | Avoid |

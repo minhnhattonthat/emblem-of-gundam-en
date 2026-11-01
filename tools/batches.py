@@ -273,9 +273,11 @@ def check(name):
     def flush():
         if not block_jp:
             return
-        jp, en = "".join(block_jp), " ".join(block_en)
+        jp, en = "".join(block_jp), " ".join(" ".join(block_en).split())  # a term may wrap across lines
         for forms, e, avoid in gl:
-            if any(has_term(jp, x) for x in forms) and e and e not in en and e.lower() not in en.lower():
+            low = en.lower()
+            if any(has_term(jp, x) for x in forms) and e and e.lower() not in low \
+                    and not (e.endswith("y") and e[:-1].lower() + "ies" in low):  # colony -> colonies
                 errs.append(f"{block_ids[0]}: glossary {forms[0]} -> '{e}' missing")
             for a in avoid:  # per line: a block's lines joined can fake a match across a break
                 if any(re.search(r"\b" + re.escape(a) + r"\b", ln) for ln in block_en):
