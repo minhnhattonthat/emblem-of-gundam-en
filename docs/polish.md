@@ -521,3 +521,16 @@ script refuses to run while any line is unticked.
 - [ ] a9:02074934 / a9:02074940 - shortened to "SFX On"/"SFX Off" (91/97px -> 34/40px vs ~52px) beside "Music On/Off"; restore "Sound Effects On/Off" if the options row proves wide enough
 - [ ] a9:02072e1c / a9:02072d2c - "Character A/B" 61px vs ~52px - in-game width QA (debug team labels)
 - [ ] a9:02072ee8.. - "Enemy Team X" 68px vs ~65px - in-game width QA (debug team labels)
+
+## voice pass review (2026-11-01, Approved, Minors only)
+- [ ] 0099:0323 - 戦いやすい = "fight more easily", not "freely"; くれたまえ a polite order - "As commander, I ask you to help / them fight more easily."
+- [ ] 0099:0037 - 人の常識 = common sense; "plain human sense" unidiomatic - "In the end, plain common sense, / not the supply corps, won out:"
+- [ ] 0099:0195 - "the tiniest" superlative not in JP - "was a tiny supply officer / in White Base's tiny supply section."
+- [ ] 0172:0235 - tense: he has already said it - " So you're saying / you had your reasons too, right?""
+- [ ] 0201:0080 - 甘いな = "That's naive"; "You're soft!" reads as an insult - "Don't be naive!"
+- [ ] 0316:0068 - all-caps HIM unique in the script; ヤツ is a snarl - " was murdered by that bastard!""
+- [ ] 0115:0021 - 効率が10倍 compares efficiency - "Even if Zeon turned national power / into strength ten times as efficiently, / it was no match for the Federation."
+- [ ] 0088:0234 - ご苦労様 = thanks for your trouble; "Welcome aboard" adds a ship - "Thank you for coming, Lieutenant Ray."
+- [ ] 0088:0256 - "a job that happened to be military" odd - "that happened to be in the military;"
+- [ ] 0190:0008 - "and besides / only an elder sister" awkward - "the eldest, Gihren, and after him / only an elder sister, Kycilia,"
+- [ ] 0292:0021 - 先日の recon lost - "This was unlike the recent recon in force."
