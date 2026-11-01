@@ -178,13 +178,14 @@ LABELS = {
         # bottom-left screen of the 512x512 atlas = prep 編成チーム情報 (two teams side by side); D18 short forms
         (78, 257, 100, 14, 336, "Team Formation"),
         # the same labels and terrain strip also sit in the top-left screen, drawn from the same tiles (twins)
-        *[(x, y0 + y, 28, 13, 337, s) for x, y0 in ((2, 256), (130, 256), (2, 24)) for y, s in (
+        # Cost "W": its 消 cell's pale gradient outnumbers the white strokes, so the detected ink was near the fill
+        *[(x, y0 + y, 28, 13, 337, s, *"W"[:s == "Cost"]) for x, y0 in ((2, 256), (130, 256), (2, 24)) for y, s in (
             (17, "Atk"), (33, "Def"), (49, "Move"), (65, "Cost"), (81, "Supply"))],
         *[(x0 + 16 * k, y0, 16, 13, 337, s, "v", f"c{x0 - 4}", "W") for x0, y0 in ((40, 353), (168, 353), (168, 81)) for k, s in enumerate(
             ("Lnd", "Rgh", "Wtr", "Air", "Spc"))],
         # top-right screen = ユニット情報 (map_unit), bottom-right = キャラクター情報 (map_chara)
         (346, 1, 78, 15, 336, "Unit Info", "h", "W"), (336, 257, 104, 15, 336, "Character Info", "h", "W"),
-        *[(258, 33 + 16 * k, 28, 13, 337, s) for k, s in enumerate(("Atk", "Def", "Move", "Cost", "Supply", "Mob"))],
+        *[(258, 33 + 16 * k, 28, 13, 337, s, *"W"[:s == "Cost"]) for k, s in enumerate(("Atk", "Def", "Move", "Cost", "Supply", "Mob"))],
         *[(424 + 16 * k, 81, 16, 13, 337, s, "v", "c420", "W") for k, s in enumerate(("Lnd", "Rgh", "Wtr", "Air", "Spc"))],
     ],
     360: [  # title: the katakana reading under the English logo goes (D16), © 創通・サンライズ -> SOTSU・SUNRISE
