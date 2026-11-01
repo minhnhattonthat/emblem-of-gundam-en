@@ -352,12 +352,12 @@
   "Losses\n",
   "Kills\n",
   " ",
-  "機",
-  "MAP04:宇宙ステージ２",
-  "シナリオ初期化",
-  "シナリオ解放",
-  "シナリオ再開",
-  "戦闘開始",
-  "戦闘終了"
+  "units",
+  "MAP04: Space Stage 2",
+  "Reset Scenario",
+  "Unlock Scenario",
+  "Resume Scenario",
+  "Battle Start",
+  "Battle End"
  ]
 }

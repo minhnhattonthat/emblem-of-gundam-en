@@ -352,12 +352,12 @@
   "Losses\n",
   "Kills\n",
   " ",
-  "機",
-  "MAP19:ジャブロー地上",
-  "シナリオ初期化",
-  "シナリオ解放",
-  "シナリオ再開",
-  "戦闘開始",
-  "戦闘終了"
+  "units",
+  "MAP19: Jaburo Surface",
+  "Reset Scenario",
+  "Unlock Scenario",
+  "Resume Scenario",
+  "Battle Start",
+  "Battle End"
  ]
 }

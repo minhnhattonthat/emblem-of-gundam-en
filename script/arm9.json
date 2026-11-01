@@ -3,171 +3,171 @@
  "strings": [
   {
    "at": "0x2072170",
-   "text": "キャラクターの配属"
+   "text": "Assign Characters"
   },
   {
    "at": "0x2072184",
-   "text": "購入するユニットを選択"
+   "text": "Select a unit to buy"
   },
   {
    "at": "0x207219c",
-   "text": "売却するユニットを選択"
+   "text": "Select a unit to sell"
   },
   {
    "at": "0x20721b4",
-   "text": "配属するキャラクターを選択"
+   "text": "Select a character to assign"
   },
   {
    "at": "0x20721d0",
-   "text": "これ以上、購入できません。"
+   "text": "You can't buy any more."
   },
   {
    "at": "0x20721ec",
-   "text": "戦果ポイントが足りません。"
+   "text": "Not enough Merit Points."
   },
   {
    "at": "0x2072208",
-   "text": "%sを\n購入しました。"
+   "text": "%s\nwas purchased."
   },
   {
    "at": "0x207221c",
-   "text": "%sを\n売却しました。"
+   "text": "%s\nwas sold."
   },
   {
    "at": "0x2072230",
-   "text": "これ以上、配属できません。"
+   "text": "You can't assign any more."
   },
   {
    "at": "0x207224c",
-   "text": "戦果ポイントが足りません。"
+   "text": "Not enough Merit Points."
   },
   {
    "at": "0x2072268",
-   "text": "%sは\nすでに配属済みです。"
+   "text": "%s\nis already assigned."
   },
   {
    "at": "0x2072284",
-   "text": "%sを\n自軍に配属しました。"
+   "text": "%s\nwas assigned to your forces."
   },
   {
    "at": "0x207236c",
-   "text": "ユニットの強化"
+   "text": "Upgrade Units"
   },
   {
    "at": "0x207237c",
-   "text": "%sは\n出撃不可の為、\n強化できません。"
+   "text": "%s\ncan't sortie, so\nit can't be upgraded."
   },
   {
    "at": "0x20723a4",
-   "text": "%sは\nこれ以上、強化できません。"
+   "text": "%s\ncan't be upgraded any further."
   },
   {
    "at": "0x20723c4",
-   "text": "戦果ポイントが足りません。"
+   "text": "Not enough Merit Points."
   },
   {
    "at": "0x20723e0",
-   "text": "%sの\n攻戦を強化しました。"
+   "text": "%s:\nATK upgraded."
   },
   {
    "at": "0x20723fc",
-   "text": "%sの\n防戦を強化しました。"
+   "text": "%s:\nDEF upgraded."
   },
   {
    "at": "0x2072418",
-   "text": "強化するユニットを選択"
+   "text": "Select a unit to upgrade"
   },
   {
    "at": "0x2072494",
-   "text": "スライド中"
+   "text": "Sliding"
   },
   {
    "at": "0x20724a0",
-   "text": "入れ替え元を選択"
+   "text": "Select swap source"
   },
   {
    "at": "0x20724b4",
-   "text": "入れ替え先を選択"
+   "text": "Select swap target"
   },
   {
    "at": "0x20724c8",
-   "text": "編成を終了します。\n\n編成を確定する\n編成を破棄する\nキャンセル"
+   "text": "Finish organizing.\n\nConfirm lineup\nDiscard lineup\nCancel"
   },
   {
    "at": "0x2072508",
-   "text": "キャラクターだけのチームは\n編成できません！\nユニットを追加して下さい。"
+   "text": "You can't form a team\nof characters only!\nPlease add a unit."
   },
   {
    "at": "0x2072550",
-   "text": "地形に適さないチームは\n編成できません！\n編成を確認して下さい。"
+   "text": "You can't form a team\nunsuited to the terrain!\nPlease check the lineup."
   },
   {
    "at": "0x2072590",
-   "text": "ユニットとキャラクターは\n入れ替えられません！"
+   "text": "Units and characters\ncan't be swapped!"
   },
   {
    "at": "0x20725c0",
-   "text": "キャラクターとユニットは\n入れ替えられません！"
+   "text": "Characters and units\ncan't be swapped!"
   },
   {
    "at": "0x20725f0",
-   "text": "出撃できないユニットは\n入れ替えられません！"
+   "text": "Units that can't sortie\ncan't be swapped!"
   },
   {
    "at": "0x207261c",
-   "text": "出撃中のキャラクターは\n入れ替えられません！"
+   "text": "Characters out on sortie\ncan't be swapped!"
   },
   {
    "at": "0x2072648",
-   "text": "入れ替えられません！"
+   "text": "Can't swap!"
   },
   {
    "at": "0x2072660",
-   "text": "入れ替えられません！"
+   "text": "Can't swap!"
   },
   {
    "at": "0x2072718",
-   "text": "選択して情報を表示"
+   "text": "Select to view info"
   },
   {
    "at": "0x2072730",
-   "text": "－1"
+   "text": "-1"
   },
   {
    "at": "0x2072734",
-   "text": "＋1"
+   "text": "+1"
   },
   {
    "at": "0x2072738",
-   "text": "＋10"
+   "text": "+10"
   },
   {
    "at": "0x2072740",
-   "text": "最大"
+   "text": "Max"
   },
   {
    "at": "0x2072748",
-   "text": "最小"
+   "text": "Min"
   },
   {
    "at": "0x2072750",
-   "text": "地上"
+   "text": "Ground"
   },
   {
    "at": "0x2072758",
-   "text": "自爆"
+   "text": "Self-Destruct"
   },
   {
    "at": "0x2072760",
-   "text": "敗北"
+   "text": "Loss"
   },
   {
    "at": "0x2072768",
-   "text": "－10"
+   "text": "-10"
   },
   {
    "at": "0x2072770",
-   "text": "勝利"
+   "text": "Win"
   },
   {
    "at": "0x2072778",
@@ -175,103 +175,103 @@
   },
   {
    "at": "0x2072780",
-   "text": "香港"
+   "text": "Hong Kong"
   },
   {
    "at": "0x2072788",
-   "text": "平均"
+   "text": "Average"
   },
   {
    "at": "0x2072814",
-   "text": "鳥00"
+   "text": "Bird 00"
   },
   {
    "at": "0x2072914",
-   "text": "アムロ側"
+   "text": "Amuro Side"
   },
   {
    "at": "0x2072920",
-   "text": "シャア側"
+   "text": "Char Side"
   },
   {
    "at": "0x207292c",
-   "text": "自動編成"
+   "text": "Auto Organize"
   },
   {
    "at": "0x2072938",
-   "text": "強制終了"
+   "text": "Force Quit"
   },
   {
    "at": "0x2072944",
-   "text": "東南アジア"
+   "text": "Southeast Asia"
   },
   {
    "at": "0x2072950",
-   "text": "オプション"
+   "text": "Options"
   },
   {
    "at": "0x207295c",
-   "text": "バスケットＣ"
+   "text": "Basket C"
   },
   {
    "at": "0x207296c",
-   "text": "バスケットＤ"
+   "text": "Basket D"
   },
   {
    "at": "0x207297c",
-   "text": "未行動に戻す"
+   "text": "Reset to Not Acted"
   },
   {
    "at": "0x207298c",
-   "text": "バスケットＡ"
+   "text": "Basket A"
   },
   {
    "at": "0x207299c",
-   "text": "バスケットＢ"
+   "text": "Basket B"
   },
   {
    "at": "0x20729ac",
-   "text": "適正レベル設定"
+   "text": "Set Suitable Level"
   },
   {
    "at": "0x20729bc",
-   "text": "敵軍 補給値－100"
+   "text": "Enemy Supply -100"
   },
   {
    "at": "0x20729d0",
-   "text": "イベントトリガー"
+   "text": "Event Trigger"
   },
   {
    "at": "0x20729e4",
-   "text": "キャラレベル操作"
+   "text": "Character Level Edit"
   },
   {
    "at": "0x20729f8",
-   "text": "自軍 補給値＋100"
+   "text": "Ally Supply +100"
   },
   {
    "at": "0x2072a0c",
-   "text": "自軍 補給値－100"
+   "text": "Ally Supply -100"
   },
   {
    "at": "0x2072a20",
-   "text": "敵軍 補給値＋100"
+   "text": "Enemy Supply +100"
   },
   {
    "at": "0x2072a34",
-   "text": "個別デバッグ"
+   "text": "Individual Debug"
   },
   {
    "at": "0x2072a44",
-   "text": "強制終了"
+   "text": "Force Quit"
   },
   {
    "at": "0x2072a50",
-   "text": "イベントトリガー"
+   "text": "Event Trigger"
   },
   {
    "at": "0x2072a64",
-   "text": "キャラレベル操作"
+   "text": "Character Level Edit"
   },
   {
    "at": "0x2072a78",
@@ -279,7 +279,7 @@
   },
   {
    "at": "0x2072a80",
-   "text": "最初の分岐"
+   "text": "First Branch"
   },
   {
    "at": "0x2072a8c",
@@ -291,31 +291,31 @@
   },
   {
    "at": "0x2072a98",
-   "text": "Ａ=%d,Ｂ=%d,Ｃ=%d,Ｄ=%d"
+   "text": "A=%d,B=%d,C=%d,D=%d"
   },
   {
    "at": "0x2072ab0",
-   "text": "レベルが設定されました"
+   "text": "Level has been set"
   },
   {
    "at": "0x2072ac8",
-   "text": "自軍ダメージ:無効"
+   "text": "Ally Damage: Off"
   },
   {
    "at": "0x2072adc",
-   "text": "自軍ダメージ:有効"
+   "text": "Ally Damage: On"
   },
   {
    "at": "0x2072af0",
-   "text": "敵軍ダメージ:無効"
+   "text": "Enemy Damage: Off"
   },
   {
    "at": "0x2072b04",
-   "text": "敵軍ダメージ:有効"
+   "text": "Enemy Damage: On"
   },
   {
    "at": "0x2072b18",
-   "text": "オプション"
+   "text": "Options"
   },
   {
    "at": "0x2072b24",
@@ -327,11 +327,11 @@
   },
   {
    "at": "0x2072b9c",
-   "text": "%d％"
+   "text": "%d%"
   },
   {
    "at": "0x2072ba4",
-   "text": "%d％"
+   "text": "%d%"
   },
   {
    "at": "0x2072bc4",
@@ -339,11 +339,11 @@
   },
   {
    "at": "0x2072bc8",
-   "text": "－"
+   "text": "-"
   },
   {
    "at": "0x2072bcc",
-   "text": "大型"
+   "text": "Large"
   },
   {
    "at": "0x2072bd4",
@@ -351,7 +351,7 @@
   },
   {
    "at": "0x2072bdc",
-   "text": "射撃"
+   "text": "Shooting"
   },
   {
    "at": "0x2072be4",
@@ -359,31 +359,31 @@
   },
   {
    "at": "0x2072bec",
-   "text": "陸戦"
+   "text": "Land"
   },
   {
    "at": "0x2072bf4",
-   "text": "ＭＡ"
+   "text": "MA"
   },
   {
    "at": "0x2072bfc",
-   "text": "ＭＳ"
+   "text": "MS"
   },
   {
    "at": "0x2072c04",
-   "text": "合流"
+   "text": "Merge"
   },
   {
    "at": "0x2072c0c",
-   "text": "編成"
+   "text": "Organize"
   },
   {
    "at": "0x2072c14",
-   "text": "攻撃"
+   "text": "Attack"
   },
   {
    "at": "0x2072c1c",
-   "text": "移動"
+   "text": "Move"
   },
   {
    "at": "0x2072c24",
@@ -391,39 +391,39 @@
   },
   {
    "at": "0x2072c2c",
-   "text": "破棄"
+   "text": "Discard"
   },
   {
    "at": "0x2072c34",
-   "text": "格闘"
+   "text": "Melee"
   },
   {
    "at": "0x2072c3c",
-   "text": "砲撃"
+   "text": "Artillery"
   },
   {
    "at": "0x2072c44",
-   "text": "攻撃"
+   "text": "Attack"
   },
   {
    "at": "0x2072c4c",
-   "text": "艦船"
+   "text": "Ship"
   },
   {
    "at": "0x2072c54",
-   "text": "ザク"
+   "text": "Zaku"
   },
   {
    "at": "0x2072c5c",
-   "text": "情報"
+   "text": "Info"
   },
   {
    "at": "0x2072c64",
-   "text": "変形"
+   "text": "Transform"
   },
   {
    "at": "0x2072c6c",
-   "text": "物資+"
+   "text": "Materiel+"
   },
   {
    "at": "0x2072c74",
@@ -435,39 +435,39 @@
   },
   {
    "at": "0x2072c84",
-   "text": "航空機"
+   "text": "Aircraft"
   },
   {
    "at": "0x2072c8c",
-   "text": "セーブ"
+   "text": "Save"
   },
   {
    "at": "0x2072c94",
-   "text": "セーブ"
+   "text": "Save"
   },
   {
    "at": "0x2072c9c",
-   "text": "チームＩ"
+   "text": "Team I"
   },
   {
    "at": "0x2072ca8",
-   "text": "チームＸ"
+   "text": "Team X"
   },
   {
    "at": "0x2072cb4",
-   "text": "チームＪ"
+   "text": "Team J"
   },
   {
    "at": "0x2072cc0",
-   "text": "戦闘準備"
+   "text": "Battle Prep"
   },
   {
    "at": "0x2072ccc",
-   "text": "チームＧ"
+   "text": "Team G"
   },
   {
    "at": "0x2072cd8",
-   "text": "チームＫ"
+   "text": "Team K"
   },
   {
    "at": "0x2072ce4",
@@ -475,15 +475,15 @@
   },
   {
    "at": "0x2072cf0",
-   "text": "戦闘開始"
+   "text": "Start Battle"
   },
   {
    "at": "0x2072cfc",
-   "text": "チームＵ"
+   "text": "Team U"
   },
   {
    "at": "0x2072d08",
-   "text": "ユニーク"
+   "text": "Unique"
   },
   {
    "at": "0x2072d14",
@@ -491,15 +491,15 @@
   },
   {
    "at": "0x2072d20",
-   "text": "チームＯ"
+   "text": "Team O"
   },
   {
    "at": "0x2072d2c",
-   "text": "キャラＡ"
+   "text": "Character A"
   },
   {
    "at": "0x2072d38",
-   "text": "メニュー"
+   "text": "Menu"
   },
   {
    "at": "0x2072d44",
@@ -507,47 +507,47 @@
   },
   {
    "at": "0x2072d50",
-   "text": "水陸両用"
+   "text": "Amphibious"
   },
   {
    "at": "0x2072d5c",
-   "text": "行動選択"
+   "text": "Select Action"
   },
   {
    "at": "0x2072d68",
-   "text": "チームＡ"
+   "text": "Team A"
   },
   {
    "at": "0x2072d74",
-   "text": "チームＢ"
+   "text": "Team B"
   },
   {
    "at": "0x2072d80",
-   "text": "チームＣ"
+   "text": "Team C"
   },
   {
    "at": "0x2072d8c",
-   "text": "チームＤ"
+   "text": "Team D"
   },
   {
    "at": "0x2072d98",
-   "text": "チームＥ"
+   "text": "Team E"
   },
   {
    "at": "0x2072da4",
-   "text": "チームＨ"
+   "text": "Team H"
   },
   {
    "at": "0x2072db0",
-   "text": "チームＹ"
+   "text": "Team Y"
   },
   {
    "at": "0x2072dbc",
-   "text": "デバッグ"
+   "text": "Debug"
   },
   {
    "at": "0x2072dc8",
-   "text": "チームＶ"
+   "text": "Team V"
   },
   {
    "at": "0x2072dd4",
@@ -555,327 +555,327 @@
   },
   {
    "at": "0x2072de0",
-   "text": "チームＺ"
+   "text": "Team Z"
   },
   {
    "at": "0x2072dec",
-   "text": "チームＮ"
+   "text": "Team N"
   },
   {
    "at": "0x2072df8",
-   "text": "チームＷ"
+   "text": "Team W"
   },
   {
    "at": "0x2072e04",
-   "text": "チームＬ"
+   "text": "Team L"
   },
   {
    "at": "0x2072e10",
-   "text": "チームＰ"
+   "text": "Team P"
   },
   {
    "at": "0x2072e1c",
-   "text": "キャラＢ"
+   "text": "Character B"
   },
   {
    "at": "0x2072e28",
-   "text": "デバッグ"
+   "text": "Debug"
   },
   {
    "at": "0x2072e34",
-   "text": "チームＱ"
+   "text": "Team Q"
   },
   {
    "at": "0x2072e40",
-   "text": "チームＭ"
+   "text": "Team M"
   },
   {
    "at": "0x2072e4c",
-   "text": "チームＴ"
+   "text": "Team T"
   },
   {
    "at": "0x2072e58",
-   "text": "チームＲ"
+   "text": "Team R"
   },
   {
    "at": "0x2072e64",
-   "text": "チームＦ"
+   "text": "Team F"
   },
   {
    "at": "0x2072e70",
-   "text": "チームＳ"
+   "text": "Team S"
   },
   {
    "at": "0x2072e7c",
-   "text": "ギブアップ"
+   "text": "Give Up"
   },
   {
    "at": "0x2072e88",
-   "text": "オプション"
+   "text": "Options"
   },
   {
    "at": "0x2072e94",
-   "text": "新チームＡ"
+   "text": "New Team A"
   },
   {
    "at": "0x2072ea0",
-   "text": "新チームＢ"
+   "text": "New Team B"
   },
   {
    "at": "0x2072eac",
-   "text": "新チームＱ"
+   "text": "New Team Q"
   },
   {
    "at": "0x2072eb8",
-   "text": "新チームＹ"
+   "text": "New Team Y"
   },
   {
    "at": "0x2072ec4",
-   "text": "新チームＣ"
+   "text": "New Team C"
   },
   {
    "at": "0x2072ed0",
-   "text": "ユニットＡ"
+   "text": "Unit A"
   },
   {
    "at": "0x2072edc",
-   "text": "新チームＤ"
+   "text": "New Team D"
   },
   {
    "at": "0x2072ee8",
-   "text": "敵チームＢ"
+   "text": "Enemy Team B"
   },
   {
    "at": "0x2072ef4",
-   "text": "新チームＲ"
+   "text": "New Team R"
   },
   {
    "at": "0x2072f00",
-   "text": "敵チームＣ"
+   "text": "Enemy Team C"
   },
   {
    "at": "0x2072f0c",
-   "text": "移動の確認"
+   "text": "Confirm Move"
   },
   {
    "at": "0x2072f18",
-   "text": "新チームＥ"
+   "text": "New Team E"
   },
   {
    "at": "0x2072f24",
-   "text": "新チームＦ"
+   "text": "New Team F"
   },
   {
    "at": "0x2072f30",
-   "text": "敵チームＦ"
+   "text": "Enemy Team F"
   },
   {
    "at": "0x2072f3c",
-   "text": "新チームＳ"
+   "text": "New Team S"
   },
   {
    "at": "0x2072f48",
-   "text": "新チームＺ"
+   "text": "New Team Z"
   },
   {
    "at": "0x2072f54",
-   "text": "敵チームＧ"
+   "text": "Enemy Team G"
   },
   {
    "at": "0x2072f60",
-   "text": "敵チームＨ"
+   "text": "Enemy Team H"
   },
   {
    "at": "0x2072f6c",
-   "text": "新チームＧ"
+   "text": "New Team G"
   },
   {
    "at": "0x2072f78",
-   "text": "敵チームＩ"
+   "text": "Enemy Team I"
   },
   {
    "at": "0x2072f84",
-   "text": "敵チームＪ"
+   "text": "Enemy Team J"
   },
   {
    "at": "0x2072f90",
-   "text": "新チームＨ"
+   "text": "New Team H"
   },
   {
    "at": "0x2072f9c",
-   "text": "新チームＴ"
+   "text": "New Team T"
   },
   {
    "at": "0x2072fa8",
-   "text": "敵チームＫ"
+   "text": "Enemy Team K"
   },
   {
    "at": "0x2072fb4",
-   "text": "新チームＩ"
+   "text": "New Team I"
   },
   {
    "at": "0x2072fc0",
-   "text": "敵チームＬ"
+   "text": "Enemy Team L"
   },
   {
    "at": "0x2072fcc",
-   "text": "新チームＵ"
+   "text": "New Team U"
   },
   {
    "at": "0x2072fd8",
-   "text": "敵チームＭ"
+   "text": "Enemy Team M"
   },
   {
    "at": "0x2072fe4",
-   "text": "敵チームＮ"
+   "text": "Enemy Team N"
   },
   {
    "at": "0x2072ff0",
-   "text": "新チームＪ"
+   "text": "New Team J"
   },
   {
    "at": "0x2072ffc",
-   "text": "敵チームＯ"
+   "text": "Enemy Team O"
   },
   {
    "at": "0x2073008",
-   "text": "敵チームＰ"
+   "text": "Enemy Team P"
   },
   {
    "at": "0x2073014",
-   "text": "敵チームＥ"
+   "text": "Enemy Team E"
   },
   {
    "at": "0x2073020",
-   "text": "物資の確認"
+   "text": "Check Materiel"
   },
   {
    "at": "0x207302c",
-   "text": "新チームＫ"
+   "text": "New Team K"
   },
   {
    "at": "0x2073038",
-   "text": "敵チームＤ"
+   "text": "Enemy Team D"
   },
   {
    "at": "0x2073044",
-   "text": "敵チームＱ"
+   "text": "Enemy Team Q"
   },
   {
    "at": "0x2073050",
-   "text": "敵チームＲ"
+   "text": "Enemy Team R"
   },
   {
    "at": "0x207305c",
-   "text": "新チームＬ"
+   "text": "New Team L"
   },
   {
    "at": "0x2073068",
-   "text": "新チームＶ"
+   "text": "New Team V"
   },
   {
    "at": "0x2073074",
-   "text": "チーム選択"
+   "text": "Select Team"
   },
   {
    "at": "0x2073080",
-   "text": "敵チームＡ"
+   "text": "Enemy Team A"
   },
   {
    "at": "0x207308c",
-   "text": "チーム情報"
+   "text": "Team Info"
   },
   {
    "at": "0x2073098",
-   "text": "敵チームＳ"
+   "text": "Enemy Team S"
   },
   {
    "at": "0x20730a4",
-   "text": "敵チームＴ"
+   "text": "Enemy Team T"
   },
   {
    "at": "0x20730b0",
-   "text": "新チームＭ"
+   "text": "New Team M"
   },
   {
    "at": "0x20730bc",
-   "text": "敵チームＵ"
+   "text": "Enemy Team U"
   },
   {
    "at": "0x20730c8",
-   "text": "敵チームＶ"
+   "text": "Enemy Team V"
   },
   {
    "at": "0x20730d4",
-   "text": "新チームＮ"
+   "text": "New Team N"
   },
   {
    "at": "0x20730e0",
-   "text": "新チームＷ"
+   "text": "New Team W"
   },
   {
    "at": "0x20730ec",
-   "text": "マップ確認"
+   "text": "View Map"
   },
   {
    "at": "0x20730f8",
-   "text": "新チームＯ"
+   "text": "New Team O"
   },
   {
    "at": "0x2073104",
-   "text": "敵チームＷ"
+   "text": "Enemy Team W"
   },
   {
    "at": "0x2073110",
-   "text": "オプション"
+   "text": "Options"
   },
   {
    "at": "0x207311c",
-   "text": "敵チームＸ"
+   "text": "Enemy Team X"
   },
   {
    "at": "0x2073128",
-   "text": "ユニットＢ"
+   "text": "Unit B"
   },
   {
    "at": "0x2073134",
-   "text": "敵チームＹ"
+   "text": "Enemy Team Y"
   },
   {
    "at": "0x2073140",
-   "text": "攻戦の強化"
+   "text": "Upgrade ATK"
   },
   {
    "at": "0x207314c",
-   "text": "新チームＰ"
+   "text": "New Team P"
   },
   {
    "at": "0x2073158",
-   "text": "防戦の強化"
+   "text": "Upgrade DEF"
   },
   {
    "at": "0x2073164",
-   "text": "ターン終了"
+   "text": "End Turn"
   },
   {
    "at": "0x2073170",
-   "text": "敵チームＺ"
+   "text": "Enemy Team Z"
   },
   {
    "at": "0x207317c",
-   "text": "新チームＸ"
+   "text": "New Team X"
   },
   {
    "at": "0x2073188",
-   "text": "移動先を選択"
+   "text": "Move where?"
   },
   {
    "at": "0x2073198",
-   "text": "前進先を選択"
+   "text": "Advance where?"
   },
   {
    "at": "0x20731a8",
-   "text": "後退先を選択"
+   "text": "Retreat where?"
   },
   {
    "at": "0x20731b8",
@@ -883,87 +883,87 @@
   },
   {
    "at": "0x20731c8",
-   "text": "強化メニュー"
+   "text": "Upgrade Menu"
   },
   {
    "at": "0x20731d8",
-   "text": "強化メニュー"
+   "text": "Upgrade Menu"
   },
   {
    "at": "0x20731e8",
-   "text": "作戦内容確認"
+   "text": "Operation Details"
   },
   {
    "at": "0x20731f8",
-   "text": "作戦内容確認"
+   "text": "Operation Details"
   },
   {
    "at": "0x2073208",
-   "text": "ユニットの強化"
+   "text": "Upgrade Units"
   },
   {
    "at": "0x2073218",
-   "text": "ユニットの購入"
+   "text": "Buy Units"
   },
   {
    "at": "0x2073228",
-   "text": "ユニットの売却"
+   "text": "Sell Units"
   },
   {
    "at": "0x2073238",
-   "text": "ユニットの強化"
+   "text": "Upgrade Units"
   },
   {
    "at": "0x2073248",
-   "text": "は移動できません"
+   "text": " can't move"
   },
   {
    "at": "0x207325c",
-   "text": "オリジナル隊編成"
+   "text": "Custom Team"
   },
   {
    "at": "0x2073270",
-   "text": "シナリオチャート"
+   "text": "Scenario Chart"
   },
   {
    "at": "0x2073284",
-   "text": "シナリオチャート"
+   "text": "Scenario Chart"
   },
   {
    "at": "0x2073298",
-   "text": "移動先がありません"
+   "text": "Nowhere to move"
   },
   {
    "at": "0x20732ac",
-   "text": "キャラクターの配属"
+   "text": "Assign Characters"
   },
   {
    "at": "0x20732c0",
-   "text": "補給線が切れています"
+   "text": "Supply line is cut"
   },
   {
    "at": "0x20732d8",
-   "text": "物資が不足しています"
+   "text": "Not enough Materiel"
   },
   {
    "at": "0x20732f0",
-   "text": "が再編成を行いました"
+   "text": " has reorganized"
   },
   {
    "at": "0x2073308",
-   "text": "ギブアップしますか？"
+   "text": "Give up?"
   },
   {
    "at": "0x2073320",
-   "text": "ターンを終了しますか？"
+   "text": "End your turn?"
   },
   {
    "at": "0x2073338",
-   "text": "これ以上は分割できません"
+   "text": "Can't split any further"
   },
   {
    "at": "0x2073354",
-   "text": "地形適正の\n合わないユニットが\n消滅しました"
+   "text": "Units unsuited\nto the terrain\nhave been lost."
   },
   {
    "at": "0x207364c",
@@ -975,55 +975,55 @@
   },
   {
    "at": "0x2073c50",
-   "text": "バスケットＣ"
+   "text": "Basket C"
   },
   {
    "at": "0x2073c60",
-   "text": "バスケットＢ"
+   "text": "Basket B"
   },
   {
    "at": "0x2073c70",
-   "text": "バスケットＡ"
+   "text": "Basket A"
   },
   {
    "at": "0x2073cd0",
-   "text": "セーブを終了しますか？"
+   "text": "Quit saving?"
   },
   {
    "at": "0x2073ce8",
-   "text": "データを消去しました。"
+   "text": "Data erased."
   },
   {
    "at": "0x2073d00",
-   "text": "データを上書きしますか？"
+   "text": "Overwrite this data?"
   },
   {
    "at": "0x2073d1c",
-   "text": "データをロードしますか？"
+   "text": "Load this data?"
   },
   {
    "at": "0x2073d38",
-   "text": "セーブデータの\nリビジョンが変わりました。\n再フォーマットします。"
+   "text": "The save data\nrevision has changed.\nReformatting."
   },
   {
    "at": "0x2073d7c",
-   "text": "ロードに失敗しました。\nデータが破損している為、\nデータの消去を行います。"
+   "text": "Loading failed.\nThe data is corrupted,\nso it will be erased."
   },
   {
    "at": "0x2073ed0",
-   "text": "バックアップメモリの\n読み込みに失敗しました。\n電源を切りＤＳカードを\nさしなおして下さい。"
+   "text": "Failed to read\nthe backup memory.\nTurn the power off and\nreinsert the DS Card."
   },
   {
    "at": "0x2073f2c",
-   "text": "バックアップメモリの\n書き込みに失敗しました。\n電源を切りＤＳカードを\nさしなおして下さい。"
+   "text": "Failed to write to\nthe backup memory.\nTurn the power off and\nreinsert the DS Card."
   },
   {
    "at": "0x2073f88",
-   "text": "セーブに失敗しました。\n再度セーブを試みるか、\n電源を切りＤＳカードを\nさしなおして下さい。"
+   "text": "Saving failed.\nTry saving again, or\nturn the power off and\nreinsert the DS Card."
   },
   {
    "at": "0x2073fe4",
-   "text": "データが破損しています。\n復元を行う為、データの\nフォーマットを行います。\n※データは全て消去されます"
+   "text": "The data is corrupted.\nTo restore it, the data\nwill be formatted.\n*All data will be erased."
   },
   {
    "at": "0x2074248",
@@ -1031,7 +1031,7 @@
   },
   {
    "at": "0x2074388",
-   "text": "キャラクターの情報を表示"
+   "text": "View character info"
   },
   {
    "at": "0x20743a4",
@@ -1039,31 +1039,31 @@
   },
   {
    "at": "0x20743a8",
-   "text": "１"
+   "text": "1"
   },
   {
    "at": "0x20743ac",
-   "text": "２"
+   "text": "2"
   },
   {
    "at": "0x20743b0",
-   "text": "１"
+   "text": "1"
   },
   {
    "at": "0x20743b4",
-   "text": "２"
+   "text": "2"
   },
   {
    "at": "0x20744a0",
-   "text": "キャラクターの\nレベルが%sアップ！"
+   "text": "Character level\nup by %s!"
   },
   {
    "at": "0x20744c4",
-   "text": "キャラクターのレベルアップ"
+   "text": "Character Level Up"
   },
   {
    "at": "0x20744e0",
-   "text": "バトンを選択"
+   "text": "Select a Baton"
   },
   {
    "at": "0x20746fc",
@@ -1095,7 +1095,7 @@
   },
   {
    "at": "0x2074778",
-   "text": "－"
+   "text": "-"
   },
   {
    "at": "0x207477c",
@@ -1107,19 +1107,19 @@
   },
   {
    "at": "0x20747f4",
-   "text": "\n\n　はい　／　いいえ"
+   "text": "\n\n Yes / No"
   },
   {
    "at": "0x207480c",
-   "text": "退役するキャラクター、\nユニットを\n戦果ポイントに還元します。"
+   "text": "Retired characters\nand units are converted\ninto Merit Points."
   },
   {
    "at": "0x207484c",
-   "text": "戦果ポイント還元中...\n"
+   "text": "Converting to Merit Points...\n"
   },
   {
    "at": "0x2074864",
-   "text": "戦果ポイントを還元しました。"
+   "text": "Converted to Merit Points."
   },
   {
    "at": "0x2074884",
@@ -1139,15 +1139,15 @@
   },
   {
    "at": "0x207489c",
-   "text": "オフ"
+   "text": "Off"
   },
   {
    "at": "0x20748a4",
-   "text": "はい"
+   "text": "Yes"
   },
   {
    "at": "0x20748ac",
-   "text": "オン"
+   "text": "On"
   },
   {
    "at": "0x20748b4",
@@ -1155,107 +1155,107 @@
   },
   {
    "at": "0x20748bc",
-   "text": "いいえ"
+   "text": "No"
   },
   {
    "at": "0x2074934",
-   "text": "ＳＥ有効"
+   "text": "SFX On"
   },
   {
    "at": "0x2074940",
-   "text": "ＳＥ無効"
+   "text": "SFX Off"
   },
   {
    "at": "0x207494c",
-   "text": "ＢＧＭ無効"
+   "text": "Music Off"
   },
   {
    "at": "0x2074958",
-   "text": "ＢＧＭ有効"
+   "text": "Music On"
   },
   {
    "at": "0x2074964",
-   "text": "戦闘演出スキップ"
+   "text": "Skip Battle Scenes"
   },
   {
    "at": "0x2074978",
-   "text": "メッセージスキップ"
+   "text": "Skip Messages"
   },
   {
    "at": "0x207498c",
-   "text": "戦闘演出スキップ無効"
+   "text": "Battle Scene Skip Off"
   },
   {
    "at": "0x20749a4",
-   "text": "戦闘演出スキップ有効"
+   "text": "Battle Scene Skip On"
   },
   {
    "at": "0x20749bc",
-   "text": "メッセージスキップ無効"
+   "text": "Message Skip Off"
   },
   {
    "at": "0x20749d4",
-   "text": "メッセージスキップ有効"
+   "text": "Message Skip On"
   },
   {
    "at": "0x2074b18",
-   "text": "キャラクターの退役"
+   "text": "Retire Characters"
   },
   {
    "at": "0x2074b30",
-   "text": "ユニットの退役"
+   "text": "Retire Units"
   },
   {
    "at": "0x2074b88",
-   "text": "★STAGE %d\n「%s」\nプレイ時間: %d時間%d分%d秒"
+   "text": "*STAGE %d\n\"%s\"\nPlay Time: %d hr %d min %d sec"
   },
   {
    "at": "0x2074bb8",
-   "text": "STAGE %d\n「%s」\nプレイ時間: %d時間%d分%d秒"
+   "text": "STAGE %d\n\"%s\"\nPlay Time: %d hr %d min %d sec"
   },
   {
    "at": "0x2074be4",
-   "text": "データ無し"
+   "text": "No Data"
   },
   {
    "at": "0x2074bf0",
-   "text": "セーブ"
+   "text": "Save"
   },
   {
    "at": "0x2074bf8",
-   "text": "保存する場所を選択して下さい"
+   "text": "Select where to save"
   },
   {
    "at": "0x2074c18",
-   "text": "ロード"
+   "text": "Load"
   },
   {
    "at": "0x2074c20",
-   "text": "データを選択して下さい"
+   "text": "Select data"
   },
   {
    "at": "0x2074c38",
-   "text": "データがありません"
+   "text": "No data"
   },
   {
    "at": "0x2075bb0",
-   "text": "登場キャラクター"
+   "text": "Characters"
   },
   {
    "at": "0x2075bc4",
-   "text": "キャラクターの情報を表示"
+   "text": "View character info"
   },
   {
    "at": "0x2076d98",
-   "text": "ステージを選択"
+   "text": "Select Stage"
   },
   {
    "at": "0x2076e0c",
-   "text": "項目を選択"
+   "text": "Select an item"
   },
   {
    "at": "0x2076e18",
-   "text": "シナリオ チャート"
+   "text": "Scenario Chart"
   },
   {
    "at": "0x2076e40",
@@ -1331,55 +1331,55 @@
   },
   {
    "at": "0x2076f04",
-   "text": "右"
+   "text": "Right"
   },
   {
    "at": "0x2076f08",
-   "text": "右"
+   "text": "Right"
   },
   {
    "at": "0x2076f0c",
-   "text": "左"
+   "text": "Left"
   },
   {
    "at": "0x2076f10",
-   "text": "左"
+   "text": "Left"
   },
   {
    "at": "0x2076f14",
-   "text": "右"
+   "text": "Right"
   },
   {
    "at": "0x2076f18",
-   "text": "左"
+   "text": "Left"
   },
   {
    "at": "0x2076f1c",
-   "text": "右"
+   "text": "Right"
   },
   {
    "at": "0x2076f20",
-   "text": "左"
+   "text": "Left"
   },
   {
    "at": "0x2076f24",
-   "text": "空中"
+   "text": "Air"
   },
   {
    "at": "0x2076f2c",
-   "text": "正面"
+   "text": "Front"
   },
   {
    "at": "0x2076f34",
-   "text": "正面"
+   "text": "Front"
   },
   {
    "at": "0x2076f3c",
-   "text": "正面"
+   "text": "Front"
   },
   {
    "at": "0x2076f44",
-   "text": "地上"
+   "text": "Ground"
   },
   {
    "at": "0x2076f4c",
@@ -1391,11 +1391,11 @@
   },
   {
    "at": "0x20770b4",
-   "text": "武装%d－%s－ｶﾒﾗ%d"
+   "text": "Weapon %d-%s-Camera %d"
   },
   {
    "at": "0x20770cc",
-   "text": "武装%d－%s－%s"
+   "text": "Weapon %d-%s-%s"
   },
   {
    "at": "0x2077124",

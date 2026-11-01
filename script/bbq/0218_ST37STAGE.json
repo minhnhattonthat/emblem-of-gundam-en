@@ -359,7 +359,7 @@
   "Resume Scenario",
   "Battle Start",
   "Hold 'Livermore Factory', 'Gate 1'\nand 'Gate 2' for 15 turns",
-  "Victory conditions cannot be met\nAll our units destroyed",
+  "Victory conditions not met\nAll allies destroyed",
   "Battle End",
   "In this battle,",
   "until turn 15, hold",

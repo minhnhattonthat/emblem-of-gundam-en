@@ -352,12 +352,12 @@
   "Losses\n",
   "Kills\n",
   " ",
-  "機",
-  "MAP07:宇宙ステージ５",
-  "シナリオ初期化",
-  "シナリオ解放",
-  "シナリオ再開",
-  "戦闘開始",
-  "戦闘終了"
+  "units",
+  "MAP07: Space Stage 5",
+  "Reset Scenario",
+  "Unlock Scenario",
+  "Resume Scenario",
+  "Battle Start",
+  "Battle End"
  ]
 }

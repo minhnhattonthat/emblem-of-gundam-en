@@ -352,12 +352,12 @@
   "Losses\n",
   "Kills\n",
   " ",
-  "機",
-  "MAP14:月面",
-  "シナリオ初期化",
-  "シナリオ解放",
-  "シナリオ再開",
-  "戦闘開始",
-  "戦闘終了"
+  "units",
+  "MAP14: Lunar Surface",
+  "Reset Scenario",
+  "Unlock Scenario",
+  "Resume Scenario",
+  "Battle Start",
+  "Battle End"
  ]
 }

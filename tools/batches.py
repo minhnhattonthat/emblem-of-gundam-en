@@ -99,7 +99,7 @@ def units():
     for stem in order:
         strs = jp[stem]
         ez = stem[:4]
-        speaker, name_at = "", -2
+        speaker, name_at, prev = "", -2, []
         for form, idx in blocks(stem, strs):
             ids = [f"{ez}:{i:04d}" for i in idx]
             if form == "name":
@@ -107,6 +107,9 @@ def units():
             elif name_at != idx[0] - 1:
                 speaker = ""  # a speaker label only names the speech right after it
             key = tuple(strs[i] for i in idx)
+            if len(prev) >= 8 and prev[-1] + 1 == idx[0] and not strs[prev[-1]].rstrip().endswith(END):
+                key = (stem,) + key  # tail of a sentence cut at 8 lines: its English depends on the lines before
+            prev = idx
             if key in seen:
                 seen[key][5].append(ids)
                 continue

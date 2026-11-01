@@ -146,6 +146,16 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | メラニー | Melanie | | Melanie Hue Carbine | |
 | ノイエン・ビッター | Noyen Bitter | | | |
 | ソロモンの悪夢 | Nightmare of Solomon | | Gato's title | |
+| ジョン・コーウェン | John Cowen | | 中将: Vice Admiral (D15) | |
+| ルセット・オデビー | Lucette Audevie | | | |
+| ラトーラ | Latora | | | |
+| オサリバン | O'Sullivan | | | |
+| フランクリン・ビダン | Franklin Bidan | | | |
+| ヒルダ・ビダン | Hilda Bidan | | | |
+| ライラ・ミラ・ライラ | Lila Milla Rira | | | |
+| クワトロ・バジーナ | Quattro Bajeena | | | |
+| ルオ・ウーミン | Luo Uu Ming | | | |
+| ハサウェイ | Hathaway | | | |
 
 ## Factions, places, eras
 | JP | EN | max | notes | Avoid |
@@ -199,6 +209,15 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | デラーズ紛争 | Delaz Conflict | | | |
 | カラマ・ポイント | Karama Point | | | |
 | 地球圏 | Earth Sphere | | | |
+| グリーン・ノア | Green Noa | | | |
+| グリーン・オアシス | Green Oasis | | | |
+| 30バンチ事件 | 30 Bunch Incident | | | |
+| ニュー・ホンコン | New Hong Kong | | | |
+| ケネディポート | Kennedy Port | | | |
+| オークリー | Oakley | | base | |
+| 阻止限界点 | point of no return | | | |
+| 第401警戒中隊 | 401st Patrol Squadron | | | |
+| ジオニスト | Zeonist | | not "Zionist" | Zionist |
 
 ## Units and ships
 | JP | EN | max | notes | Avoid |
@@ -316,6 +335,15 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | サイサリス | Physalis | | GP02A | |
 | ルナタンク | Luna Tank | | | |
 | バリュート | ballute | | | |
+| ステイメン | Stamen | | | |
+| オーキス | Orchis | | | |
+| フルバーニアン | Full Burnern | | GP01Fb | |
+| グワデン | Gwaden | | | |
+| ガルダ | Garuda | | | |
+| ガルバルディ | Galbaldy | | | |
+| テンプテーション | Temptation | | | |
+| ムーバブル・フレーム | movable frame | | | |
+| マスドライバー | mass driver | | | |
 
 ## UI and stat tags
 | JP | EN | max | notes | Avoid |
