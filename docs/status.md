@@ -2,9 +2,15 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase 8 (2026-11-02), in progress:** combat now English end to end (two playtests, `work/play/combat2`,
-  `combat3`; verified cold on build `70d48851`, session `work/play/fc3`: Confirm Move popup, forecast, battle,
-  result). Fixed this session:
+- **Phase 9 (release): next.** Done-when in the skill table: story-pass verdicts per chapter
+  (`work/qa/story/manifest.tsv`), `docs/polish.md` all ticked (232 open + 3 visual-QA wording notes), release
+  script running `qa_gate.py check` on every manifest, `jp_left.py` clean, debug tool off, patch built/re-applied,
+  README hashes, zip. No release script exists yet.
+- **Phase 8 (2026-11-02): complete.** Build `9b51ba44d3285e109252c43e71d04705e9c50c06`: 70 tests pass, lint 0,
+  smoke ok, cold tour `work/qa/tour` 373/373 scenes (ST06 is a scrapped stage, no scenes), `qa_gate.py check
+  work/qa/manifest.tsv work/qa/verdicts` = 18/18 sheets ok (visual-QA rounds r3-r5, `work/qa/verdicts/r*_*.tsv`).
+  Graphics rows not reachable in-game (preview only): 0450 scenario menu, 0402 building placeholder, 2239 portrait
+  tags. Combat English end to end (playtests `work/play/combat2`, `combat3`, cold check `fc3`). Fixed:
   - **Shared page lines** (D23): the VM reuses a line across pages (ST02 tutorial "In this state, press left / Here
     you can move units"); `tools/pages.py` lists them (`--narration`, `--shape`), `tests/test_pages.py` gates
     quote/indent shape. Two translator passes rewrote ~100 tutorial/narration pages (`docs/shared-lines-*brief.md`).
@@ -27,7 +33,8 @@ Updated at the end of every session. Keep it to what the next session needs; his
     box's X left to fit (`bbq.tutorial_boxes`, `docs/re/bbq.md`), verified on 61 st01_prep pages (`work/qa/tut3`);
     Scenario Chart title bar (DLG 2227) erases both halves to the middle teal (`dlg` style `seamT:X`).
   - Not surveyed: DLG 2248-4131 (battle sprites/cut-ins); the combat playtests saw no Japanese there.
-  - **Next:** full re-tour + `qa_gate.py init` + verdicts (fresh read-only pass), smoke, then phase 9.
+  - Every tour re-hashes ~17 of 18 sheets (frame timing): after any build change, the gate needs a fresh round of
+    4 visual-qa agents (`qa_gate.py todo --size 5`); a text-only fix can rerun just its scene with `--only`.
 - **Phase 7:** review remediation **complete** (2026-11-01).
   See `docs/phase7-remediation.md`. I1-I5 and M1 repaired; width coverage reports zero unresolved lines.
   Native call/domain evidence is in `docs/re/native-widths.md`, `native-domains.md` and `retirement-route.md`.

@@ -534,3 +534,8 @@ script refuses to run while any line is unticked.
 - [ ] 0088:0256 - "a job that happened to be military" odd - "that happened to be in the military;"
 - [ ] 0190:0008 - "and besides / only an elder sister" awkward - "the eldest, Gihren, and after him / only an elder sister, Kycilia,"
 - [ ] 0292:0021 - 先日の recon lost - "This was unlike the recent recon in force."
+
+## Visual QA notes (phase 8)
+- [ ] 0305:0366 - st60 intro "The battle to survive / had begun." while the box is present tense: "has begun"
+- [ ] 0301:0366 - st59 "The enemy makes its final attack." vs st63/st67 "launched": match tense
+- [ ] 0139:0362 - case of win/lose conditions differs between stages ("White Base destroyed" vs "All Allies Destroyed"): pick one
