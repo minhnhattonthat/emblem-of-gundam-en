@@ -20,6 +20,7 @@ katakana runs only (ジム does not match inside ジムカスタム).
 ## Characters
 | JP | EN | max | notes | Avoid |
 |---|---|---|---|---|
+| 射撃 (weapon trait) | Ranged | 44 px | map-panel Weapon cell is ~44 px; pairs with 格闘 Melee | Shooting (overflowed with its "-") |
 | アムロ | Amuro | | アムロ・レイ Amuro Ray | Amro |
 | ブライト | Bright | | ブライト・ノア Bright Noa | Brite |
 | セイラ | Sayla | | セイラ・マス Sayla Mass; Artesia | Seira |

@@ -131,13 +131,137 @@ def credit_page(d, lines):
     return d[:0x1c] + new + d[0x1c + len(pix):]
 
 
+BPP = {2: 2, 3: 4, 4: 8}  # DS texture formats handled: 4-colour, 16-colour, 256-colour
+
+
+def textures(lga, p):
+    """Sub-textures of a DLG from its LGA's texture table: 16-byte records (u16 palette base in 8-colour units,
+    u16 format, u16 id, u16 1, u16 S, u16 T (size 8<<n), u32 byte offset into the pixels), ids consecutive and
+    offsets ascending. Height = bytes up to the next offset (rows past it are padding the DLG doesn't store)."""
+    best = []
+    for at in range(0, len(lga) - 16, 2):
+        recs = []
+        for q in range(at, len(lga) - 15, 16):
+            pal, fmt, tid, _, s, t, off = struct.unpack_from("<HHHHHHI", lga, q)
+            if fmt not in (1, 2, 3, 4, 6, 7) or s > 7 or t > 7 or off >= p or (recs and (
+                    tid != recs[-1]["id"] + 1 or off <= recs[-1]["off"])):
+                break
+            recs.append({"id": tid, "fmt": fmt, "pal": pal * 8, "w": 8 << s, "off": off})
+        if len(recs) > len(best):
+            best = recs
+    for k, r in enumerate(best):
+        end = best[k + 1]["off"] if k + 1 < len(best) else p
+        r["h"] = (end - r["off"]) * 8 // (BPP.get(r["fmt"], 8) * r["w"])
+    return {r["id"]: r for r in best}
+
+
+def _get(pix, r):
+    b, w = BPP[r["fmt"]], r["w"]
+    n = w * r["h"]
+    raw = pix[r["off"]:r["off"] + n * b // 8]
+    if b == 8:
+        v = list(raw)
+    elif b == 4:
+        v = [x for c in raw for x in (c & 15, c >> 4)]
+    else:
+        v = [c >> s & 3 for c in raw for s in (0, 2, 4, 6)]
+    return [v[y * w:(y + 1) * w] for y in range(r["h"])]
+
+
+def _put(pix, r, rows):
+    b = BPP[r["fmt"]]
+    v = [x for row in rows for x in row]
+    if b == 8:
+        raw = bytes(v)
+    elif b == 4:
+        raw = bytes(v[i] | v[i + 1] << 4 for i in range(0, len(v), 2))
+    else:
+        raw = bytes(v[i] | v[i + 1] << 2 | v[i + 2] << 4 | v[i + 3] << 6 for i in range(0, len(v), 4))
+    pix[r["off"]:r["off"] + len(raw)] = raw
+
+
+def _rgb(c):
+    return ((c & 31) << 3, (c >> 5 & 31) << 3, (c >> 10 & 31) << 3)
+
+
+def relabel(d, lga, edits_):
+    """Redraw text rects in sub-textures: [(tex id, (x, y, w, h), text, font px, style)]. The rect is cleared by
+    interpolating each row between the pixels just left and right of it, then the text is drawn centred in the
+    original's lightest colour, with a 1 px outline (style "outline") or a +1,+1 shadow ("shadow") in its darkest
+    colour, and every pixel snapped to the nearest opaque colour of the texture's own palette slice."""
+    pix, pal = parse(d)
+    pix = bytearray(pix)
+    texs = textures(lga, len(pix))
+    for tid, (x, y, w, h), text, size, style in edits_:
+        r = texs[tid]
+        rows = _get(pix, r)
+        n = 1 << BPP[r["fmt"]]
+        cols = {i: _rgb(pal[r["pal"] + i]) for i in range(1, n) if r["pal"] + i < len(pal)}
+        lum = lambda c: c[0] * 3 + c[1] * 6 + c[2]  # noqa: E731
+        inside = [cols[rows[yy][xx]] for yy in range(y, y + h) for xx in range(x, x + w) if rows[yy][xx]]
+        ink, dark = max(inside, key=lum), min(inside, key=lum)
+        im = Image.new("RGB", (w, h))
+        for yy in range(h):
+            a, b = rows[y + yy][x - 1], rows[y + yy][x + w]
+            ca, cb = cols.get(a, (0, 0, 0)), cols.get(b, (0, 0, 0))
+            for xx in range(w):
+                t = (xx + 1) / (w + 1)
+                im.putpixel((xx, yy), tuple(round(ca[k] * (1 - t) + cb[k] * t) for k in range(3)))
+        font = ImageFont.truetype(str(ROOT / "fonts" / "LiberationSans-Bold.ttf"), size)
+        l, _, rr, _ = font.getbbox(text)
+        _, t, _, bb = font.getbbox("H")
+        pos = ((w - (rr - l)) // 2 - l, (h - (bb - t)) // 2 - t)
+        m = Image.new("L", (w, h))
+        ImageDraw.Draw(m).text(pos, text, font=font, fill=255)
+        assert m.getbbox() and m.getbbox()[0] > 0 and m.getbbox()[2] < w, f"{text!r} does not fit {w} px"
+        ma = m.load()
+        under = Image.new("L", (w, h))
+        ua = under.load()
+        for yy in range(h):
+            for xx in range(w):
+                if style == "outline":
+                    ua[xx, yy] = max(ma[xx + dx, yy + dy] for dx in (-1, 0, 1) for dy in (-1, 0, 1)
+                                     if 0 <= xx + dx < w and 0 <= yy + dy < h)
+                elif style == "shadow" and xx and yy:
+                    ua[xx, yy] = ma[xx - 1, yy - 1]
+        im = Image.composite(Image.new("RGB", (w, h), dark), im, under)
+        im = Image.composite(Image.new("RGB", (w, h), ink), im, m)
+        keys = list(cols)
+        for yy in range(h):
+            for xx in range(w):
+                c = im.getpixel((xx, yy))
+                rows[y + yy][x + xx] = min(keys, key=lambda i: sum((cols[i][k] - c[k]) ** 2 for k in range(3)))
+        _put(pix, r, rows)
+    return d[:0x1c] + bytes(pix) + d[0x1c + len(pix):]
+
+
+def texture_image(d, lga, tid):
+    pix, pal = parse(d)
+    r = textures(lga, len(pix))[tid]
+    im = Image.new("RGB", (r["w"], r["h"]), (255, 0, 255))
+    for y, row in enumerate(_get(pix, r)):
+        for x, v in enumerate(row):
+            if v:
+                im.putpixel((x, y), _rgb(pal[r["pal"] + v]))
+    return im
+
+
+# {DLG id: [(sub-texture id, (x, y, w, h), text, font px, style)]}: Japanese captions in 3D-layer UI textures
+TEXT = {
+    2233: [(t, (18, 2, 114, 19), s, 12, "shadow") for t, s in (  # win/lose condition screen banners (briefNN)
+        (3, "Victory Conditions"), (4, "Victory Conditions"), (5, "Defeat Conditions"), (6, "Defeat Conditions"))],
+}
+
+
 def ids():
-    return set(CREDITS)
+    return set(CREDITS) | set(TEXT)
 
 
 def edits(tbl, dat, unpack):
-    raw = unpack(tbl, dat, ids())
-    return {i: credit_page(raw[i], CREDITS[i]) for i in CREDITS}
+    raw = unpack(tbl, dat, ids() | {i - 1 for i in TEXT})
+    out = {i: credit_page(raw[i], CREDITS[i]) for i in CREDITS}
+    out.update({i: relabel(raw[i], raw[i - 1], e) for i, e in TEXT.items()})
+    return out
 
 
 def image(d, w=W):
