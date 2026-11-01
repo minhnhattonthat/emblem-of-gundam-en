@@ -64,6 +64,8 @@ SCENES.chart = extend("st30_prep", { { "press", "down", 4 }, { "press", "a" } })
 SCENES.save = extend("st30_prep", { { "press", "down", 5 }, { "press", "a" } })   -- セーブ
 -- Map: start the battle, then open the map command menu (A on an empty cell), with its デバッグ item.
 SCENES.map = extend("st30_prep", { { "press", "up" }, { "press", "a" }, { "wait", 400 } })
+SCENES.map_team = extend("map", { { "press", "x" }, { "wait", 120 } }, true)  -- team info (0444 atlas)
+SCENES.map_chara = extend("map", { { "press", "y" }, { "wait", 120 } }, true) -- character info (0444 atlas)
 SCENES.mapmenu = extend("map", { { "press", "right", 30 }, { "read", MAPMENU, { "a" } } }, true)
 SCENES.debugmenu = extend("mapmenu", { { "press", "down", 5 }, { "press", "a" } }, true)
 SCENES.victory = extend("debugmenu", { { "wait", 30 }, { "press", "a" }, { "wait", 30 }, { "press", "a" } }, true)
