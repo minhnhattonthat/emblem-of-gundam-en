@@ -2,7 +2,8 @@
 
 Updated at the end of every session. Keep it to what the next session needs; history is in git.
 
-- **Phase:** 6 (translate in batches) in progress 2026-11-01; phase 5 done.
+- **Phase:** 6 (translate) **done** 2026-11-01; next is phase 7 (insert, fit, check: width/overflow lint against
+  `tbl/windows.json`, control codes, `romdiff.py`, `jp_left.py`).
 - **Done:**
   - Step 0: DeSmuME QA fork qa-2 in `tools/desmume/`, smoke boots the original ROM (title -> menu -> opening card),
     Lua probe logs, pre-commit rejects a failing test, guard hook blocks `sed -i`, `rom.sha1` pinned, `tools/check.py`.
@@ -51,7 +52,19 @@ Updated at the end of every session. Keep it to what the next session needs; his
     reviewed by **review-and-fix agents** (`docs/review-fix-brief.md`: translator type, reviews batches it didn't
     write, fixes Critical/Important itself, logs Minors to `work/tl/minors_<batch>.md` -> fold into docs/polish.md).
     Use review-and-fix for the rest: reviewer agents can't write files and their full reports flood the controller.
-    b061-b090 dispatched to translators; b091-b160 not yet dispatched.
+  - **Done 2026-11-01:** b001-b160 translated, every batch review-fixed (no open Critical/Important), all merged:
+    `batches.py status` = 66033/66033 (100 %), `check` 0 errors on all 161 batches, build + 28 tests + smoke green,
+    English renders in the st56 story box (`work/qa/p6_st56/`). b161 = 58 punctuation-only strings the splitter
+    skips (「……」, 、。, Ⅱ) converted mechanically. Rulings D15 (navy 中佐/大佐/中将; Colonel Bask/M'Quve/Char,
+    General Revil kept). Stage labels normalised: 敵全滅 "All Enemies Destroyed", 自軍全滅 "All Allies Destroyed",
+    敵機N機以上撃破 "Destroy N+ enemy units", 味方機N機以上撃破 "N+ allied units destroyed".
+    Check now accepts glossary terms wrapped across lines and y->ies plurals; a literal ％ in a printf string must
+    be `%%`. Dedup fix: the tail of a sentence cut at 8 lines no longer dedups across tables (0292:0150 had got
+    another scene's "a nuisance.").
+  - **Open from phase 6 (for phase 7/8 QA):** `docs/polish.md` has 291 unticked Minors (release blocks on them).
+    a9:02072b9c `%d%%` - confirm in-game the formatter prints one `%`. a9:02072bc4 `〆` left as the game's glyph
+    (context unknown). arm9 labels over their JP width (Artillery/Transform/Organize, Left/Right) need an in-game
+    width check. Debug-only screens (0017/0018 ●○【EXE】) left as is.
   - Workflow: translator agents (3-5 batches each) -> `batches.py check` OK -> reviewer (sonnet) on
     `pairs.py work/tl/pairs_<x>.txt <batches>` -> Critical/Important fixed by the same translator -> `merge` ->
     commit. Minors go to `docs/polish.md`. work/tl is gitignored: **merge + commit after every wave**, a lost

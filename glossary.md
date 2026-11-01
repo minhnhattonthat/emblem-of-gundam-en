@@ -218,6 +218,15 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | 阻止限界点 | point of no return | | | |
 | 第401警戒中隊 | 401st Patrol Squadron | | | |
 | ジオニスト | Zeonist | | not "Zionist" | Zionist |
+| ネオ・ジオン | Neo Zeon | | | |
+| モウサ | Moussa | | | |
+| マハル | Mahal | | | |
+| メールシュトローム作戦 | Operation Maelstrom | | | |
+| グリプス戦役 | Gryps Conflict | | | |
+| ムラサメ研究所 | Murasame Lab | | | |
+| オーガスタ研 | Augusta Institute | | | |
+| シャイアン | Cheyenne | | base | |
+| 宇宙機動軍 | Space Mobile Forces | | | |
 
 ## Units and ships
 | JP | EN | max | notes | Avoid |
@@ -344,6 +353,13 @@ katakana runs only (ジム does not match inside ジムカスタム).
 | テンプテーション | Temptation | | | |
 | ムーバブル・フレーム | movable frame | | | |
 | マスドライバー | mass driver | | | |
+| グワダン | Gwadan | | Haman's ship; not グワデン Gwaden (Delaz's) | |
+| ニーベルング | Nibelung | | ship | |
+| バーミンガム | Birmingham | | ship | |
+| ミノフスキー・クラフト | Minovsky Craft | | | |
+| シュツルム・ブースター | Sturm Booster | | | |
+| バイオ・センサー | bio-sensor | | | |
+| Ｉフィールド | I-Field | | | |
 
 ## UI and stat tags
 | JP | EN | max | notes | Avoid |

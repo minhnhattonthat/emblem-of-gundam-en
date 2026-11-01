@@ -309,7 +309,8 @@ def check(name):
             errs.append(f"{i}: \\u escape")
         if JP_RE.search(en):
             errs.append(f"{i}: Japanese left")
-        tj = sorted(TOKEN_RE.findall(jp.replace("％", "%").replace("%%", "")))
+        pct = "%%" if re.search(r"%[ds]", jp) else "%"  # a literal percent in a printf string must be %%
+        tj = sorted(TOKEN_RE.findall(jp.replace("％", pct).replace("%%", "")))
         te = sorted(TOKEN_RE.findall(en.replace("%%", "")))
         if tj != te:
             errs.append(f"{i}: codes {tj} != {te}")
