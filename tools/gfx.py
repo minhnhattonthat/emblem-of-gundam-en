@@ -175,6 +175,12 @@ LABELS = {
         (4, 163, 38, 11, 337, "Weapon"), (56, 163, 34, 11, 337, "Attack"), (102, 163, 38, 11, 337, "Defense"),
         (153, 163, 38, 11, 337, "Terrain"),
     ],
+    360: [  # title: the katakana reading under the English logo goes (D16), © 創通・サンライズ -> SOTSU・SUNRISE
+        (86, 112, 92, 12, 337, ""), (168, 179, 86, 12, 337, "SOTSU・SUNRISE", "l"),
+    ],
+    2121: [  # staff roll "Produced by" card
+        (18, 95, 220, 20, ("LiberationSerif-Bold.ttf", 15), "BANDAI NAMCO Games Inc."),
+    ],
     450: [  # scenario menu
         (74, 1, 112, 14, 336, "Scenario Menu"), (8, 177, 172, 14, 336, "See how the scenario unfolds"),
         (216, 177, 30, 14, 336, "Back"),
@@ -186,12 +192,12 @@ def _glyphs(fid, d):
     import nftr
     f = nftr.parse(d)
     out = {}
-    for c in range(0x21, 0x7F):
+    for c in list(range(0x21, 0x7F)) + [0x8145]:  # ASCII + ・ (Shift-JIS 8145, the official "SOTSU・SUNRISE")
         if c in f["cmap"]:
             rows = nftr.glyph(f, d, f["cmap"][c])
             xs = [x for r in rows for x, v in enumerate(r) if v]
             if xs:
-                out[chr(c)] = [r[min(xs):max(xs) + 1] for r in rows]
+                out[chr(c) if c < 0x80 else "・"] = [r[min(xs):max(xs) + 1] for r in rows]
     return out
 
 
@@ -219,14 +225,25 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
     cols = wpx // 8
     refs = Counter(e & 0x3FF for e in ent)
     free = list(range(max(refs) + 1, len(ts)))  # never-referenced slots past the last used tile
-    for x0, y0, w, h, fid, text in LABELS[cid]:
+    ncol = 256 if g["bpp"] == 8 else 16
+
+    def colour_at(x, y):
+        if (x, y) in px:
+            return px[x, y]
+        e = ent[(y // 8) * cols + x // 8]
+        k = (7 - y % 8 if e >> 11 & 1 else y % 8) * 8 + (7 - x % 8 if e >> 10 & 1 else x % 8)
+        return pal[((e >> 12) * ncol + ts[e & 0x3FF][k]) % len(pal)]
+
+    for x0, y0, w, h, fid, text, *align in LABELS[cid]:
         cells = [(cx, cy) for cy in range(y0 // 8, (y0 + h - 1) // 8 + 1) for cx in range(x0 // 8, (x0 + w - 1) // 8 + 1)]
         tid = {c: ent[c[1] * cols + c[0]] for c in cells}
-        px = {}
+        # work in RGB: cells may sit on different (extended) palette slots, so raw indices don't compare
+        idx, px = {}, {}
         for (cx, cy), e in tid.items():
             for k, v in enumerate(ts[e & 0x3FF]):
                 x, y = k % 8, k // 8
-                px[cx * 8 + (7 - x if e >> 10 & 1 else x), cy * 8 + (7 - y if e >> 11 & 1 else y)] = v
+                xy = cx * 8 + (7 - x if e >> 10 & 1 else x), cy * 8 + (7 - y if e >> 11 & 1 else y)
+                idx[xy], px[xy] = v, pal[((e >> 12) * ncol + v) % len(pal)]
         # a tile used outside these cells, or flipped, gets a fresh slot; the others are edited in place
         for c, e in tid.items():
             if e >> 10 & 3 or refs[e & 0x3FF] > 1:
@@ -235,13 +252,13 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
                 refs[e & 0x3FF] -= 1
                 tid[c] = (e & 0xF000) | free.pop(0)
                 ent[c[1] * cols + c[0]] = tid[c]
+        before = dict(px)
         box = {(x, y): px[x, y] for y in range(y0, y0 + h) for x in range(x0, x0 + w)}
         ring = {v for (x, y), v in box.items() if x in (x0, x0 + w - 1) or y in (y0, y0 + h - 1)}
         inks = Counter(v for v in box.values() if v not in ring)
         if not inks:
             raise ValueError(f"{cid}: no ink in {(x0, y0, w, h)}")
-        p = (tid[cells[0]] >> 12) * 256  # 8bpp extended palette slot
-        lum = lambda i: sum(pal[(p + i) % len(pal)])  # noqa: E731
+        lum = sum  # noqa: E731  (an RGB tuple's brightness)
         ring_lum = sum(lum(v) for v in ring) / len(ring)
         top = inks.most_common(1)[0][1]
         # 11 px labels sit on gradient bars whose inner shades beat the ink in count: take the strongest contrast
@@ -251,28 +268,56 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
         sh = Counter(box.get((x + dx, y + dy)) for (x, y), v in box.items() if v == ink for dx, dy in ((1, 0), (0, 1)))
         sh = [(n, i) for i, n in sh.items() if i in inks and i != ink]
         shadow = max(sh)[1] if sh and max(sh)[0] > inks[ink] // 4 else None
-        for y in range(y0, y0 + h):  # erase: each ink pixel takes the nearest background pixel of its row
+        if not text:  # pure erase over artwork: blend each column from the row above the box to the row below
+            def soft(x, y):  # 7 px horizontal average: a single bright pixel above/below would streak down
+                cs = [colour_at(min(max(i, 0), wpx - 1), y) for i in range(x - 3, x + 4)]
+                return tuple(sum(c[k] for c in cs) / len(cs) for k in range(3))
+            for x in range(x0, x0 + w):
+                a, c = soft(x, y0 - 1), soft(x, y0 + h)
+                for y in range(y0, y0 + h):
+                    t = (y - y0 + 1) / (h + 1)
+                    px[x, y] = tuple(round(u + (v - u) * t) for u, v in zip(a, c))
+        for y in range(y0, y0 + h) if text else ():  # erase: an ink pixel takes the nearest background of its row
             row = [px[x, y] for x in range(x0, x0 + w)]
             bgx = [k for k, v in enumerate(row) if v not in inks]
             for k, v in enumerate(row):
                 if v in inks:
                     px[x0 + k, y] = row[min(bgx, key=lambda j: abs(j - k))]
-        pts = _text_mask(text, fonts[fid]) or [(0, 0)]  # "" = erase only (drawn under the erased bg below)
-        if not text:
-            shadow = ink = px[x0, y0]
-        tw = max(p[0] for p in pts) + 1 + (shadow is not None)
-        ys = [p[1] for p in pts]
-        th = max(ys) - min(ys) + 1 + (shadow is not None)
-        if tw > w:
-            raise ValueError(f"{cid}: {text!r} {tw}px > {w}px")
-        ox, oy = x0 + (w - tw) // 2, y0 + (h - th) // 2 - min(ys)
-        for layer, idx, d in ((shadow, shadow, 1), (ink, ink, 0)):
-            if layer is None:
+        if isinstance(fid, tuple):  # (ttf name in fonts/, px size): antialiased, coverage blended in RGB
+            f = ImageFont.truetype(str(FONTS / fid[0]), fid[1])
+            m = Image.new("L", (int(f.getlength(text)) + 4, fid[1] * 2), 0)
+            ImageDraw.Draw(m).text((0, 0), text, font=f, fill=255)
+            cov = {(x, y): a / 255 for (x, y), a in zip(((i % m.width, i // m.width) for i in range(m.width * m.height)), m.getdata()) if a}
+            pts = list(cov)
+        else:
+            pts = _text_mask(text, fonts[fid])  # "" = erase only
+            cov = dict.fromkeys(pts, 1.0)
+        if pts:
+            tw = max(p[0] for p in pts) + 1 + (shadow is not None)
+            ys = [p[1] for p in pts]
+            th = max(ys) - min(ys) + 1 + (shadow is not None)
+            if tw > w:
+                raise ValueError(f"{cid}: {text!r} {tw}px > {w}px")
+            ox = x0 + (1 if align == ["l"] else (w - tw) // 2)
+            oy = y0 + (h - th) // 2 - min(ys)
+        for colour, d in ((shadow, 1), (ink, 0)):
+            if colour is None or not pts:
                 continue
             for x, y in pts:
-                px[ox + x + d, oy + y + d] = idx
+                xy, a = (ox + x + d, oy + y + d), cov[x, y]
+                px[xy] = colour if a == 1 else tuple(round(u + (v - u) * a) for u, v in zip(px[xy], colour))
+        near = {}
         for (cx, cy), e in tid.items():
-            ts[e & 0x3FF] = [px[cx * 8 + k % 8, cy * 8 + k // 8] for k in range(64)]
+            q = (e >> 12) * ncol
+            for k in range(64):  # a changed pixel takes the nearest colour of its own cell's palette slot
+                xy = (cx * 8 + k % 8, cy * 8 + k // 8)
+                if px[xy] != before[xy]:
+                    key = (q, px[xy])
+                    if key not in near:
+                        near[key] = min(range(ncol), key=lambda i: sum(
+                            (a - b) ** 2 for a, b in zip(pal[(q + i) % len(pal)], px[xy])))
+                    idx[xy] = near[key]
+            ts[e & 0x3FF] = [idx[cx * 8 + k % 8, cy * 8 + k // 8] for k in range(64)]
     gb = nitro2d.block(ncgr)
     size, off = struct.unpack_from("<II", gb, 24)
     data_at = 0x10 + (8 + off if off else 0x20)

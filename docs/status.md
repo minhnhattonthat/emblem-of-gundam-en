@@ -13,16 +13,19 @@ Updated at the end of every session. Keep it to what the next session needs; his
     (lint now keeps it identical to the 0000 stage list; 6 mismatches fixed), Liberation Sans/Serif Bold 20 px
     (`fonts/`, OFL, `docs/fonts.md`), caption ramp of each card, re-tiled into the same 256-tile NCGR; logo rows
     untouched (`tests/test_gfx.py`). Card 1129 "06" kept. Seen in-game (st13/st20 warps, `work/qa/cards/`).
-  - **UI labels: in progress** (`gfx.LABELS`, redrawn in place with the game's own 9/11 px NFTR fonts; these
-    screens give every visible cell its own tile): 0375 stage info, 0378 battle forecast, 0450 scenario menu done
-    in preview (`python -X utf8 tools/gfx.py preview` -> `work/gfx_en/ui_*.png`); `tools/gfxgrid.py ID` draws a
-    screen with a tile grid to read label bboxes. Not yet in-game checked.
-  - **Next:** 0444 team info (flipped tiles, 4 palettes: check the shared-tile assert), 0340/0344 tile sheets
-    (zoom, sprites), 0402 建物, title katakana subtitle + © 創通・サンライズ (0360/0372), credits 2121
-    (株式会社 バンダイナムコゲームス) + the end caption `- エンブレム オブ ガンダム -`, the **win/lose banners
-    勝利条件/敗北条件** (briefNN scene; missing from the phase 1 survey, source not found yet). GAME OVER is already
-    English art. Then: warp scenes for the forecast/team-info/scenario menu (debug tool), `warp_all.py` on the EN
-    build, `qa_gate.py init` over the sheets, visual-QA verdicts (fresh read-only pass), smoke.
+  - **UI labels** (`gfx.LABELS`: pixel bbox of the Japanese, font = game NFTR 336/337 or a TTF tuple; works in
+    RGB so cells on other extended-palette slots snap to their own slot; shared/flipped tiles get never-referenced
+    slots and the NSCR is repointed; "" = erase, blended from the rows above/below): 0375 stage info (**seen
+    in-game**, `work/qa/ui/map_top.png`), title 0360 (reading erased + "© SOTSU・SUNRISE", D16, **seen in-game**),
+    credits 2121 "BANDAI NAMCO Games Inc." (preview), 0378 forecast, 0444 team info, 0450 scenario menu (preview
+    only: no warp reaches them yet). `python -X utf8 tools/gfx.py preview` -> `work/gfx_en/ui_*.png` (preview
+    colours are wrong on extended-palette cells; trust the emulator); `tools/gfxgrid.py ID` = tile grid view.
+  - **Next:** warp scenes for forecast/team info/scenario menu/credits card (debug tool) and check them in-game;
+    0444 terrain strip 隠蔽/水/空/宇 (16 px boxes, not done); 0340/0344 sprite tile sheets (zoom), 0402 建物;
+    the end caption `- エンブレム オブ ガンダム -` (source unknown: last credits frame); the **win/lose banners
+    勝利条件/敗北条件** (briefNN scene; missing from the phase 1 survey, source not found). GAME OVER is already
+    English art. Then `qa_gate.py init` over the tour sheets (`work/qa/tour/`, warp_all at 900 frames on the
+    EN build), visual-QA verdicts (fresh read-only pass), smoke.
 - **Phase 7 (this session):**
   - Gates green: build, `tools/check.py` 37 tests (incl. `test_lint` = `tools/lint.py` 0 errors: font chars, control
     codes JP==EN, trailing space, width vs `tbl/windows.json`, stub last lines), `tools/romcheck.py` 0 unexpected
