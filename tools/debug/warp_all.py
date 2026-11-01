@@ -71,12 +71,18 @@ def main():
     names = [n for n in scene_names() if re.search(a.only, n)]
     with ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(lambda n: run(os.path.abspath(a.rom), n, a.out, a.frames), names))
-    with open(os.path.join(a.out, "summary.tsv"), "w", encoding="utf-8") as f:
+    summ = os.path.join(a.out, "summary.tsv")
+    rows = {}  # an --only rerun updates its rows and keeps the others
+    if os.path.exists(summ):
+        rows = {ln.split("\t")[0]: ln for ln in open(summ, encoding="utf-8").read().splitlines()[1:] if ln}
+    for r in res:
+        rows[r[0]] = "\t".join([r[0], "ok" if r[1] else "FAIL", *r[2:]])
+    with open(summ, "w", encoding="utf-8") as f:
         f.write("scene\tok\twarp_frame\tscript\tproblem\n")
-        for r in res:
-            f.write("\t".join([r[0], "ok" if r[1] else "FAIL", *r[2:]]) + "\n")
+        f.write("".join(rows[n] + "\n" for n in scene_names() if n in rows))
+    every = scene_names()  # sheets always cover every scene shot so far, not just this run's
     for g in sorted({group(n) for n in names}):
-        shots = [os.path.join(a.out, "shots", n + ".png") for n in names if group(n) == g]
+        shots = [os.path.join(a.out, "shots", n + ".png") for n in every if group(n) == g]
         shots = [s for s in shots if os.path.exists(s)]
         if shots:
             sheet.make(shots, out=os.path.join(a.out, f"sheet_{g}.png"), cols=6, limit=24)

@@ -20,6 +20,13 @@ Updated at the end of every session. Keep it to what the next session needs; his
     credits 2121 "BANDAI NAMCO Games Inc." (preview), 0378 forecast, 0444 team info, 0450 scenario menu (preview
     only: no warp reaches them yet). `python -X utf8 tools/gfx.py preview` -> `work/gfx_en/ui_*.png` (preview
     colours are wrong on extended-palette cells; trust the emulator); `tools/gfxgrid.py ID` = tile grid view.
+  - **QA tour:** `warp_all.py build/eog_en.nds --frames 900 --out work/qa/tour` = 359/359 scenes ok (16 sheets,
+    one final shot per scene; `--only` reruns now keep the other rows and rebuild full sheets). Gate:
+    `qa_gate.py init work/qa/manifest.tsv work/qa/tour --glob "sheet_*.png"`, 4 chunks, verdicts in
+    `work/qa/verdicts/` from visual-qa agents (`docs/visual-qa-brief.md`; JP reference = `work/qa/warps/`).
+  - **Banner source:** VRAM dump at brief01 f5400 (`work/qa/brief_dump/`): not a BG file; the 勝利条件/敗北条件
+    banners are OBJ sprites, most likely from sprite sheet 0340 (+ its cells 0343, 1D-mapped 4bpp) - edit needs
+    the NCER cells (which tiles form each banner).
   - **Next:** warp scenes for forecast/team info/scenario menu/credits card (debug tool) and check them in-game;
     0444 terrain strip 隠蔽/水/空/宇 (16 px boxes, not done); 0340/0344 sprite tile sheets (zoom), 0402 建物;
     the end caption `- エンブレム オブ ガンダム -` (source unknown: last credits frame); the **win/lose banners
