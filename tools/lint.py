@@ -136,7 +136,13 @@ def stage_names(jp, cur):
         j, e = jp[stem][351], cur[stem][351]
         if j in names and names[j] != e:
             out.append(f"{stem}:0351: stage name {e!r} != stage list {names[j]!r}")
+        if fit.px(e) > STAGE_NAME_PX:
+            out.append(f"{stem}:0351: stage name {e!r} {fit.px(e)} px > {STAGE_NAME_PX} (prep name bar)")
     return out
+
+
+# shortcut: prep/brief name bar wraps past ~155 px (st61 at 156 lost the O's edge, visual QA 2026-11-01); margin kept
+STAGE_NAME_PX = 150
 
 
 def honorifics(jp, cur):
