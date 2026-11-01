@@ -33,9 +33,9 @@
    "shots": ["work/qa/markers_id/extras/final.png", "work/qa/markers_id/load/final.png"]
   },
   "story_dialogue": {
-   "px": 180, "lines": 3, "line_pitch": 15, "x": 33, "font": 336, "measured": false,
-   "note": "PLACEHOLDER: no scene in the warp list reaches a story dialogue window with a portrait yet. Before phase 6 dispatch, find one (warp a later page of a stage intro, or the 0x1006 message-window test script) and measure it.",
-   "shots": []
+   "px": 180, "lines": 3, "line_pitch": 12, "x": 9, "font": 336, "measured": true,
+   "note": "Portrait message window on the lower screen (MILITARY tables, stage-intro dialogue): reached by warping st01_open and mashing A ~5250 frames. A 40-digit ruler (tools/mark.py --ruler 40 --only MILITARY) clips at ink x=183 (x 9-183), the same 180 px line buffer as the stage card; 3 lines at y 336/348/360.",
+   "shots": ["work/qa/dlg3/f005250.png", "work/qa/dlg3/f006000.png"]
   }
  }
 }
