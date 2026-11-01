@@ -182,6 +182,10 @@ LABELS = {
             (17, "Atk"), (33, "Def"), (49, "Move"), (65, "Cost"), (81, "Supply"))],
         *[(x0 + 16 * k, y0, 16, 13, 337, s, "v", f"c{x0 - 4}", "W") for x0, y0 in ((40, 353), (168, 353), (168, 81)) for k, s in enumerate(
             ("Lnd", "Rgh", "Wtr", "Air", "Spc"))],
+        # top-right screen = ユニット情報 (map_unit), bottom-right = キャラクター情報 (map_chara)
+        (346, 1, 78, 15, 336, "Unit Info", "h", "W"), (336, 257, 104, 15, 336, "Character Info", "h", "W"),
+        *[(258, 33 + 16 * k, 28, 13, 337, s) for k, s in enumerate(("Atk", "Def", "Move", "Cost", "Supply", "Mob"))],
+        *[(424 + 16 * k, 81, 16, 13, 337, s, "v", "c420", "W") for k, s in enumerate(("Lnd", "Rgh", "Wtr", "Air", "Spc"))],
     ],
     360: [  # title: the katakana reading under the English logo goes (D16), © 創通・サンライズ -> SOTSU・SUNRISE
         (86, 112, 92, 12, 337, ""), (168, 179, 86, 12, 337, "SOTSU・SUNRISE", "l"),
@@ -309,6 +313,16 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
             for y in range(y0, y0 + h):
                 for x in range(x0, x0 + w):
                     px[x, y] = colour_at(int(cfl[0][1:]), y)
+        elif "h" in align:  # title bar whose glyph strokes reuse the bar's glow colours: each column takes its most
+            # common saturated colour (the glow is a horizontal gradient only; the glyphs are white/grey), then the
+            # median of 5 columns drops what is left of glyph stems
+            sat = lambda c: max(c) - min(c) >= 0.6 * max(max(c), 1)  # noqa: E731
+            col = [(Counter(px[x, y] for y in range(y0 + 1, y0 + h - 1) if sat(px[x, y]))
+                    or Counter([px[x, y0 + 1]])).most_common(1)[0][0] for x in range(x0, x0 + w)]
+            col = [sorted(col[max(i - 2, 0):i + 3], key=sum)[len(col[max(i - 2, 0):i + 3]) // 2] for i in range(w)]
+            for y in range(y0 + 1, y0 + h - 1):
+                for x in range(x0, x0 + w):
+                    px[x, y] = col[x - x0]
         elif not text or "b" in align:  # erase over artwork: blend each column from the row above the box to below
             def soft(x, y):  # 7 px horizontal average: a single bright pixel above/below would streak down
                 cs = [colour_at(min(max(i, 0), wpx - 1), y) for i in range(x - 3, x + 4)]
@@ -318,7 +332,7 @@ def label_edits(cid, ncgr, nscr, nclr, fonts):
                 for y in range(y0, y0 + h):
                     t = (y - y0 + 1) / (h + 1)
                     px[x, y] = tuple(round(u + (v - u) * t) for u, v in zip(a, c))
-        for y in range(y0, y0 + h) if text and "b" not in align and not cfl else ():  # ink takes its row's nearest bg
+        for y in range(y0, y0 + h) if text and "b" not in align and "h" not in align and not cfl else ():  # ink takes its row's nearest bg
             row = [px[x, y] for x in range(x0, x0 + w)]
             bgx = [k for k, v in enumerate(row) if v not in inks]
             for k, v in enumerate(row):

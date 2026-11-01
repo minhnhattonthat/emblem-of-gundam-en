@@ -24,22 +24,19 @@ Updated at the end of every session. Keep it to what the next session needs; his
     one final shot per scene; `--only` reruns now keep the other rows and rebuild full sheets). Gate:
     `qa_gate.py init work/qa/manifest.tsv work/qa/tour --glob "sheet_*.png"`, 4 chunks, verdicts in
     `work/qa/verdicts/` from visual-qa agents (`docs/visual-qa-brief.md`; JP reference = `work/qa/warps/`).
-  - **Visual-QA round 1 (4 chunks, all `issue`):** fixed: stage names over the 150 px prep/brief name bar (8
-    shortened, lint check). Open: (a) **3D-layer textures** - engine A BG0 is 3D in every UI scene; the win/lose
-    banners, button captions 戻る/決定/次へ/情報/メニュー, result panel 戦果ポイント/獲得ポイント/所持ポイント/戦果合計,
-    chart header シナリオ チャート, st03 baton header 歴史のバトンを何処につなぐ？ and the **17 staff-roll pages** are
-    `\0DLG` textures (`docs/re/graphics.md` §DLG; format half-decoded); (b) 0444 BL quadrant = prep_team
-    編成チーム情報 screen (+ TR/BR quadrants); (c) "Weapon" W in font 337 reads as H; (d) terrain cell
-    "Shooting-" too wide (map panel); (e) save dialog cursor brackets frame いいえ's width, not "No"; (f) extras
-    title art reading + help bar "Music..." clipped at x=0; (g) one-word lines st40 "Sink her", st52 "and".
-    Tools in scratchpad this session (re-create if lost): BG-layer render from ppudump (`io.bin` DISPCNT/BGxCNT,
-    mode 5 ext-affine BG2/3 = linear 16-bit map, 8bpp), OAM render, NCER cell render, DLG contact sheets.
-  - **Next:** warp scenes for forecast/team info/scenario menu/credits card (debug tool) and check them in-game;
-    0444 terrain strip 隠蔽/水/空/宇 (16 px boxes, not done); 0340/0344 sprite tile sheets (zoom), 0402 建物;
-    the end caption `- エンブレム オブ ガンダム -` (source unknown: last credits frame); the **win/lose banners
-    勝利条件/敗北条件** (briefNN scene; missing from the phase 1 survey, source not found). GAME OVER is already
-    English art. Then `qa_gate.py init` over the tour sheets (`work/qa/tour/`, warp_all at 900 frames on the
-    EN build), visual-QA verdicts (fresh read-only pass), smoke.
+  - **Visual-QA round 1 (4 chunks, all `issue`):** fixed since: stage names over the 150 px name bar (8 shortened,
+    lint check); **3D-layer textures** (`tools/dlg.py`, `\0DLG`+`\0LGA`): 17 staff-roll pages, win/lose banners
+    (2233), result panel/buttons (2139), battle/skill banners, phase labels, chart/baton headers, save popups,
+    retirement notice (2179-2245), seen in-game; "Weapon" W (5 px W for font 337); "Shooting" -> "Ranged"; one-word
+    lines st40/st52; **0444 all four quadrants** (TL team info, BL prep 編成チーム情報, TR ユニット情報 = scene
+    `map_unit`, BR キャラクター情報 = `map_chara`; D18 short forms Atk/Def/.../Mob, Lnd/Rgh/Wtr/Air/Spc; title bars
+    whose glyphs reuse the glow colours use the `h` erase). Still open: (e) save dialog cursor brackets frame
+    いいえ's width, not "No"; (f) extras title art reading + help bar "Music..." clipped at x=0.
+  - **Next:** 0340/0344 sprite tile sheets, 0402 建物, 0450 scenario menu (needs a warp); small textures 2169 (red
+    digits, no text), 2177 (6 px kanji bars), 2239 (corner tags): too small for the fonts, decide or leave; end
+    caption `- エンブレム オブ ガンダム -`; `docs/synopsis.md` old stage names. Then re-tour
+    (`warp_all.py build/eog_en.nds --frames 900 --out work/qa/tour`), `qa_gate.py init` + verdicts (fresh read-only
+    pass) + `check`, smoke, then release zip.
 - **Phase 7 (this session):**
   - Gates green: build, `tools/check.py` 37 tests (incl. `test_lint` = `tools/lint.py` 0 errors: font chars, control
     codes JP==EN, trailing space, width vs `tbl/windows.json`, stub last lines), `tools/romcheck.py` 0 unexpected
